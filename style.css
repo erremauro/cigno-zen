@@ -1,0 +1,125 @@
+/* CSS Reset */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+    display: block;
+    max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+    font: inherit;
+}
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+    content: '';
+}
+
+:focus-visible {
+    outline: none;
+}
+
+/* Il Cigno Zen STYLES */
+
+html {
+    lang: it;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Merriweather', serif;
+    font-weight: 400;
+    line-height: 1.6;
+    background-color: #141414;
+    color: #96969B;
+    font-size: 1.2rem;
+}
+a {
+    color: #bb86fc;
+    text-decoration: none;
+}
+a:hover {
+    color: #3700b3;
+}
+header, footer {
+    padding: 1rem;
+    text-align: center;
+}
+main {
+    padding: 1rem;
+    max-width: 800px;
+    margin: 0 auto;
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
+article h1,
+article h2 {
+    text-align: center;
+}
+article h2 {
+    margin-bottom: 2em;
+}
+article p {
+    margin: 1em 0 1em 0;
+    text-indent: 2em;
+    text-align: justify; 
+    hyphens: auto; 
+    word-break: break-word;
+    line-height: 1.68;
+}
