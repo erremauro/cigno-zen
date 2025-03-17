@@ -2,7 +2,12 @@
 
 <div id="primary" class="content-area">
 	<main id="main" class="site-main">
-<?php get_template_part('patterns/template-query-loop'); ?>
+		<?php
+		// Inizia il loop di WordPress
+		while ( have_posts() ) : the_post();
+			the_content();
+		endwhile;
+		?>
 	</main>
 </div>
 

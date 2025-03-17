@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="svg2" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" version="1.1" viewBox="0 0 682.7 682.7">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #141414;
+        stroke-width: 16px;
+      }
+
+      .cls-1, .cls-2 {
+        stroke: #989898;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke-linecap: round;
+        stroke-width: 32px;
+      }
+    </style>
+  </defs>
+  <line class="cls-2" x1="399.2" y1="399.2" x2="560.7" y2="560.7"/>
+  <circle class="cls-1" cx="288.4" cy="288.4" r="166.4"/>
+</svg>

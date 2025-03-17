@@ -1,125 +1,412 @@
-/* CSS Reset */
-*,
-*::before,
-*::after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/*
+Theme Name: Cigno Zen
+Theme URI: http://github.com/erremauro/cigno-zen
+Author: Roberto Mauro
+Author URI: http://github.com/erremauro
+Description: Un tema WordPress classico e minimalista.
+Version: 1.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: cigno-zen
+*/
+
+/** CSS RESET */
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/** Cigno Zen CSS */
+
+html {
+	lang: it;
 }
 
 html,
 body {
     height: 100%;
     width: 100%;
-    font-family: Arial, sans-serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-img,
-picture,
-video,
-canvas,
-svg {
-    display: block;
-    max-width: 100%;
-}
-
-input,
-button,
-textarea,
-select {
-    font: inherit;
-}
-
-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-ul,
-ol {
-    list-style: none;
-}
-
-table {
-    border-collapse: collapse;
-    border-spacing: 0;
-}
-
-blockquote,
-q {
-    quotes: none;
-}
-
-blockquote::before,
-blockquote::after,
-q::before,
-q::after {
-    content: '';
-}
-
-:focus-visible {
-    outline: none;
-}
-
-/* Il Cigno Zen STYLES */
-
-html {
-    lang: it;
 }
 
 body {
-    margin: 0;
+	margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Merriweather', serif;
-    font-weight: 400;
-    line-height: 1.6;
-    background-color: #141414;
-    color: #96969B;
-    font-size: 1.2rem;
+	background-color: #141414;
+	color: #98989b;
+	box-sizing: border-box;
+	font-family: 'Libre Baskerville', serif;
+	font-weight: 400;
+	font-size: 1.2em;
+	line-height: 1.68;
 }
+
+/* Heading */
+h1 {
+    font-size: 2.5em; /* circa 40px */
+    font-weight: 700; /* bold */
+    line-height: 1.2; /* leggermente più alto del font-size per migliorare la leggibilità */
+}
+
+h2 {
+    font-size: 2em; /* circa 32px */
+    font-weight: 700; /* bold */
+    line-height: 1.3;
+}
+
+h3 {
+    font-size: 1.75em; /* circa 28px */
+    font-weight: 600; /* semi-bold */
+    line-height: 1.35;
+}
+
+h4 {
+    font-size: 1.5em; /* circa 24px */
+    font-weight: 600; /* semi-bold */
+    line-height: 1.4;
+}
+
+h5 {
+    font-size: 1.25em; /* circa 20px */
+    font-weight: 500; /* normal */
+    line-height: 1.45;
+}
+
+h6 {
+    font-size: 1em; /* circa 16px */
+    font-weight: 500; /* normal */
+    line-height: 1.5;
+}
+
+/* Elements */
+em, i {
+	font-style: italic;
+}
+
+bold, strong, b {
+	font-style: bold;
+}
+
+/* Links */
 a {
-    color: #bb86fc;
-    text-decoration: none;
+	color: #439cd6;
+	text-decoration: none;
+	cursor: pointer;
 }
+
 a:hover {
-    color: #3700b3;
+	color: #439cd6;
 }
-header, footer {
-    padding: 1rem;
-    text-align: center;
+
+a:visited {
+	color: #439cd6;
 }
-main {
-    padding: 1rem;
+
+header.site-header {
+	padding: 2em;
+	text-align: center;
+}
+
+/* SITE SEARCH */
+.search-bar {
+	padding: 1em 0;
+}
+
+.search-bar form[role=search] {
+	display: flex;
+	justify-content: center;
+}
+
+input.search-field[type=search] {
+	box-sizing: border-box;
+	padding: 1em;
+	border: none;
+	border: 1px solid #98989B;
+	background: none;
+	background-color: transparent;
+	color: #98989B;
+	border-radius: 0;
+	font-size: 16px;
+}
+
+.search-submit {
+	box-sizing: border-box;
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	border: 1px solid #98989B;
+	border-left: none;
+	border-radius: 0;
+	min-width: 48px;
+}
+
+.search-submit:focus,
+input.search-field[type=search]:focus {
+	outline: none;
+}
+
+.rotated {
+    transform: rotate(180deg);
+    transition: transform 0.3s;
+}
+
+/* /SITE SEARCH */
+
+/* SEARCH RESULTS */
+.search-page-title {
+	text-align: center;
+	font-style: italic;
+}
+
+mark.ep-highlight {
+	background-color: #f7dc5f;
+	color: #141414;
+}
+
+div.ep-suggestions {
+	margin: 1em 0;
+	text-align: center;
+}
+
+p.ep-suggestion-item a {
+	box-sizing: border-box;
+	border-bottom: 1px solid #a63b31;
+	border-width: 2px;
+	padding-bottom: 0.25em;
+}
+
+/* /SEARCH RESULTS */
+
+.custom-logo-link svg {
+	width: 32px;
+	height: auto;
+}
+
+.site-search svg {
+	width: 64px;
+	height: auto;
+}
+
+header.site-header h1 a,
+header.site-header h1 a:hover,
+header.site-header h1 a:visited {
+	color: #98989b;
+}
+
+a.more-link {
+	color: #98989b;
+}
+
+div.content-area {
     max-width: 800px;
     margin: 0 auto;
 }
-img {
-    max-width: 100%;
-    height: auto;
+
+.content-area main {
+	padding: 0 1em;
+	box-sizing: border-box;
 }
-article h1,
-article h2 {
-    text-align: center;
+
+/* POST HEADER */
+.post-header .post-categories {
+	margin: 1em 0;
+	text-align: center;
 }
-article h2 {
-    margin-bottom: 2em;
+
+.post-header .post-categories a {
+	box-sizing: border-box;
+	border: 1px solid #98989B;
+	padding: 0.25em 1em;
+	border-radius: 1em;
+	color: #98989B;
 }
-article p {
-    margin: 1em 0 1em 0;
-    text-indent: 2em;
-    text-align: justify; 
-    hyphens: auto; 
-    word-break: break-word;
-    line-height: 1.68;
+/* /POST HEADER */
+
+.post-content p,
+.post-excerpt p {
+	text-indent: 2em;
+	text-align: justify;
+	hyphens: auto;
+	word-break: break-word;
+	line-height: 1.68;
+	font-size: 1.2em;
+	padding: 0.5em 0;
 }
+
+.wp-block-quote {
+  margin: 2em;
+}
+
+.wp-block-quote p {
+	margin: 0 auto;
+	box-sizing: border-box;
+	text-indent: 0;
+	padding: 0 1em;
+	font-style: italic;
+}
+
+p.series-link {
+	text-align: center;
+}
+
+h1.post-title,
+h2.post-title {
+	text-align: center;
+	font-style: italic;
+	font-weight: 400;
+	margin: 1em 0;
+}
+
+.post-content h2 {
+	line-height: 2;
+}
+
+p.more-text {
+	margin-top: 1em;
+	text-align: center;
+}
+
+/* POST PAGINATION */
+
+.pagination,
+.post-pagination  {
+	box-sizing: border-box;
+	text-align: center;
+	padding: 1em;
+	margin-top: 2em;
+	border-top: 1px solid #98989B;
+	border-bottom: 1px solid #98989B;
+}
+
+p.page-links {
+	text-indent: 0;
+}
+
+/* Series */
+.series-chapters {
+	text-align: center;
+}
+
+.series-title {
+	font-size: 1.8em;
+	text-align: center;
+	margin: 1em;
+	font-style: italic;
+}
+
+.chapter-title {
+	font-size: 1.6em;
+	margin-bottom: 1em;
+	font-weight: normal;
+}
+
+li.related-post {
+	font-size: 1.5em;
+}
+
+p.series-link,
+p.more-text,
+p.footnote {
+	text-indent: 0;
+}
+
+footer {
+	margin-top: 2em;
+	padding: 2em 0;
+}
+
+footer .wp-group {
+	text-align: center;
+}
+
+/* CONTACT FORM */
+input.wpcf7-form-control[type=text],
+input.wpcf7-form-control[type=email] {
+	box-sizing: border-box;
+	font-family: 'Libre Baskerville', serif;
+	width: 100%;
+	padding: 0.5em;
+	font-size: 16px;
+	background-color: transparent;
+	color: #98989B;
+	border: 1px solid #98989B;
+	border-radius: 0;
+	margin-bottom: 1em;
+}
+
+textarea.wpcf7-form-control {
+	box-sizing: border-box;
+	font-family: 'Libre Baskerville', serif;
+	font-size: 16px;
+	padding: 0.5em;
+	width: 100%;
+  	border: 1px solid #98989B;
+  	color: #98989B;
+  	background-color: transparent;
+  	margin-bottom: 1em;
+  	border-radius: 0;
+}
+
+input.wpcf7-form-control[type=submit] {
+	box-sizing: border-box;
+	font-family: 'Libre Baskerville', serif;
+	font-size: 16px;
+	padding: 0.5em;
+	border: 1px solid #98989B;
+	background: transparent;
+	color: #98989B;
+	border-radius: 0;
+	cursor: pointer;
+}
+
+input.wpcf7-form-control[type=text],
+input.wpcf7-form-control[type=email],
+textarea.wpcf7-form-control,
+input.wpcf7-form-control[type=submit] {
+	outline: none;
+}
+/* /CONTACT FORM */
