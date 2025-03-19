@@ -70,6 +70,8 @@ function jetpackme_custom_related() {
 }
 add_shortcode( 'jprel', 'jetpackme_custom_related' );
 
+/* ELASTIC PRESS */
+
 /**
  * Display all suggested terms.
  *
@@ -101,3 +103,65 @@ add_filter(
 	10,
 	3
 );
+
+/**
+ * Get the first paragraph containing the search term with highlighting and remove <sup> tags.
+ *
+ * @param string $content The full content of the post.
+ * @param string $search_term The search term to highlight.
+ * @return string The highlighted paragraph or a fallback excerpt.
+ */
+function get_highlighted_paragraph($content, $search_term) {
+    // Rimuovi i tag <sup> dal contenuto
+    $content = preg_replace('/<sup>.*?<\/sup>/', '', $content);
+
+    // Crea un nuovo DOMDocument
+    $dom = new DOMDocument();
+
+    // Suppress errors due to malformed HTML
+    libxml_use_internal_errors(true);
+
+    // Carica il contenuto HTML nel DOMDocument
+    $loaded = $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+
+    // Se il caricamento fallisce, restituisci un estratto normale
+    if (!$loaded) {
+        libxml_clear_errors();
+        return wp_trim_words($content, 55, '...');
+    }
+
+    // Crea un nuovo XPath per cercare il termine di ricerca
+    $xpath = new DOMXPath($dom);
+
+    // Cerca il termine di ricerca in tutto il contenuto
+    $nodes = $xpath->query("//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" . strtolower($search_term) . "')]");
+
+    if ($nodes->length > 0) {
+        // Ottieni il primo nodo che contiene il termine di ricerca
+        $node = $nodes->item(0);
+
+        // Trova il primo paragrafo <p> che contiene il nodo
+        $paragraph = $node;
+        while ($paragraph && $paragraph->nodeName !== 'p') {
+            $paragraph = $paragraph->parentNode;
+        }
+
+        if ($paragraph && $paragraph->nodeName === 'p') {
+            // Ottieni il contenuto del paragrafo
+            $paragraph_content = $dom->saveHTML($paragraph);
+
+            // Evidenzia il termine di ricerca nel paragrafo
+            $highlighted_paragraph = preg_replace(
+                '/(' . preg_quote($search_term, '/') . ')/i',
+                '<mark class="highlight">$1</mark>',
+                $paragraph_content
+            );
+
+            return wp_kses_post($highlighted_paragraph);
+        }
+    }
+
+    // Se il termine non è trovato, restituisci un estratto normale
+    libxml_clear_errors();
+    return wp_trim_words($content, 55, '...');
+}
