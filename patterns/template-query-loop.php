@@ -2,11 +2,15 @@
 // Ottieni il numero della pagina corrente
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
 
+// Ottieni l'ID dell'autore corrente
+$author_id = get_query_var('author');
+
 // Argomenti per la query
 $args = array(
-	'post_type' => 'post', // Tipo di post da recuperare
-	'posts_per_page' => 5, // Numero di post per pagina
-	'paged' => $paged, // Numero della pagina corrente
+	'post_type'      => 'post', // Tipo di post da recuperare
+	'posts_per_page' => 5,      // Numero di post per pagina
+	'paged'          => $paged, // Numero della pagina corrente
+	'author'         => $author_id, // Filtra per autore
 );
 
 // Esegui la query
@@ -17,18 +21,17 @@ $the_query = new WP_Query($args);
 	<?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 			<header class="post-header">
-				<h2 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
-				<?php
-				// Ottieni le categorie del post
-				// $categories = get_the_category();
-				// if (!empty($categories)) {
-				// 	echo '<div class="post-categories">';
-				// 	foreach ($categories as $category) {
-				// 		echo '<a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a> ';
-				// 	}
-				// 	echo '</div>';
-				// }
-				?>
+				<?php display_author_info_conditionally(); ?>
+				<h2 class="post-title">
+					<a href="<?php the_permalink(); ?>">
+						<?php the_title(); ?>
+					</a>
+				</h2>
+				<h4 class="post-subtitle">
+					<a href="<?php the_permalink(); ?>">
+						<?php the_subtitle(); ?>
+					</a>
+				<h4>
 			</header>
 			<div class="post-content">
 				<?php the_excerpt(); ?>
@@ -41,8 +44,8 @@ $the_query = new WP_Query($args);
 	<div class="pagination">
 		<?php
 		echo paginate_links(array(
-			'total' => $the_query->max_num_pages,
-			'current' => $paged,
+			'total'     => $the_query->max_num_pages,
+			'current'   => $paged,
 			'prev_text' => __('« Precedente'),
 			'next_text' => __('Successivo »'),
 		));

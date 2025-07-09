@@ -1,98 +1,81 @@
 <?php
 
+/**
+ * Setup del tema
+ */
 function cigno_zen_setup() {
-    load_theme_textdomain('cigno-zen', get_template_directory() . '/languages');
+	load_theme_textdomain('cigno-zen', get_template_directory() . '/languages');
 }
 add_action('after_setup_theme', 'cigno_zen_setup');
 
+/**
+ * Caricamento di script e stili
+ */
 function cigno_zen_scripts() {
 	wp_enqueue_style('cigno-zen-style', get_stylesheet_uri());
 	wp_enqueue_script('cigno-zen-script', get_template_directory_uri() . '/assets/js/script.js', array(), '1.0.0', true);
+	carica_google_fonts();
 }
 add_action('wp_enqueue_scripts', 'cigno_zen_scripts');
 
 function carica_google_fonts() {
-    wp_enqueue_style('libre-baskerville', 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap', false);
+	wp_enqueue_style('libre-baskerville', 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap', false);
 }
-add_action('wp_enqueue_scripts', 'carica_google_fonts');
 
-// Disable JetPack's Related Posts Automatic Placement
+/**
+ * Funzionalità di Jetpack
+ */
 function jetpackme_remove_rp() {
-    if ( class_exists( 'Jetpack_RelatedPosts' ) ) {
-        $jprp = Jetpack_RelatedPosts::init();
-        $callback = array( $jprp, 'filter_add_target_to_dom' );
-        remove_filter( 'the_content', $callback, 40 );
-    }
+	if (class_exists('Jetpack_RelatedPosts')) {
+		$jprp = Jetpack_RelatedPosts::init();
+		$callback = array($jprp, 'filter_add_target_to_dom');
+		remove_filter('the_content', $callback, 40);
+	}
 }
-add_filter( 'wp', 'jetpackme_remove_rp', 20 );
+add_filter('wp', 'jetpackme_remove_rp', 20);
 
-// Create JetPack's Related Posts Automatic Placement
 function jetpackme_custom_related() {
-	//  Check that JetPack Related Posts exists
-	if (
-			class_exists( 'Jetpack_RelatedPosts' )
-			&& method_exists( 'Jetpack_RelatedPosts', 'init_raw' )
-	) {
-			//  Get the related posts
-			$related = Jetpack_RelatedPosts::init_raw()
-				->set_query_name( 'edent-related-shortcode' )
-				->get_for_post_id(
-					get_the_ID(),   //  ID of the post
-					array( 'size' => 4 )//  How many related items to fetch
-				);
-			if ( $related ) {
-				//  Set the container for the related posts
-				$output = "<h2 id='related-posts'>Altri Articoli:</h2>";
-				$output .=   "<ul class='related-posts'>";
+	if (class_exists('Jetpack_RelatedPosts') && method_exists('Jetpack_RelatedPosts', 'init_raw')) {
+		$related = Jetpack_RelatedPosts::init_raw()
+			->set_query_name('edent-related-shortcode')
+			->get_for_post_id(get_the_ID(), array('size' => 4));
 
-				foreach ( $related as $result ) {
-					$related_post_id = $result['id'];
+		if ($related) {
+			$output = "<h2 id='related-posts'>Altri Articoli:</h2>";
+			$output .= "<ul class='related-posts'>";
 
-					// Get the related post
-					$related_post = get_post( $related_post_id );
+			foreach ($related as $result) {
+				$related_post_id = $result['id'];
+				$related_post = get_post($related_post_id);
+				$related_post_title = $related_post->post_title;
+				$related_post_link = get_permalink($related_post_id);
 
-					//  Get the attributes
-					$related_post_title = $related_post->post_title;
-					$related_post_link  = get_permalink( $related_post_id );
-
-					//  Create the HTML for the related post
-					$output .= '<li class="related-post">';
-					$output .=    "<a href='{$related_post_link}'>";
-					$output .=       "{$related_post_title}</a>";
-					$output .= "</li>";
-				}
-				//  Finish the related posts container
-				$output .="</ul>";
+				$output .= '<li class="related-post">';
+				$output .= "<a href='{$related_post_link}'>{$related_post_title}</a>";
+				$output .= "</li>";
 			}
-		//  Display the related posts
+			$output .= "</ul>";
+		}
 		echo $output;
 	}
 }
-add_shortcode( 'jprel', 'jetpackme_custom_related' );
-
-/* ELASTIC PRESS */
+add_shortcode('jprel', 'jetpackme_custom_related');
 
 /**
- * Display all suggested terms.
- *
- * @param string $html Original HTML output.
- * @param array $terms Array of suggested terms.
- * @param WP_Query $query WP_Query object.
- *
- * @return string
+ * Funzionalità di ElasticPress
  */
 add_filter(
 	'ep_suggestion_html',
-	function( $html, $terms, $query )  {
-		$valid_terms = array_filter($terms, function($term) {
-            return !empty(trim($term['text']));
-        });
+	function ($html, $terms, $query) {
+		$valid_terms = array_filter($terms, function ($term) {
+			return !empty(trim($term['text']));
+		});
 
-        if (!empty($valid_terms)) {
-			$html  = '<div class="ep-suggestions">';
-			$html .= '<p class="ep-suggestion-item">' . esc_html__( 'Forse intendevi', 'elasticpress' );
-			foreach( $terms as $term ) {
-				$html .= ' <a href="' . esc_url( get_search_link( $term['text'] ) ) . '">' . esc_html( $term['text'] ) . '</a>';
+		if (!empty($valid_terms)) {
+			$html = '<div class="ep-suggestions">';
+			$html .= '<p class="ep-suggestion-item">' . esc_html__('Forse intendevi', 'elasticpress');
+			foreach ($terms as $term) {
+				$html .= ' <a href="' . esc_url(get_search_link($term['text'])) . '">' . esc_html($term['text']) . '</a>';
 			}
 			$html .= '?</p>';
 			$html .= '</div>';
@@ -104,64 +87,105 @@ add_filter(
 	3
 );
 
+
 /**
- * Get the first paragraph containing the search term with highlighting and remove <sup> tags.
- *
- * @param string $content The full content of the post.
- * @param string $search_term The search term to highlight.
- * @return string The highlighted paragraph or a fallback excerpt.
+ * Funzioni di utilità
  */
 function get_highlighted_paragraph($content, $search_term) {
-    // Rimuovi i tag <sup> dal contenuto
-    $content = preg_replace('/<sup>.*?<\/sup>/', '', $content);
+	$content = preg_replace('/<sup>.*?<\/sup>/', '', $content);
 
-    // Crea un nuovo DOMDocument
-    $dom = new DOMDocument();
+	$dom = new DOMDocument();
+	libxml_use_internal_errors(true);
+	$loaded = $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
 
-    // Suppress errors due to malformed HTML
-    libxml_use_internal_errors(true);
+	if (!$loaded) {
+		libxml_clear_errors();
+		return wp_trim_words($content, 55, '...');
+	}
 
-    // Carica il contenuto HTML nel DOMDocument
-    $loaded = $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+	$xpath = new DOMXPath($dom);
+	$nodes = $xpath->query("//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" . strtolower($search_term) . "')]");
 
-    // Se il caricamento fallisce, restituisci un estratto normale
-    if (!$loaded) {
-        libxml_clear_errors();
-        return wp_trim_words($content, 55, '...');
-    }
+	if ($nodes->length > 0) {
+		$node = $nodes->item(0);
+		$paragraph = $node;
+		while ($paragraph && $paragraph->nodeName !== 'p') {
+			$paragraph = $paragraph->parentNode;
+		}
 
-    // Crea un nuovo XPath per cercare il termine di ricerca
-    $xpath = new DOMXPath($dom);
+		if ($paragraph && $paragraph->nodeName === 'p') {
+			$paragraph_content = $dom->saveHTML($paragraph);
+			$highlighted_paragraph = preg_replace(
+				'/(' . preg_quote($search_term, '/') . ')/i',
+				'<mark class="highlight">$1</mark>',
+				$paragraph_content
+			);
 
-    // Cerca il termine di ricerca in tutto il contenuto
-    $nodes = $xpath->query("//*[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" . strtolower($search_term) . "')]");
+			return wp_kses_post($highlighted_paragraph);
+		}
+	}
 
-    if ($nodes->length > 0) {
-        // Ottieni il primo nodo che contiene il termine di ricerca
-        $node = $nodes->item(0);
-
-        // Trova il primo paragrafo <p> che contiene il nodo
-        $paragraph = $node;
-        while ($paragraph && $paragraph->nodeName !== 'p') {
-            $paragraph = $paragraph->parentNode;
-        }
-
-        if ($paragraph && $paragraph->nodeName === 'p') {
-            // Ottieni il contenuto del paragrafo
-            $paragraph_content = $dom->saveHTML($paragraph);
-
-            // Evidenzia il termine di ricerca nel paragrafo
-            $highlighted_paragraph = preg_replace(
-                '/(' . preg_quote($search_term, '/') . ')/i',
-                '<mark class="highlight">$1</mark>',
-                $paragraph_content
-            );
-
-            return wp_kses_post($highlighted_paragraph);
-        }
-    }
-
-    // Se il termine non è trovato, restituisci un estratto normale
-    libxml_clear_errors();
-    return wp_trim_words($content, 55, '...');
+	libxml_clear_errors();
+	return wp_trim_words($content, 55, '...');
 }
+
+function display_author_info_conditionally() {
+	$author_name = get_the_author();
+	if ($author_name !== 'cigno') {
+		echo '<div class="entry-meta">';
+		the_author_posts_link();
+		echo '</div>';
+	}
+}
+
+function display_series_name() {
+	$series_terms = get_the_terms(get_the_ID(), 'series');
+	if ($series_terms && !is_wp_error($series_terms)) {
+		$series_term = array_shift($series_terms);
+		$series_link = get_term_link($series_term);
+		echo '<p class="series-link"><a href="' . esc_url($series_link) . '">' . esc_html($series_term->name) . '</a></p>';
+	}
+}
+
+function the_subtitle() {
+	// Controlla se il campo ACF 'sottotitolo' ha un valore
+	if (get_field('sottotitolo')) {
+		// Ottieni il valore del campo 'sottotitolo'
+		$sottotitolo = get_field('sottotitolo');
+		// Visualizza il sottotitolo racchiuso in un tag <h3>
+		echo esc_html($sottotitolo);
+	}
+}
+
+function custom_post_pagination() {
+    global $page, $numpages;
+
+    // Inizia l'output del contenitore
+    echo '<div class="post-pagination-control">';
+    echo '<p class="pagination-control">';
+
+    // Controlla se ci sono più pagine
+    if ($numpages > 1) {
+        // Mostra il link "Previous" se non siamo alla prima pagina
+        if ($page > 1) {
+            echo _wp_link_page($page - 1) . '« Indietro</a>';
+        } else {
+            echo '<a class="empty-link">« Indietro</a>'; // Elemento vuoto per "Previous"
+        }
+
+        // Mostra il link "Next" se non siamo all'ultima pagina
+        if ($page < $numpages) {
+            echo _wp_link_page($page + 1) . 'Avanti »</a>';
+        } else {
+            echo '<a class="empty-link">Avanti »</a>'; // Elemento vuoto per "Next"
+        }
+    } else {
+        // Se c'è solo una pagina, mostra entrambi gli elementi vuoti
+        echo '<a class="empty-link">« Indietro</a>';
+        echo '<a class="empty-link">Avanti »</a>';
+    }
+
+    // Chiude l'output del contenitore
+    echo '</p></div>';
+}
+
