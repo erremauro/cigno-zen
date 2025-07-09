@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+### Changed
+
+## [0.2.1] - 2025-07-09
+### Fixed
+- `theme.json` has been removed
+
 ## [0.2.0] - 2025-07-09
 ### Added
 - Post subtitle
@@ -31,7 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.2.1...HEAD
+[0.2.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.2.1
 [0.2.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.2.0
 [0.1.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.1.0
 [0.0.1]: https://github.com/erremauro/cigno-zen/releases/tag/v0.0.1
