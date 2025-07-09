@@ -321,7 +321,7 @@ h2.post-title {
 }
 
 p.more-text {
-	margin-top: 1em;
+	margin: 1em 0em 3em 0em;
 	text-align: center;
 }
 
@@ -359,14 +359,20 @@ p.page-links {
 
 /* Series */
 .series-chapters {
+	text-align: left;
+}
+
+.series-author {
 	text-align: center;
 }
 
 .series-title {
-	font-size: 1.8em;
 	text-align: center;
-	margin: 1em;
+	margin: 1em 0em 2em 0em;
+	padding: 1em 0em;
 	font-style: italic;
+	border-bottom: 1px solid #98989B;
+	border-top: 1px solid #98989B;
 }
 
 .chapter-title {

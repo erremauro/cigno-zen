@@ -3,6 +3,7 @@ $term = get_queried_object(); // Ottiene il termine attuale della tassonomia
 ?>
 
 <div class="wp-group">
+	<?php display_series_author(); ?>
 	<h1 class="series-title"><?php echo esc_html($term->name); ?></h1>
 </div>
 

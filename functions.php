@@ -138,6 +138,42 @@ function display_author_info_conditionally() {
 	}
 }
 
+function display_series_author( $term = null, $echo = true ) {
+    if ( ! $term ) {
+        $term = get_queried_object();
+    }
+
+    if ( ! $term || ! isset( $term->term_id ) ) {
+        return '';
+    }
+
+    $author = get_field( 'author', $term->taxonomy . '_' . $term->term_id );
+
+    // Se il campo restituisce un array, prendiamo il primo elemento
+    if ( is_array( $author ) ) {
+        $author = reset( $author );
+    }
+
+    if ( ! ( $author instanceof WP_User ) ) {
+        return '';
+    }
+
+    $author_id   = $author->ID;
+    $author_name = esc_html( $author->display_name );
+    $author_url  = esc_url( get_author_posts_url( $author_id ) );
+
+    $output  = '<div class="series-author">';
+    $output .= ' <a href="' . $author_url . '">' . $author_name . '</a>';
+    $output .= '</div>';
+
+    if ( $echo ) {
+        echo $output;
+        return;
+    }
+
+    return $output;
+}
+
 function display_series_name() {
 	$series_terms = get_the_terms(get_the_ID(), 'series');
 	if ($series_terms && !is_wp_error($series_terms)) {

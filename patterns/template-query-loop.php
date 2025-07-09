@@ -22,6 +22,7 @@ $the_query = new WP_Query($args);
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 			<header class="post-header">
 				<?php display_author_info_conditionally(); ?>
+				<?php display_series_name() ?>
 				<h2 class="post-title">
 					<a href="<?php the_permalink(); ?>">
 						<?php the_title(); ?>
@@ -41,6 +42,7 @@ $the_query = new WP_Query($args);
 	<?php endwhile; ?>
 
 	<!-- Paginazione -->
+	<?php if ( $the_query->max_num_pages > 1 ) : ?>
 	<div class="pagination">
 		<?php
 		echo paginate_links(array(
@@ -51,6 +53,7 @@ $the_query = new WP_Query($args);
 		));
 		?>
 	</div>
+	<?php endif; ?>
 
 <?php else : ?>
 	<p><em><?php _e('Nessun articolo trovato.'); ?></em></p>

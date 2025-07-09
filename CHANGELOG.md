@@ -7,7 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Displays the serie's Author
 ### Changed
+- Hides the pagination box in `patterns/template-query-loop.php` when no pages are available
+- `more-link` bottom margin changed for better post spacing
 
 ## [0.2.1] - 2025-07-09
 ### Fixed
