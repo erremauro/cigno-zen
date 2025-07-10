@@ -48,7 +48,7 @@
 				endforeach;
 				echo '</ul>';
 			else :
-				echo '<p>Nessuna serie trovata.</p>';
+				echo '<p>Nessun volume trovato.</p>';
 			endif;
 			?>
 		</section>
