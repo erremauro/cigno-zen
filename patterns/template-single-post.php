@@ -7,7 +7,7 @@ while (have_posts()) : the_post();
 	<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 		<header class="post-header">
 			<?php display_author_info_conditionally() ?>
-			<?php display_series_name() ?>
+			<?php display_volumes_name() ?>
 			<h1 class="post-title"><?php the_title(); ?></h1>
 			<h3 class="post-subtitle"><?php the_subtitle() ?><h3>
 		</header>

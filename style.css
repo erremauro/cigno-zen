@@ -237,6 +237,15 @@ header.site-header h1 a:visited {
 	color: #98989b;
 }
 
+/* MENU */
+
+menu.menu-bar {
+	margin: 1em auto;
+	padding: 1em 0;
+}
+
+/* ./MENU */
+
 a.more-link {
 	color: #98989b;
 }
@@ -287,7 +296,7 @@ div.content-area {
 	font-style: italic;
 }
 
-p.series-link {
+p.volumes-link {
 	text-align: center;
 	margin-bottom: 1em;
 }
@@ -358,15 +367,15 @@ p.page-links {
 }
 
 /* Series */
-.series-chapters {
+.volumes-chapters {
 	text-align: left;
 }
 
-.series-author {
+.volumes-author {
 	text-align: center;
 }
 
-.series-title {
+.volumes-title {
 	text-align: center;
 	margin: 1em 0em 2em 0em;
 	padding: 1em 0em;
@@ -385,11 +394,37 @@ li.related-post {
 	font-size: 1.5em;
 }
 
-p.series-link,
+p.volumes-link,
 p.more-text,
 p.footnote {
 	text-indent: 0;
 }
+
+/* LE-SERIE */
+.volumes-list,
+.author-list {
+	text-align: center;
+}
+
+.volumes-list h1,
+.author-list h1 {
+	margin-bottom: 1em;
+}
+
+li.volumes-item,
+li.author-item {
+	padding: 1em 0;
+}
+
+li.volumes-item .volume-title {
+	margin: inherit;
+	padding: inherit;
+	font-weight: normal;
+	border: none;
+	font-style: italic;
+}
+
+/* ./LE-SERIE */
 
 footer {
 	margin-top: 2em;

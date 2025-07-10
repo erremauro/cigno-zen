@@ -22,7 +22,7 @@ $the_query = new WP_Query($args);
 		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 			<header class="post-header">
 				<?php display_author_info_conditionally(); ?>
-				<?php display_series_name() ?>
+				<?php display_volumes_name() ?>
 				<h2 class="post-title">
 					<a href="<?php the_permalink(); ?>">
 						<?php the_title(); ?>
