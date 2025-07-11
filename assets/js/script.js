@@ -4,8 +4,8 @@
 	function onShowSearchClick(event) {
 		// Seleziona l'elemento con ID search-bar
 		var searchBar = document.getElementById('search-bar');
-
-		// Controlla lo stato attuale della visibilità
+		
+                // Controlla lo stato attuale della visibilità
 		if (searchBar.style.display === 'none' || searchBar.style.display === '') {
 			// Se è nascosto, mostralo
 			searchBar.style.display = 'block';
@@ -14,9 +14,12 @@
 			searchBar.style.display = 'none';
 		}
 
+                // Nasconde l'etichetta del menu
+                document.querySelectorAll('.menu-label').forEach(el => el.classList.toggle('hidden'));
+
 		// Ruota l'immagine aggiungendo o rimuovendo la classe
-		var searchButton = document.getElementById('search-button');
-		searchButton.classList.toggle('rotated');
+		var menuButton = document.getElementById('menu-button');
+		menuButton.classList.toggle('rotated');
 
 		// Imposta il focus sul campo di ricerca
 		var searchField = document.getElementById('search-field');
@@ -24,8 +27,8 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', function() {
-		var searchButton = document.getElementById('search-button');
+		var menuButton = document.getElementById('menu-button');
 		// Assicurati di aggiungere l'event listener correttamente
-		searchButton.addEventListener('click', onShowSearchClick);
+		menuButton.addEventListener('click', onShowSearchClick);
 	});
 })(document);
