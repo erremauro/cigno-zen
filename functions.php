@@ -8,11 +8,30 @@ function cigno_zen_setup() {
 }
 add_action('after_setup_theme', 'cigno_zen_setup');
 
+
+function cigno_zen_styles() {
+  $css_file = get_stylesheet_directory() . '/style.css';
+  $css_version = filemtime($css_file);
+
+
+  error_log('css_path: ' . $css_file);
+  error_log('filemtime: ' . filemtime($css_file));
+
+  wp_enqueue_style(
+    'cigno-zen-style',
+    get_stylesheet_uri(),
+    [],
+    $css_version
+  );
+}
+add_action('wp_enqueue_scripts', 'cigno_zen_styles');
+
+
 /**
  * Caricamento di script e stili
  */
 function cigno_zen_scripts() {
-	wp_enqueue_style('cigno-zen-style', get_stylesheet_uri());
+	//wp_enqueue_style('cigno-zen-style', get_stylesheet_uri());
 	wp_enqueue_script('cigno-zen-script', get_template_directory_uri() . '/assets/js/script.js', array(), '1.0.0', true);
 	carica_google_fonts();
 }
