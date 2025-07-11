@@ -3,7 +3,7 @@
 		<h1>Esplora per Categoria</h1>
 
 		<form method="get" action="<?php echo esc_url( get_permalink() ); ?>">
-			<label for="cat">Categoria:</label>
+			<label for="cat">Seleziona Categoria:</label>
 			<select name="cat" id="cat" onchange="this.form.submit()">
 				<option value="">-- Tutte le categorie --</option>
 				<?php
