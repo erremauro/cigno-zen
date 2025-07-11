@@ -7,8 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add Category List page
 - Add a "MENU" label
 ### Changed
+- All pages were moved to `./pages/`
+- `page.php` is now a template that get templates parts in `.pages/` by
+the slug's name
+- A visual separator was added to `page-volumi.php` for separating titles
 - Chevron animation has been removed
 - Add a timestamp version to the styles and scripts URI to force the reload on changes
 ### Fixed

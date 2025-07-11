@@ -412,26 +412,65 @@ p.footnote {
 
 /* LE-SERIE */
 .volumes-list,
-.author-list {
+.author-list,
+.category-list {
 	text-align: center;
 }
 
 .volumes-list h1,
-.author-list h1 {
+.author-list h1,
+.category-list h1 {
 	margin-bottom: 1em;
+}
+
+.category-select {
+	margin-bottom: 3em;
 }
 
 li.volumes-item,
 li.author-item {
 	padding: 1em 0;
+	margin: 1em 0;
 }
 
-li.volumes-item .volume-title {
+li.category-item {
+	padding: 1em 0;
+}
+
+li.category-item .separator {
+	margin-top: 0;
+}
+
+li.volumes-item .volumes-author,
+li.category-item .category-author {
+	line-height: 0;
+}
+
+li.volumes-item .volume-title,
+li.category-item .category-title {
 	margin: inherit;
 	padding: inherit;
 	font-weight: normal;
 	border: none;
 	font-style: italic;
+}
+
+li.category-author-group {
+	margin: 2em 0;
+}
+
+ul.category-author-posts > li {
+	margin: 0;
+	padding: 0.5em 0;
+}
+
+li.category-author-group .category-author {
+	line-height: inherit;
+	font-weight: normal;
+}
+
+li.category-author-group .separator {
+	padding-top: 2em;
 }
 
 /* ./LE-SERIE */
