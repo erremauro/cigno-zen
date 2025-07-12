@@ -8,6 +8,18 @@ function cigno_zen_setup() {
 }
 add_action('after_setup_theme', 'cigno_zen_setup');
 
+function cignozen_add_favicon_meta() {
+    echo '
+    <link rel="icon" type="image/png" href="' . get_template_directory_uri() . '/assets/images/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="' . get_template_directory_uri() . '/assets/images/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="' . get_template_directory_uri() . '/assets/images/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="' . get_template_directory_uri() . '/assets/images/favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Cigno Zen" />
+    <link rel="manifest" href="' . get_template_directory_uri() . '/assets/images/favicon/site.webmanifest" />
+    ';
+}
+add_action('wp_head', 'cignozen_add_favicon_meta');
+
 
 function cigno_zen_styles() {
   $css_file = get_stylesheet_directory() . '/style.css';
