@@ -1,5 +1,5 @@
 <menu class="menu-bar">
-	<p>Sfoglia:
+	<p>Sfoglia per:</p>
 		<?php
 		$current_slug = get_post_field( 'post_name', get_post() );
 		$is_home = is_front_page() || is_home();
@@ -21,7 +21,7 @@
 			}
 		}
 
-		echo implode(', ', $links);
 		?>
-	</p>
+
+		<p><?php echo implode(', ', $links); ?></p>
 </menu>
