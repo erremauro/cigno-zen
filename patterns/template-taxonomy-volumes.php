@@ -42,3 +42,22 @@ else :
 	echo '<p>Nessun contenuto disponibile per questo volume.</p>';
 endif;
 ?>
+
+<!-- DOWNLOAD LINKS -->
+<?php
+$epub_url = get_field( 'epub_file', 'volumes_' . $term->term_id );
+$pdf_url  = get_field( 'pdf_file', 'volumes_' . $term->term_id );
+
+if ( $epub_url || $pdf_url ) :
+?>
+<div class="volumes-downloads centered">
+	Ebook:
+		<?php if ( $pdf_url ) : ?>
+			<a href="<?php echo esc_url( $pdf_url ); ?>" download>PDF</a>
+		<?php endif; ?>
+		<?php if ( $epub_url ) : ?>
+			<?php if ( $pdf_url ) : ?>, <?php endif; ?>
+			<a href="<?php echo esc_url( $epub_url ); ?>" download>EPUB</a>
+		<?php endif; ?>
+</div>
+<?php endif; ?>
