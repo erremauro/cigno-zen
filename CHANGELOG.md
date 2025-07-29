@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add Volume's download link to `patterns/template-taxonomu-volumes.php`
+### Changed
+- Removed autofocus on search field when the menu is opened in `script.js`
 
 ## [0.4.0] 2025-07-13
 ### Added

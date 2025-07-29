@@ -20,10 +20,6 @@
 		// Ruota l'immagine aggiungendo o rimuovendo la classe
 		var menuButton = document.getElementById('menu-button');
 		menuButton.classList.toggle('rotated');
-
-		// Imposta il focus sul campo di ricerca
-		var searchField = document.getElementById('search-field');
-		searchField.focus();
 	}
 
 	document.addEventListener('DOMContentLoaded', function() {
