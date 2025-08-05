@@ -1,7 +1,7 @@
 <head>
 	<meta charset="<?php bloginfo('charset'); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><?php bloginfo('name'); ?></title>
+	<title><?php echo cignozen_get_title(); ?></title>
 	<link rel="icon" type="image/png" href="/assets/images/favicon/favicon-96x96.png" sizes="96x96" />
 	<link rel="icon" type="image/svg+xml" href="/assets/images/favicon/favicon.svg" />
 	<link rel="shortcut icon" href="/assets/images/favicon/favicon.ico" />

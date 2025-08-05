@@ -2,11 +2,12 @@
 	<p>Sfoglia per:</p>
 		<?php
 		$current_slug = get_post_field( 'post_name', get_post() );
-		$is_home = is_front_page() || is_home();
+		$is_home = is_home();
+		$is_archive = is_archive();
 		$links = [];
 
 		if ( ! $is_home ) {
-			$links[] = '<a href="' . esc_url( home_url( '/' ) ) . '">Tutto</a>';
+			$links[] = '<a href="' . esc_url( home_url( '/articoli' ) ) . '">Articoli</a>';
 		}
 
 		$pages = [
