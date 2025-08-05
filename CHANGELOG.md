@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add Volume's download link to `patterns/template-taxonomu-volumes.php`
 ### Changed
+- `functions.php` has been refactored by separating grouped functionalities
+in separate files placed inside the `./inc/` directory.
 - Removed autofocus on search field when the menu is opened in `script.js`
 
 ## [0.4.0] 2025-07-13
