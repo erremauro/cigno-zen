@@ -75,7 +75,7 @@ body {
 
 body {
 	margin: 0;
-        padding: 0;
+    padding: 0;
 	background-color: #141414;
 	color: #98989b;
 	box-sizing: border-box;
@@ -83,6 +83,11 @@ body {
 	font-weight: 400;
 	font-size: 1.2em;
 	line-height: 1.68;
+}
+
+::selection {
+	background-color: #98989B;
+	color: #141414;
 }
 
 /* Heading */
@@ -581,3 +586,130 @@ input.wpcf7-form-control[type=submit] {
 	outline: none;
 }
 /* /CONTACT FORM */
+
+/* FORM CONTROLS */
+input.form-control[type="text"],
+input.form-control[type="email"],
+input.form-control[type="password"] {
+	box-sizing: border-box;
+	font-family: 'Libre Baskerville', serif;
+	width: 100%;
+	padding: 0.5em;
+	font-size: 16px;
+	background-color: transparent;
+	color: #98989B;
+	border: 1px solid #98989B;
+	border-radius: 0;
+	margin-bottom: 1em;
+}
+
+input.form-control[type="submit"] {
+	box-sizing: border-box;
+	font-family: 'Libre Baskerville', serif;
+	font-size: 16px;
+	padding: 0.5em;
+	border: 1px solid #98989B;
+	background: transparent;
+	color: #98989B;
+	border-radius: 0;
+	cursor: pointer;
+}
+
+input.form-control[type="text"]:focus,
+input.form-control[type="email"]:focus,
+input.form-control[type="password"]:focus {
+	outline: none;
+	border-color: #439cd6;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;   /* Allinea verticalmente la checkbox e il testo */
+  gap: 6px;              /* Spazio tra checkbox e testo */
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  appearance: none;           /* Rimuove lo stile nativo */
+  -webkit-appearance: none;   /* Per Safari/Chrome */
+  -moz-appearance: none;      /* Per Firefox */
+
+  width: 1.5em;
+  height: 1.5em;
+  border-radius: none;
+  border: 1px solid #98989B;
+  cursor: pointer;
+  background-color: transparent;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+  border-radius: none;
+  border: 1px solid #98989B;
+  position: relative;
+}
+
+.checkbox-label input[type="checkbox"]:checked::after {
+  content: "✓";
+  color: white;
+  font-size: 1em;
+  position: absolute;
+  left: 3px;
+  top: 0px;
+}
+
+/* LOGIN FORM */
+
+.login-form,
+.registration-form {
+	margin: 1em auto;
+	max-width: 480px;
+}
+
+.login-form .submit-control {
+	margin-top: 1em;
+	text-align: right;
+}
+
+.login-form .password-recovery-control {
+	text-align: center;
+	margin-top: 2em;
+	border-top: 1px solid #91919B;
+	border-bottom: 1px solid #91919B;
+	padding: 1em 0;
+}
+
+.registration-form .submit-control {
+	margin-top: 1em;
+}
+
+.error-message {
+	border: 1px solid #f00;
+	text-align: center;
+	padding: 1em;
+	background-color: #ff020212;
+	color: #f00;
+	margin-bottom: 2em;
+}
+
+a.no-color-link,
+a.no-color-link:hover,
+a.no-color-link:visited {
+	color: #98989B;
+}
+
+section h2.section-title {
+	font-size: 1.5em; /* circa 24px */
+    font-weight: 600; /* semi-bold */
+    line-height: 1.4;;
+}
+
+.card {
+	border: 1px solid #98989B;
+	padding: 1em;
+	margin: 1em 0;
+}
+
+.card span.author {
+	font-style: italic;
+}

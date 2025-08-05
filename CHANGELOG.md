@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- Add Volume's download link to `patterns/template-taxonomu-volumes.php`
+- Add User Account's registration, login and logout pages.
+- Add Volume's download link to `patterns/template-taxonomy-volumes.php`
 ### Changed
 - `functions.php` has been refactored by separating grouped functionalities
 in separate files placed inside the `./inc/` directory.
