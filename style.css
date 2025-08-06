@@ -715,6 +715,15 @@ section.home-section {
 	margin: 2em 0;
 }
 
+section.home-section#welcome .post-content p {
+	font-size: 1em;
+	text-indent: 0;
+}
+
+section.home-section .post-content p {
+	font-size: 1em;
+}
+
 section.home-section h2.section-title {
 	font-size: 1.5em; /* circa 24px */
     font-weight: 600; /* semi-bold */
