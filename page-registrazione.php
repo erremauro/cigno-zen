@@ -1,22 +1,9 @@
-<?php if ( is_user_logged_in() ) { wp_redirect(home_url()); } ?>
-
-<!DOCTYPE html>
-<html <?php language_attributes(); ?>>
-
-<?php get_template_part('parts/head'); ?>
-
-<body <?php body_class(); ?>>
-	<header class="site-header">
-		<!-- SITE LOGO -->
-		<div class="site-branding">
-			<a href="<?php echo esc_url(home_url('/')) ?>" rel="home" class="custom-logo-link">
-				    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/cigno-zen.svg'); ?>" title="<?php echo bloginfo('description') ?>" alt="<?php echo bloginfo('name'); ?>" width="150" height="auto">
-			</a>
-		</div>
-	</header>
-
 <?php
 
+// Fa un redirect se l'utente è già loggato
+if ( is_user_logged_in() ) { wp_redirect(home_url()); }
+
+// Elabora i dati di post dopo il reponse di registrazione
 if ($_POST && isset($_POST['theme_custom_register'])) {
 	$username = sanitize_user($_POST['username']);
 	$email    = sanitize_email($_POST['email']);
@@ -34,6 +21,10 @@ if ($_POST && isset($_POST['theme_custom_register'])) {
 		$errors->add('password', 'La password non può essere vuota.');
 	}
 }
+
+// Carica l'header nascondendo il menu
+get_template_part('parts/header', null, array( 'show_menu' => false ));
+
 ?>
 <div id="primary" class="content-area">
 	<main id="main" class="site-main">
