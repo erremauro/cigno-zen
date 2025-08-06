@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] 2025-08-06
 ### Added
 - Add Landing Page
 - Add User Account's registration, login and logout pages.
@@ -72,7 +72,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.4.0...HEAD
+[unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.5.0
 [0.4.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.4.0
 [0.3.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.3.0
 [0.2.1]: https://github.com/erremauro/cigno-zen/releases/tag/v0.2.1
