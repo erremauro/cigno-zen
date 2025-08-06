@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- `page-home.php` has been to `patterns/template-home-*`
 - `parts/header.php` now has the option to hide the menu
 - `page-login.php` and `page-registrazione.php` has been updated to use the new
 option in `parts-header.php` to make the pages more consistent.
