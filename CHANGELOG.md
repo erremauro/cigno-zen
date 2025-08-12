@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add an `author.php` page to show the author's biography.
 ### Changed
+- Restyle home-page's author list
 - Add a Welcome message to `page-home.php`
 - `page-home.php` has been to `patterns/template-home-*`
 - `parts/header.php` now has the option to hide the menu
