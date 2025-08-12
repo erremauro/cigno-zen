@@ -828,6 +828,10 @@ section.home-section#volumes .volume-card:hover {
 
 /* ========== HOME → AUTHORS GRID ========== */
 
+.author-header-container {
+	padding: 0 1em;
+}
+
 section.home-section#authors .authors-grid {
   display: grid;
   gap: 1em;
