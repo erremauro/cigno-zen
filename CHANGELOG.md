@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `page-login.php` and `page-registrazione.php` has been updated to use the new
 option in `parts-header.php` to make the pages more consistent.
 ### Fixed
+- Fix header menu button clickability
 - Site Logo fill color has been set to transparent.
 
 ## [0.5.0] 2025-08-06

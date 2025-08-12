@@ -243,6 +243,13 @@ header.site-header h1 a:visited {
 
 /* MENU */
 
+.site-menu-toggle {
+	margin: auto;
+	max-width: 4em;
+	user-select: none;
+  cursor: pointer;
+}
+
 .site-menu-toggle svg {
 	width: 64px;
 	height: auto;
@@ -252,6 +259,8 @@ header.site-header h1 a:visited {
        font-size: 0.6em;
        text-transform: uppercase;
        display: block;
+       user-select: none;
+       cursor: pointer;
 }
 
 .rotated {

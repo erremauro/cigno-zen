@@ -23,7 +23,7 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', function() {
-		var menuButton = document.getElementById('menu-button');
+		var menuButton = document.getElementById('site-menu-toggle');
 		// Assicurati di aggiungere l'event listener correttamente
 		menuButton.addEventListener('click', onShowSearchClick);
 	});
