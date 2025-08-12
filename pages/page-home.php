@@ -2,7 +2,7 @@
 <div class="post-content">
 <h2 class="wp-heading">Benvenuti</h2>
 
-<p>Questo sito ospita un'estesa collezione di traduzioni in italiano della tradizione buddhista zen e non solo.</p>
+<p>Questo sito ospita un'estesa collezione di traduzioni in italiano della tradizione buddhista Zen Sōtō e non solo.</p>
 </div>
 </section>
 
