@@ -6,12 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Add an `author.php` page to show the author's biography.
 ### Changed
 - Add a Welcome message to `page-home.php`
 - `page-home.php` has been to `patterns/template-home-*`
 - `parts/header.php` now has the option to hide the menu
 - `page-login.php` and `page-registrazione.php` has been updated to use the new
 option in `parts-header.php` to make the pages more consistent.
+### Fixed
+- Site Logo fill color has been set to transparent.
 
 ## [0.5.0] 2025-08-06
 ### Added

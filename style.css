@@ -71,12 +71,16 @@ html,
 body {
     height: 100%;
     width: 100%;
+    min-height: 100%;
 }
 
 body {
 	margin: 0;
     padding: 0;
-	background-color: #141414;
+	/*background: linear-gradient(0deg,rgba(20, 20, 20, 1) 0%, rgba(0, 0, 0, 1) 100%);*/
+  	background-repeat: no-repeat;
+  	background-size: 100% 100%;
+  	background-color: #141414;
 	color: #98989b;
 	box-sizing: border-box;
 	font-family: 'Libre Baskerville', serif;
@@ -772,3 +776,47 @@ section.home-section h2.section-title {
   background: linear-gradient(0deg,rgba(25, 25, 25, 1) 0%, rgba(20, 20, 20, 1) 50%);
 }
 
+/* AUTHOR */
+
+.author-hero {
+	margin: auto;
+	text-align: center;
+	margin: 1.5em 0 3em 0;
+}
+
+.author-name {
+	line-height: 2.0;
+}
+
+.author-portrait {
+	border-radius: 50%;
+}
+
+.author-bio h2 {
+	text-align: center;
+}
+
+.more-link-chevron {
+	transition: transform 0.25s ease;
+}
+
+.author-bio-teaser .more-link,
+.author-bio-full .more-link {
+	cursor: pointer;
+	user-select: none;
+	margin-top: 2em;
+	text-align: center;
+	font-size: 0.8em;
+	text-transform: uppercase;
+}
+
+.author-bio-inline {
+	text-align: justify;
+	hyphens: auto;
+	margin-top: 1em;
+}
+
+.author-hero {
+	border-bottom: 1px solid #98989B;
+	padding-bottom: 2em;
+}

@@ -32,10 +32,7 @@ $the_query = new WP_Query($args);
 <header class="archive-header">
   <h1 class="archive-title">
     <?php
-    if ( is_author() ) {
-        $author = get_queried_object();
-        echo esc_html( $author->display_name );
-    } elseif ( is_category() ) {
+    if ( is_category() ) {
         // Categoria
         single_cat_title( 'Categoria: ' );
     } elseif ( is_home() || is_archive() ) {
