@@ -1,7 +1,14 @@
 <section class="home-section" id="authors">
-	<h2 class="section-title">
-		<a class="no-color-link" href="/autori">Scopri gli Autori &rsaquo;</a>
-	</h2>
+	<?php
+		get_template_part(
+			'parts/cta-title-link',
+			null,
+			[
+				"url"	=> "/autori",
+				"title"	=> "Scopri gli Autori"
+			]
+		);
+	?>
 
 	<ul class="authors-grid">
 		<?php

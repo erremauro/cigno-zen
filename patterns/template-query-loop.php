@@ -66,7 +66,19 @@ $the_query = new WP_Query($args);
 			</header>
 			<div class="post-content">
 				<?php the_excerpt(); ?>
-				<p class="more-text"><a href="<?php the_permalink(); ?>" class="more-link">Continua ›</a></p>
+				<div class="more-text">
+					<?php
+						$url = get_permalink( get_the_ID() );
+						get_template_part(
+							'parts/cta-title-link',
+							null,
+							[
+								'url'	=> $url,
+								'title'	=> 'Continua'
+							]
+						);
+					?>
+				</div>
 			</div>
 		</article>
 	<?php endwhile; ?>

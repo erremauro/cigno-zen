@@ -9,14 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add an `author.php` page to show the author's biography.
 ### Changed
+- Add `parts/cta-title-link.php` for the home page section titles.
+- Swapped default `p.more-text` tag for articles to `cta-title-link` template-part.
 - Restyle home-page's author list
 - Add a Welcome message to `page-home.php`
-- `page-home.php` has been to `patterns/template-home-*`
+- `page-home.php` has been refactored to `patterns/template-home-*`
 - `parts/header.php` now has the option to hide the menu
 - `page-login.php` and `page-registrazione.php` has been updated to use the new
 option in `parts-header.php` to make the pages more consistent.
 ### Fixed
-- Fix header menu button clickability
+- Fix header menu button clickability and styles.
 - Site Logo fill color has been set to transparent.
 
 ## [0.5.0] 2025-08-06

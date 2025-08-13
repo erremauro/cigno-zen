@@ -1,7 +1,14 @@
 <section class="home-section" id="volumes">
-	<h2 class="section-title">
-		<a class="no-color-link" href="/volumi">Sfoglia i Volumi &rsaquo;</a>
-	</h2>
+	<?php
+		get_template_part(
+			'parts/cta-title-link',
+			null,
+			[
+				'url'	=> '/volumi',
+				'title'	=> 'Sfoglia i Volumi',
+			]
+		);
+	?>
 	<div class="volumes-grid">
 		<?php
 		global $wpdb;

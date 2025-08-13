@@ -1,6 +1,14 @@
 <section class="home-section" id="latest-articles">
-	<h2 class="section-title"><a class="no-color-link" href="/articoli" >Ultimi Articoli &rsaquo;</a></h2>
 	<?php
+		get_template_part(
+			'parts/cta-title-link',
+			null,
+			[
+				"url"	=> "/articoli",
+				"title"	=> "Ultimi Articoli"
+			]
+		);
+
 		// Recupera l'ultimo articolo pubblicato
 		$args = array(
 		    'posts_per_page' => 1, // solo 1 articolo

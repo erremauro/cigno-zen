@@ -1,7 +1,14 @@
 <section class="home-section" id="categories">
-	<h2 class="section-title">
-		<a class="no-color-link" href="/categorie">Esplora le Categorie &rsaquo;</a>
-	</h2>
+	<?php
+		get_template_part(
+			'parts/cta-title-link',
+			null,
+			[
+				"url"	=> "/categorie",
+				"title"	=> "Esplora le Categorie"
+			]
+		);
+	?>
 
 	<div class="categories-grid">
 	  <a href="/categoria/approfondimento" class="category-card">Approfondimenti</a>
