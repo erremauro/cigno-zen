@@ -385,8 +385,8 @@ article.post:first-child {
 	margin-right: 0;
 }
 
-.related-articles {
-	margin-top: 3em;
+.post-tags-list {
+	margin-bottom: 3em;
 }
 
 .related-articles ul.related-posts {
