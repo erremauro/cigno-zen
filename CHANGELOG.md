@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add a tags section to `template-single-post.php`
 - Add `inc/shortcodes.php` to `functions.php`
 - Add the `[sentence]` shortcode.
 - Add `[separator]` shortcode

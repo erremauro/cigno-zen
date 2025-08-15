@@ -486,6 +486,10 @@ p.pagination-control a.post-page-numbers:first-child {
 	border-bottom: 1px solid #98989B;
 }
 
+.post-pagination {
+	margin-bottom: 3em;
+}
+
 p.page-links {
 	text-indent: 0;
 	text-align: center;
@@ -1027,4 +1031,52 @@ section.home-section#authors .author-card--empty {
 p.separator {
 	text-indent: 0;
 	text-align: center;
+}
+
+/* TAGS */
+
+.post-tags-list {
+	margin: 0;
+	background-color: rgba(30,30,30.1);
+	padding: 1em;
+	border: 1px solid #98989B;
+}
+
+.post-tags-list .description {
+	font-size: .9em;
+	margin-bottom: 1em;
+}
+
+.post-tags-list h3 {
+	margin: 0;
+	margin-bottom: 1em;
+}
+.post-tags {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: inline;
+}
+
+.post-tags li {
+  display: inline-block;
+  border: 1px solid #98989B;
+  margin: .5rem;
+  padding: .5rem 1em;
+  border-radius: .25rem;
+  background-color: rgba(25,25,25,1);
+  user-select: none;
+}
+
+.post-tags li:hover {
+	border-color: #439cd6;
+	cursor: pointer;
+}
+
+.post-tags li:first-child {
+	margin-left: 0;
+}
+
+.post-tags li:last-child {
+	margin-right: 0;
 }
