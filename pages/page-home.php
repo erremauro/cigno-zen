@@ -13,7 +13,7 @@
 
 <section class="home-section" id="gift-of-dhamma">
 	<div style="text-align: center; margin: 4em 0 2em 0">
-		<?php get_template_part('parts/separator'); ?>
+		<?php echo do_shortcode( '[separator]' ) ?>
 	</div>
 	<div class="post-content">
 		<h2 class="wp-heading has-text-align-center">Il Dono del Dhamma</h2>

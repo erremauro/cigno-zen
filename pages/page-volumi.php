@@ -39,7 +39,7 @@
 				<h4 class="volume-title"><a href="<?php echo esc_url( $term_link ); ?>">
 					<?php echo esc_html( $term->name ); ?>
 				</a></h4>
-				<?php get_template_part( 'parts/separator') ?>
+				<?php echo do_shortcode( '[separator]' ) ?>
 			</li>
 			<?php
 		endforeach;

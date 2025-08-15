@@ -1,1 +1,0 @@
-<div class="separator">*&nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;*</div>

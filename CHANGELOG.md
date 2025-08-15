@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the author's biography "read more" label to "LEGGI TUTTO"
 ### Fixed
 - Fix the author's biography read more chevron button animation
+### Removed
+- `parts/separator.php` has been replaced by the `[separator]` shortcode.
 
 ## [0.6.0] 2025-08-13
 ### Added
