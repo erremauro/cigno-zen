@@ -53,7 +53,7 @@
 			if (chevron) {
 				chevron.classList.toggle("rotated");
 			}
-			if (label) label.textContent = expanded ? 'RIDUCI' : 'CONTINUA';
+			if (label) label.textContent = expanded ? 'CHIUDI' : 'LEGGI TUTTO';
 		});
 
 		if (expanded) {

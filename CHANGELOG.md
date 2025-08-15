@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add `inc/shortcodes.php` to `functions.php`
 - Add the `[sentence]` shortcode.
+### Changed
+- Update the author's biography "read more" label to "LEGGI TUTTO"
+### Fixed
+- Fix the author's biography read more chevron button animation
 
 ## [0.6.0] 2025-08-13
 ### Added

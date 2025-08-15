@@ -258,21 +258,25 @@ header.site-header h1 a:visited {
 	height: auto;
 }
 
+.more-link img.more-link-chevron,
 .site-menu-toggle img {
 	transition: transform 0.3s ease;
 }
 
 /* Stato base hover (menu chiuso) */
+.more-link:hover img.more-link-chevron,
 .site-menu-toggle:hover img {
 	transform: translateY(3px);
 }
 
 /* Stato ruotato (menu aperto) */
+.more-link img.more-link-chevron.rotated,
 .site-menu-toggle img.rotated {
 	transform: translateY(6px) rotate(180deg);
 }
 
 /* Stato hover quando ruotato (menu aperto) */
+.more-link:hover img.more-link-chevron.rotated,
 .site-menu-toggle:hover img.rotated {
 	transform: rotate(180deg) translateY(0px);
 }
@@ -992,6 +996,10 @@ section.home-section#authors .author-card--empty {
   section.home-section#authors .author-card-name {
     font-size: 1.15em;
   }
+}
+
+.author-bio-full p {
+	margin-top: 1em;
 }
 
 /* SHORTCODES */

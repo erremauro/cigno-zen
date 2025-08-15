@@ -42,7 +42,7 @@ $chevron_url   = esc_url( get_template_directory_uri() . '/assets/images/chevron
 						<div class="more-link js-bio-toggle" role="button" tabindex="0"
 						aria-controls="author-full-bio" aria-expanded="false"
 						data-align="label-first">
-						<div class="more-link-label">CONTINUA</div>
+						<div class="more-link-label">LEGGI TUTTO</div>
 						<img class="more-link-chevron" src="<?php echo $chevron_url; ?>" width="32" height="auto" alt="Espandi/Riduci biografia">
 					</div>
 				<?php endif; ?>
@@ -57,7 +57,7 @@ $chevron_url   = esc_url( get_template_directory_uri() . '/assets/images/chevron
 					aria-controls="author-full-bio" aria-expanded="false"
 					data-align="chevron-first">
 					<img class="more-link-chevron" src="<?php echo $chevron_url; ?>" width="32" height="auto" alt="Espandi/Riduci biografia">
-					<div class="more-link-label">CONTINUA</div>
+					<div class="more-link-label">LEGGI TUTTO</div>
 				</div>
 			</div>
 		<?php endif; ?>
