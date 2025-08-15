@@ -12,9 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the `[sentence]` shortcode.
 - Add `[separator]` shortcode
 ### Changed
+- Improve the related articles appearance.
 - Change category "poesie" to "poemi" in `patterns/template-home-categories.php`
 - Update the author's biography "read more" label to "LEGGI TUTTO"
 ### Fixed
+- Fix an issue with the rendering of post-pagination in the `custom_post_pagination` function in `inc/posts.php`
 - Fix the author's biography read more chevron button animation
 ### Removed
 - `parts/separator.php` has been replaced by the `[separator]` shortcode.

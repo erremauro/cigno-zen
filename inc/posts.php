@@ -20,7 +20,9 @@ function the_subtitle() {
 }
 
 function custom_post_pagination() {
-	global $page, $numpages;
+	global $multipage, $page, $numpages;
+
+	if ( empty($multipage) ) return;
 
 	// Inizia l'output del contenitore
 	echo '<div class="post-pagination-control">';
