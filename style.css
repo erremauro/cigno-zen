@@ -994,3 +994,23 @@ section.home-section#authors .author-card--empty {
   }
 }
 
+/* SHORTCODES */
+
+.sentence-box .source {
+	font-weight: 600;
+}
+
+.sentence-box .source .order {
+	margin-right: .25em;
+}
+
+.sentence-box .reading {
+	font-style: italic;
+}
+
+.sentence-box .reading,
+.sentence-box .translation {
+	border-left: 1px solid #98989B;
+	margin-left: 1em;
+	padding-left: 1em;
+}
