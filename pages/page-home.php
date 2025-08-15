@@ -11,6 +11,8 @@
 <?php get_template_part('patterns/template-home-volumes'); ?>
 <?php get_template_part('patterns/template-home-categories'); ?>
 
+<div class="random-article">Non sai da dove partire? <a href="/?random=1">Lasciati ispirare</a> da uno dei molti articoli presenti.</div>
+
 <section class="home-section" id="gift-of-dhamma">
 	<div style="text-align: center; margin: 4em 0 2em 0">
 		<?php echo do_shortcode( '[separator]' ) ?>

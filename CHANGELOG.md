@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add a `template_redirect` action to open random articles from the homepage.
 - Add a tags section to `template-single-post.php`
 - Add `inc/shortcodes.php` to `functions.php`
 - Add the `[sentence]` shortcode.

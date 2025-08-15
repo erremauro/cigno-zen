@@ -922,6 +922,14 @@ section.home-section#volumes .volume-card:hover {
   box-shadow: 0 2px 10px rgba(0,0,0,0.25);
 }
 
+div.random-article {
+	text-align: center;
+	border-top: 1px solid #98989B;
+	border-bottom: 1px solid #98989B;
+	padding: .5em 0;
+	margin-top: 3em;
+}
+
 /* AUTHOR */
 
 .author-hero {

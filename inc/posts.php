@@ -52,3 +52,22 @@ function custom_post_pagination() {
 	// Chiude l'output del contenitore
 	echo '</p></div>';
 }
+
+// Reindirizza a un post casuale se presente ?random=1
+add_action('template_redirect', function () {
+    if ( isset($_GET['random']) ) {
+        $rand = get_posts([
+            'posts_per_page' => 1,
+            'post_status'    => 'publish',
+            'orderby'        => 'rand',
+            'ignore_sticky_posts' => true,
+        ]);
+        if ( $rand ) {
+            wp_safe_redirect( get_permalink($rand[0]), 302 );
+            exit;
+        }
+        // Fallback: se non ci sono post pubblici
+        wp_safe_redirect( home_url('/') );
+        exit;
+    }
+});
