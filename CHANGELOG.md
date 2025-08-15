@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `inc/shortcodes.php` to `functions.php`
 - Add the `[sentence]` shortcode.
 ### Changed
+- Change category "poesie" to "poemi" in `patterns/template-home-categories.php`
 - Update the author's biography "read more" label to "LEGGI TUTTO"
 ### Fixed
 - Fix the author's biography read more chevron button animation
