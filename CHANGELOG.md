@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add `inc/shortcodes.php` to `functions.php`
 - Add the `[sentence]` shortcode.
+- Add `[separator]` shortcode
 ### Changed
 - Change category "poesie" to "poemi" in `patterns/template-home-categories.php`
 - Update the author's biography "read more" label to "LEGGI TUTTO"
