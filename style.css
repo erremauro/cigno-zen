@@ -1061,7 +1061,7 @@ div.random-article {
 	hyphens: auto;
 	word-break: break-word;
 	line-height: 1.68;
-	font-size: 1.2em;
+	font-size: 1em;
 	padding: 0.5em 0;
 }
 
@@ -1072,6 +1072,19 @@ div.random-article {
 .tag-readings {
 	margin-bottom: 1em;
 	font-style: italic;
+}
+
+.tag-header .definition-source {
+	margin: auto;
+}
+
+.tag-header .definition-source p {
+	text-align: center;
+	font-size: .8em;
+	text-indent: 0;
+	line-height: 1;
+	font-style: italic;
+	color: rgba(100,100,100,1);
 }
 
 /* ========== HOME → AUTHORS GRID ========== */
