@@ -1070,6 +1070,7 @@ div.random-article {
 }
 
 .tag-readings {
+	font-size: 0.95em;
 	margin-bottom: 1em;
 	font-style: italic;
 }
