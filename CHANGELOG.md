@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update `template/tempalte-query-loop` to show "Articoli Correlati" as a title for "tags" query loops.
 - Change `.tag-readings` font style to italics
 ### Fixed
+- Fix `.author-bio-teaser .more-link-toggle` margin
 - Fix `.tag-title` appearance
 - Fix `.post-tags` style and link clickability
 

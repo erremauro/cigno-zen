@@ -1073,6 +1073,7 @@ div.random-article {
 	font-style: italic;
 }
 
+.author-bio-teaser .more-link-toggle,
 .tag-definition .more-link-toggle {
 	margin-top: 2em;
 	margin-bottom: 2em;
