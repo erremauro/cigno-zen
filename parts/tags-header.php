@@ -14,7 +14,6 @@ $wp_description   = term_description( $term->term_id, $term->taxonomy );
 $panel_id = 'tag-full-description-' . $term->term_id;
 ?>
 
-<div id="tag-hero" class="tag-header-container">
 <header class="tag-header">
 	<h1 class="tag-title"><?php echo esc_html( $tag_name ); ?></h1>
 
@@ -40,7 +39,7 @@ $panel_id = 'tag-full-description-' . $term->term_id;
 				<?php
 				// Toggle (MOSTRA TUTTO / CHIUDI)
 				if ( function_exists( 'cz_render_more_link_toggle' ) ) {
-					cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle', 'tag-hero' );
+					cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle', 'term' );
 				}
 				?>
 				<div id="<?php echo esc_attr( $panel_id ); ?>" class="tag-full-description" hidden>
@@ -49,7 +48,7 @@ $panel_id = 'tag-full-description-' . $term->term_id;
 					<?php
 					// Bottom toggle mirrored (optional). Reuse the same helper for consistency.
 					if ( function_exists( 'cz_render_more_link_toggle' ) ) {
-						cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle-bottom', 'tag-hero' );
+						cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle-bottom', 'term' );
 					}
 					?>
 				</div>
@@ -57,7 +56,6 @@ $panel_id = 'tag-full-description-' . $term->term_id;
 		</div>
 	<?php endif; ?>
 </header>
-</div>
 <?php
 if ( function_exists( 'cz_print_tag_jsonld_for_archive' ) ) {
   cz_print_tag_jsonld_for_archive();

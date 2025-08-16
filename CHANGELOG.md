@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update the `parts/tag-header.php` definition appearance
+- Update `template/tempalte-query-loop` to show "Articoli Correlati" as a title for "tags" query loops.
 - Change `.tag-readings` font style to italics
 ### Fixed
-- Fix `.tag-title` margin bottom to 1em
+- Fix `.tag-title` appearance
+- Fix `.post-tags` style and link clickability
 
 ## [0.7.0] 2025-08-16
 ### Added

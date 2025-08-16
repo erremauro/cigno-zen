@@ -36,6 +36,8 @@ $the_query = new WP_Query( $args );
     if ( is_category() ) {
         // Categoria
         single_cat_title( 'Categoria: ' );
+    } elseif ( is_tag() ) {
+    	echo 'Articoli Correlati';
     } elseif ( is_home() || is_archive() ) {
         // Elenco generale articoli
         echo 'Tutti gli Articoli';

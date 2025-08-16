@@ -2,6 +2,7 @@
 
 <div id="primary" class="content-area">
 	<div class="tags-header-container">
+		<h3 id="term" class="tag-header-title">Dal Dizionario</h3>
 		<?php get_template_part('parts/tags-header'); ?>
 	</div>
 

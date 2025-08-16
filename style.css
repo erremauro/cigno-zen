@@ -269,6 +269,14 @@ header.site-header h1 a:visited {
 	transform: translateY(3px);
 }
 
+.more-link-toggle .more-link-label {
+	transition: color 0.3s ease;
+}
+
+.more-link-toggle:hover .more-link-label {
+	color: #439cd6;
+}
+
 .more-link-toggle .more-link-button.rotated {
 	transform: translateY(6px) rotate(180deg);
 }
@@ -396,24 +404,28 @@ article.post:first-child {
 
 .post-tags li {
   display: inline-block;
-  border: 1px solid #98989B;
   margin: .5rem;
+}
+
+.post-tags a {
+  border: 1px solid #98989B;
   padding: .5rem 1em;
   border-radius: .25rem;
   background-color: rgba(25,25,25,1);
   user-select: none;
+  display: block;
 }
 
-.post-tags li:hover {
+.post-tags a:hover {
 	border-color: #439cd6;
 	cursor: pointer;
 }
 
-.post-tags li:first-child {
+.post-tags a:first-child {
 	margin-left: 0;
 }
 
-.post-tags li:last-child {
+.post-tags a:last-child {
 	margin-right: 0;
 }
 
@@ -1005,20 +1017,35 @@ div.random-article {
 }
 
 /* ========== TAGS TEMPLATE =============== */
-.tag-header-container {
+.tags-header-container {
 	padding: 0 1em;
+	display: block;
+	text-align: center;
+}
+
+.tags-header-container .tag-header-title {
+	font-size: 1em;
+	color: #686868;
+	font-style: italic;
 }
 
 .tag-header {
 	margin: auto;
 	text-align: center;
 	margin: 1.5em 0 3em 0;
-	border-bottom: 1px solid #98989B;
+	padding: 1em;
+	border-radius: .25em;
+	border: 1px solid #989898;
+	background-color: rgba(30,30,30,1);
 }
 
-.tag-header .tag-title {
+.tag-header h1.tag-title {
 	line-height: 2;
 	margin-bottom: 1em;
+	font-size: min(2em, 20vw);
+	word-break: break-word;
+	hyphens: auto;
+	color: #aaa;;
 }
 
 .tag-definition p {
