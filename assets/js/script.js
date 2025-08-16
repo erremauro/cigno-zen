@@ -29,64 +29,99 @@
 	});
 })(document);
 
-/*
- * Collapsible biography, shared state across both toggles.
- * - Both .js-bio-toggle controls mirror the same expanded/collapsed state.
- * - Chevron rotates; label swaps CONTINUA/RIDUCI.
- * - On collapse, scroll smoothly back to #author-title.
+/* Generic content toggle with optional smooth scroll on collapse.
+ * - Works on any ".js-toggle" wrapper.
+ * - Uses data-toggle-target (CSS selector) or aria-controls to find the panel.
+ * - Swaps labels: top (collapsed) <-> bottom (expanded).
+ * - Toggles .rotated on .more-link-button (the chevron).
+ * - Optional data-scroll-target="#id" → scrollIntoView({behavior:'smooth'}) when collapsing.
+ * - Keyboard accessible (Enter/Space).
  */
-(function() {
-	var panel   = document.getElementById('author-full-bio');
-	var title   = document.getElementById('author-hero');
-	var toggles = Array.prototype.slice.call(document.querySelectorAll('.js-bio-toggle'));
+(function () {
+	function $(sel, ctx){ return (ctx || document).querySelector(sel); }
+	function qsa(sel, ctx){ return Array.prototype.slice.call((ctx || document).querySelectorAll(sel)); }
 
-	if (!panel || toggles.length === 0) return;
+	function resolveTarget(el) {
+		var sel = el.getAttribute('data-toggle-target') || ('#' + (el.getAttribute('aria-controls') || '').trim());
+		if (!sel) return null;
+		try { return document.querySelector(sel); } catch(_) { return null; }
+	}
 
-	var expanded = false; // current state
+	function getScrollTarget(wrapper){
+		var sel = (wrapper.getAttribute('data-scroll-target') || '').trim();
+		if (!sel) return null;
+		try { return document.querySelector(sel); } catch(_) { return null; }
+	}
 
-	function applyState() {
-		// ARIA + visibility
-		toggles.forEach(function(t){
-			t.setAttribute('aria-expanded', String(expanded));
-			var chevron = t.querySelector('.more-link-chevron');
-			var label   = t.querySelector('.more-link-label');
-			if (chevron) {
-				chevron.classList.toggle("rotated");
-			}
-			if (label) label.textContent = expanded ? 'CHIUDI' : 'LEGGI TUTTO';
-		});
+	function setState(wrapper, expanded) {
+		var chevron = wrapper.querySelector('.more-link-button');
+		var topLbl  = wrapper.querySelector('.more-link-lable-top');
+		var botLbl  = wrapper.querySelector('.more-link-lable-bottom');
 
-		if (expanded) {
-			panel.removeAttribute('hidden');
-		} else {
-			panel.setAttribute('hidden', '');
-			// Smoothly return user to the author title to prevent being stranded mid-page
-			if (title && 'scrollIntoView' in title) {
-				title.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			}
+		wrapper.setAttribute('aria-expanded', String(expanded));
+		if (chevron) chevron.classList.toggle('rotated', expanded);
+		if (topLbl)  topLbl.classList.toggle('hidden', expanded);
+		if (botLbl)  botLbl.classList.toggle('hidden', !expanded);
+
+		var target  = resolveTarget(wrapper);
+		if (target) {
+			if (expanded) target.removeAttribute('hidden');
+			else target.setAttribute('hidden', '');
 		}
 	}
 
-	function toggleState(e) {
-		if (e) e.preventDefault();
-		expanded = !expanded;
-		applyState();
+	function smoothScrollTo(el){
+		if (!el || !('scrollIntoView' in el)) return;
+		try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch(_) { el.scrollIntoView(true); }
 	}
 
-	// Click + keyboard accessibility
-	toggles.forEach(function(t){
-		t.addEventListener('click', toggleState);
-		t.addEventListener('keydown', function(e){
-			if (e.key === 'Enter' || e.key === ' ') {
-				e.preventDefault();
-				toggleState();
+	function toggle(e) {
+		if (e) e.preventDefault();
+		var w = e.currentTarget;
+		var newExpanded = !(w.getAttribute('aria-expanded') === 'true');
+
+		// Apply state to clicked wrapper first
+		setState(w, newExpanded);
+
+		// Mirror all wrappers controlling the same target (without causing duplicate scrolls)
+		var targetSel = w.getAttribute('data-toggle-target') || ('#' + (w.getAttribute('aria-controls') || '').trim());
+		if (targetSel) {
+			qsa('.js-toggle').forEach(function(other){
+				if (other === w) return;
+				var sel = other.getAttribute('data-toggle-target') || ('#' + (other.getAttribute('aria-controls') || '').trim());
+				if (sel === targetSel) setState(other, newExpanded);
+			});
+		}
+
+		// If we just collapsed, and a scroll target is defined, scroll once
+		if (!newExpanded) {
+			var scrollEl = getScrollTarget(w);
+			if (!scrollEl && targetSel) {
+				// try to find any sibling toggle with a scroll target for the same panel
+				var peer = qsa('.js-toggle').find(function(other){
+					if (other === w) return false;
+					var sel = other.getAttribute('data-toggle-target') || ('#' + (other.getAttribute('aria-controls') || '').trim());
+					return sel === targetSel && other.hasAttribute('data-scroll-target');
+				});
+				if (peer) scrollEl = getScrollTarget(peer);
 			}
+			if (scrollEl) smoothScrollTo(scrollEl);
+		}
+	}
+
+	function onKey(e) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			toggle(e);
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function(){
+		qsa('.js-toggle').forEach(function(w){
+			// Initialize UI to collapsed
+			setState(w, false);
+			w.addEventListener('click', toggle);
+			w.addEventListener('keydown', onKey);
 		});
 	});
-
-	// Auto-expand if landing on #bio
-	if (location.hash === '#bio') {
-		expanded = true;
-		applyState();
-	}
 })();

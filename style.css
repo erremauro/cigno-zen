@@ -241,6 +241,42 @@ header.site-header h1 a:visited {
 	color: #98989b;
 }
 
+/* MORE LINK TOGGLE */
+.more-link-toggle {
+	margin: auto;
+	max-width: 12em;
+	user-select: none;
+	cursor: pointer;
+	text-align: center;
+}
+
+.more-link-toggle .more-link-label {
+	font-size: 0.6em;
+	text-transform: uppercase;
+   	display: block;
+   	user-select: none;
+   	cursor: pointer;
+   	line-height: 0;
+   	margin: 1em 0;
+}
+
+.more-link-toggle .more-link-button {
+	cursor: pointer;
+	transition: transform 0.3s ease;
+}
+
+.more-link-toggle:hover .more-link-button {
+	transform: translateY(3px);
+}
+
+.more-link-toggle .more-link-button.rotated {
+	transform: translateY(6px) rotate(180deg);
+}
+
+.more-link-toggle:hover .more-link-button.rotated {
+	transform: rotate(180deg) translateY(0px);
+}
+
 /* MENU */
 
 .site-menu-toggle {
@@ -258,25 +294,21 @@ header.site-header h1 a:visited {
 	height: auto;
 }
 
-.more-link img.more-link-chevron,
 .site-menu-toggle img {
 	transition: transform 0.3s ease;
 }
 
 /* Stato base hover (menu chiuso) */
-.more-link:hover img.more-link-chevron,
 .site-menu-toggle:hover img {
 	transform: translateY(3px);
 }
 
 /* Stato ruotato (menu aperto) */
-.more-link img.more-link-chevron.rotated,
 .site-menu-toggle img.rotated {
 	transform: translateY(6px) rotate(180deg);
 }
 
 /* Stato hover quando ruotato (menu aperto) */
-.more-link:hover img.more-link-chevron.rotated,
 .site-menu-toggle:hover img.rotated {
 	transform: rotate(180deg) translateY(0px);
 }
@@ -292,7 +324,7 @@ header.site-header h1 a:visited {
 }
 
 .hidden {
-      display: none !important;
+     display: none !important;
 }
 
 menu.menu-bar {
@@ -936,6 +968,8 @@ div.random-article {
 	margin: auto;
 	text-align: center;
 	margin: 1.5em 0 3em 0;
+	border-bottom: 1px solid #98989B;
+	padding-bottom: 2em;
 }
 
 .author-name {
@@ -970,9 +1004,49 @@ div.random-article {
 	margin-top: 1em;
 }
 
-.author-hero {
+/* ========== TAGS TEMPLATE =============== */
+.tag-header-container {
+	padding: 0 1em;
+}
+
+.tag-header {
+	margin: auto;
+	text-align: center;
+	margin: 1.5em 0 3em 0;
 	border-bottom: 1px solid #98989B;
-	padding-bottom: 2em;
+}
+
+.tag-header .tag-title {
+	line-height: 2;
+}
+
+.tag-definition p {
+	text-align: justify;
+	hyphens: auto;
+	word-break: break-word;
+}
+
+.tag-definition p {
+	text-indent: 2em;
+	text-align: justify;
+	hyphens: auto;
+	word-break: break-word;
+	line-height: 1.68;
+	font-size: 1.2em;
+	padding: 0.5em 0;
+}
+
+.tag-short-definition p {
+	text-indent: 0;
+}
+
+.tag-readings {
+	margin-bottom: 1em;
+}
+
+.tag-definition .more-link-toggle {
+	margin-top: 2em;
+	margin-bottom: 2em;
 }
 
 /* ========== HOME → AUTHORS GRID ========== */

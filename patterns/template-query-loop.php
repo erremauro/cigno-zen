@@ -1,32 +1,33 @@
 <?php
-// Ottieni il numero della pagina corrente
-$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+$paged = max( 1, (int) get_query_var('paged') );
 
-// Ottieni l'ID dell'autore corrente (se presente)
-$author_id = get_query_var('author');
-
-// Ottieni lo slug della categoria corrente (se siamo in una categoria)
-$category_slug = get_query_var('category_name');
+// Context correnti (preferisci ID quando possibile)
+$author_id     = is_author()   ? get_queried_object_id() : (int) get_query_var('author');
+$category_id   = is_category() ? get_queried_object_id() : 0;                 // uso ID
+$tag_slug      = is_tag()      ? get_query_var('tag')     : get_query_var('tag');
 
 // Argomenti per la query
-$args = array(
-    'post_type'      => 'post',
-    'posts_per_page' => 5,
-    'paged'          => $paged,
-);
+$args = [
+    'post_type'           => 'post',
+    'posts_per_page'      => 5,
+    'paged'               => $paged,
+    'ignore_sticky_posts' => true,
+];
 
-// Se c'è un autore, filtra per autore
-if ($author_id) {
+// Filtri condizionali
+if ( $author_id ) {
     $args['author'] = $author_id;
 }
-
-// Se c'è una categoria, filtra per categoria
-if ($category_slug) {
-    $args['category_name'] = $category_slug;
+if ( $category_id ) {
+    $args['cat'] = $category_id; // preferibile a category_name quando sei già in archivio categoria
+} elseif ( $cat_slug = get_query_var('category_name') ) {
+    $args['category_name'] = $cat_slug;
+}
+if ( $tag_slug ) {
+    $args['tag'] = $tag_slug; // slug singolo; per più tag usa tag_slug__in
 }
 
-// Esegui la query
-$the_query = new WP_Query($args);
+$the_query = new WP_Query( $args );
 ?>
 
 <header class="archive-header">

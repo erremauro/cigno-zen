@@ -5,14 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.7.0] 2025-08-16
 ### Added
+- Add a `tag.php` template to show tag definitions and related articles.
+- Add custom functions (`inc/tags.php`) to render JSON-LD data for tags.
 - Add a `template_redirect` action to open random articles from the homepage.
 - Add a tags section to `template-single-post.php`
 - Add `inc/shortcodes.php` to `functions.php`
 - Add the `[sentence]` shortcode.
 - Add `[separator]` shortcode
 ### Changed
+- Refactor the `more-link-button` as a function in `inc/more-link.php` and updates `assets/scripts.js` accordingly.
 - Improve the related articles appearance.
 - Change category "poesie" to "poemi" in `patterns/template-home-categories.php`
 - Update the author's biography "read more" label to "LEGGI TUTTO"
@@ -105,7 +108,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.7.0...HEAD
+[0.7.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.7.0
 [0.6.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.6.0
 [0.5.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.5.0
 [0.4.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.4.0
