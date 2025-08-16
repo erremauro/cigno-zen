@@ -101,7 +101,7 @@ $the_query = new WP_Query( $args );
 	<?php endif; ?>
 
 <?php else : ?>
-	<p><em><?php _e('Nessun articolo trovato.'); ?></em></p>
+	<p class="no-article-found"><em><?php _e('Nessun articolo trovato.'); ?></em></p>
 <?php endif; ?>
 
 <?php

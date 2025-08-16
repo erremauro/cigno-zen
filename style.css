@@ -241,6 +241,10 @@ header.site-header h1 a:visited {
 	color: #98989b;
 }
 
+p.no-article-found {
+	text-align: center;
+}
+
 /* MORE LINK TOGGLE */
 .more-link-toggle {
 	margin: auto;
@@ -283,6 +287,17 @@ header.site-header h1 a:visited {
 
 .more-link-toggle:hover .more-link-button.rotated {
 	transform: rotate(180deg) translateY(0px);
+}
+
+.tag-definition .more-link-toggle {
+	margin-top: 2em;
+	margin-bottom: 2em;
+}
+
+.author-bio-full,
+.author-bio-teaser .more-link-toggle,
+.author-bio-full .more-link-toggle {
+	margin-top: 2em;
 }
 
 /* MENU */
@@ -996,20 +1011,6 @@ div.random-article {
 	text-align: center;
 }
 
-.more-link-chevron {
-	transition: transform 0.25s ease;
-}
-
-.author-bio-teaser .more-link,
-.author-bio-full .more-link {
-	cursor: pointer;
-	user-select: none;
-	margin-top: 2em;
-	text-align: center;
-	font-size: 0.8em;
-	text-transform: uppercase;
-}
-
 .author-bio-inline {
 	text-align: justify;
 	hyphens: auto;
@@ -1071,12 +1072,6 @@ div.random-article {
 .tag-readings {
 	margin-bottom: 1em;
 	font-style: italic;
-}
-
-.author-bio-teaser .more-link-toggle,
-.tag-definition .more-link-toggle {
-	margin-top: 2em;
-	margin-bottom: 2em;
 }
 
 /* ========== HOME → AUTHORS GRID ========== */
