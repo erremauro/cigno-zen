@@ -7,10 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update tag readings appearance to collapsable pills.
 - Add a `.no-article-found` style to center the message.
 - Update the `parts/tag-header.php` definition appearance
 - Update `template/tempalte-query-loop` to show "Articoli Correlati" as a title for "tags" query loops.
-- Change `.tag-readings` font style to italics
 ### Fixed
 - Fix author's bio menu toggle appearance
 - Fix `.tag-title` appearance

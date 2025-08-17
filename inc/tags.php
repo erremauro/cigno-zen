@@ -132,3 +132,96 @@ function cz_print_article_jsonld_with_tags( WP_Post $post ): void {
 
 	echo '<script type="application/ld+json">' . wp_json_encode( $graph, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>';
 }
+
+/**
+ * Parse a "readings" string in the form:
+ *   "Lingua: Lettura; Lingua: Lettura; ..."
+ * into an array of [ 'name' => <Lingua>, 'value' => <Lettura> ].
+ *
+ * Robusto su spazi, punteggiatura multibyte e doppio spazio dopo il ';'.
+ */
+function cz_parse_readings_string( $raw ): array {
+	if ( ! is_string( $raw ) || $raw === '' ) {
+		return [];
+	}
+
+	// 1) Split in voci per ';' (supporta anche '；' fullwidth). Evita voci vuote.
+	$parts = preg_split( '/[;；]+/u', $raw, -1, PREG_SPLIT_NO_EMPTY );
+	$out   = [];
+
+	foreach ( $parts as $part ) {
+		$part = trim( $part );
+		if ( $part === '' ) {
+			continue;
+		}
+
+		// 2) Split solo sulla PRIMA ':' (supporta anche '：' fullwidth).
+		//    Esempio: "Tibetano: གཉིས་མེད་ (gnyis med)"
+		if ( preg_match( '/^(.+?)[：:]\s*(.+)$/u', $part, $m ) ) {
+			$name  = trim( $m[1] );
+			$value = trim( $m[2] );
+			if ( $name !== '' && $value !== '' ) {
+				$out[] = [ 'name' => $name, 'value' => $value ];
+			}
+		}
+	}
+
+	return $out;
+}
+
+/**
+ * Render the "Pronunce" block with a clickable <h3> toggle and a hidden container.
+ *
+ * @param string $raw_readings      The raw readings string ("Lingua: Lettura; ...").
+ * @param string $block_slug        Optional unique suffix for IDs (default 'term').
+ * @param string $title             Optional title for the block (default 'Pronunce').
+ */
+function cz_render_readings_block( string $raw_readings, string $block_slug = 'term', string $title = 'Pronunce' ): void {
+	$items = cz_parse_readings_string( $raw_readings );
+	if ( empty( $items ) ) {
+		return;
+	}
+
+	// Build unique IDs (you can pass a custom $block_slug per-term)
+	$toggle_id    = 'readings-' . sanitize_html_class( $block_slug ) . '-toggle';
+	$container_id = 'readings-' . sanitize_html_class( $block_slug ) . '-container';
+	?>
+	<div class="readings-block">
+		<h3 id="<?php echo esc_attr( $toggle_id ); ?>"
+			class="readings-title"
+			role="button"
+			tabindex="0"
+			aria-controls="<?php echo esc_attr( $container_id ); ?>"
+			aria-expanded="false">
+			<?php echo esc_html( $title ); ?>
+		</h3>
+
+		<div id="<?php echo esc_attr( $container_id ); ?>" class="readings-container hidden">
+			<?php foreach ( $items as $it ) : ?>
+				<div class="reading-pill">
+					<div class="reading-name"><?php echo esc_html( $it['name'] ); ?></div>
+					<div class="reading-content"><?php echo esc_html( $it['value'] ); ?></div>
+				</div>
+			<?php endforeach; ?>
+		</div>
+	</div>
+	<script>
+	// Lightweight inline toggle (usa solo per questo blocco).
+	// Se preferisci, spostalo nel tuo script principale e aggancialo via delegation.
+	(function(){
+		var t = document.getElementById('<?php echo esc_js( $toggle_id ); ?>');
+		var c = document.getElementById('<?php echo esc_js( $container_id ); ?>');
+		if (!t || !c) return;
+		function setState(expanded){
+			t.setAttribute('aria-expanded', String(expanded));
+			c.classList.toggle('hidden', !expanded);
+		}
+		function onToggle(e){ if (e) e.preventDefault(); setState(t.getAttribute('aria-expanded') !== 'true'); }
+		t.addEventListener('click', onToggle);
+		t.addEventListener('keydown', function(e){
+			if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(); }
+		});
+	})();
+	</script>
+	<?php
+}

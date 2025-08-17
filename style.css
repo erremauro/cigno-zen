@@ -1088,6 +1088,37 @@ div.random-article {
 	color: rgba(100,100,100,1);
 }
 
+.readings-block { margin: 1rem 0; }
+.readings-title {
+	cursor: pointer;
+	user-select: none;
+	font-size: 0.8em;
+	font-style: italic;
+	color: #439cd6;
+}
+
+.readings-container {
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.readings-container.hidden {
+	display: none;
+}
+.reading-pill {
+	display: inline-flex;
+	flex-direction: column;
+	gap: .25rem;
+	border-radius: 25em;
+	background-color: #262626;
+	border: 1px solid #363636;
+	padding: .5rem .85rem;
+	margin: .5em;
+	min-width: 160px;
+}
+.reading-name { font-weight: 600; font-size: .9rem; font-style: italic;}
+.reading-content { font-size: .9rem; }
+
 /* ========== HOME → AUTHORS GRID ========== */
 
 .author-header-container {
