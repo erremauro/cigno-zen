@@ -1,7 +1,10 @@
 <?php
 
 // Fa un reidrect se l'utente è già loggato
-if ( is_user_logged_in() ) { wp_redirect(home_url()); }
+if ( is_user_logged_in() ) {
+	wp_redirect(home_url());
+	exit;
+}
 
 // Elabora i dati di post dopo il tentativo di login
 if ($_POST && isset($_POST['cigno_zen_login'])) {
@@ -10,12 +13,12 @@ if ($_POST && isset($_POST['cigno_zen_login'])) {
 	$creds['user_password'] = $_POST['password'];
 	$creds['remember']      = isset($_POST['remember']) ? true : false;
 
-	$user = wp_signon($creds, false);
+	$user = wp_signon($creds);
 
 	if (is_wp_error($user)) {
 		$ERROR_MESSAGE = $user->get_error_message();
 	} else {
-		wp_redirect(home_url('/dashboard')); // redirect dopo login
+		wp_redirect(home_url()); // redirect dopo login
 		exit;
 	}
 }

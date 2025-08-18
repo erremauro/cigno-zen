@@ -35,7 +35,7 @@ get_template_part('parts/header', null, array( 'show_menu' => false ));
 					if (empty($errors->errors) == 1) {
 						$user_id = wp_create_user($username, $password, $email);
 						if (!is_wp_error($user_id)) {
-							echo '<div class="success-message">Registrazione completata! <a href="'.home_url('/login').'">Accedi ora</a></div>';
+							echo '<div class="success-message">Registrazione completata. Ti abbiamo inviato un’e-mail con un link di conferma: cliccalo per attivare il tuo account. Se non la trovi subito, controlla anche nella cartella Spam.</div>';
 						} else {
 							echo '<div class="error-message">Errore: '. $user_id->get_error_message().'</div>';
 						}
