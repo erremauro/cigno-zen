@@ -652,7 +652,7 @@ p.footnote {
 	text-indent: 0;
 }
 
-.footnotes-toggle
+.footnotes-toggle,
 #footnotes-toggle {
 	cursor: pointer;
 	border-top: 1px solid #98989B;
