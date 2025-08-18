@@ -652,8 +652,11 @@ p.footnote {
 	text-indent: 0;
 }
 
+.footnotes-toggle
 #footnotes-toggle {
 	cursor: pointer;
+	border-top: 1px solid #98989B;
+  	margin-top: 1em;
 }
 
 .footnote-overlay {
@@ -707,6 +710,7 @@ p.footnote {
 .footnotes-toggle-chevron {
 	position: relative;
 	vertical-align: middle;
+	transition: transform 0.3s ease;
 }
 
 @media print{
@@ -1312,5 +1316,3 @@ p.separator {
 	text-indent: 0;
 	text-align: center;
 }
-
-

@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update Note's title style
+- Update related articles appearance.
 - Update `/assets/js/scripts.js` to implement pop-up footnotes.
 
 ## [0.7.1] 2025-08-17

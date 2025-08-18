@@ -144,56 +144,84 @@
 
 	// ---------- Footnote extraction & cleanup ----------
 	const stripLeadingMarker = (el, id) => {
-		// Remove a leading numeric marker only (e.g., <sup>1</sup>, <a>1</a>, "1.", "[1]")
-		const isNumericMarkerEl = (node) => {
-			if (node.nodeType !== 1) return false;
-			const t = node.textContent.trim();
-			const isDigits = /^\[?\(?\d+\)?[\.\:\]]?$/.test(t);
-			if (!isDigits) return false;
-			if (node.tagName === 'A') {
-				const href = (node.getAttribute('href') || '').trim();
-				if (href && href.startsWith('#')) {
-					const h = href.slice(1);
-					if (h === id || h === '' || /fn|ref|note/i.test(node.className)) return true;
-				}
-				return false;
-			}
-			return ['SUP','SPAN','EM','STRONG'].includes(node.tagName);
-		};
-		const isNumericMarkerText = (node) =>
-			node.nodeType === 3 && /^\s*\[?\(?\d+\)?[\.\:\]]?\s*/.test(node.nodeValue || '');
+  const isElementMarker = (node) => {
+    if (node.nodeType !== 1) return false;
+    const t = (node.textContent || '').trim();
+    const digitsLike = /^\[?\(?\d+\)?[\.\:\]]?$/.test(t);
 
-		let guard = 3;
-		while (el.firstChild && guard-- > 0) {
-			const n = el.firstChild;
-			if (isNumericMarkerEl(n)) { el.removeChild(n); continue; }
-			if (isNumericMarkerText(n)) { n.nodeValue = (n.nodeValue || '').replace(/^\s*\[?\(?\d+\)?[\.\:\]]?\s*/, ''); break; }
-			break;
-		}
-	};
+    if (!digitsLike) return false;
+
+    if (node.tagName === 'A') {
+      const href = (node.getAttribute('href') || '').trim();
+      const cls  = node.className || '';
+      // treat as marker only if it clearly points to a ref for THIS footnote
+      if (href.includes('#')) {
+        const hash = href.split('#').pop();
+        if (hash === id || /fnref|ref|note/i.test(hash) || /fnref|ref|note/i.test(cls)) return true;
+      }
+      return false;
+    }
+
+    // Typical wrappers for indices
+    return ['SUP','SPAN','EM','STRONG'].includes(node.tagName);
+  };
+
+  // Strip up to a couple of leading element markers
+  let guard = 3;
+  while (el.firstChild && guard-- > 0) {
+    const n = el.firstChild;
+    if (isElementMarker(n)) { el.removeChild(n); continue; }
+    break;
+  }
+};
 
 	const stripBackrefs = (container) => {
-		qsa('a[href^="#"]', container).forEach(a => {
-			const t = a.textContent.trim();
-			const cls = a.className || '';
-			if (t === '↩' || /backref|return|footnote[-_]?return|fnref/i.test(cls)) a.remove();
-		});
-	};
+  const anchors = Array.from(container.querySelectorAll('a'));
+  anchors.forEach(a => {
+    const href      = (a.getAttribute('href') || '');
+    const cls       = (a.className || '');
+    const role      = (a.getAttribute('role') || '');
+    const ariaLabel = ((a.getAttribute('aria-label') || a.getAttribute('title') || '')).toLowerCase();
+    // Normalize text (remove variation selectors like U+FE0E/U+FE0F)
+    const text = (a.textContent || '').replace(/[\uFE0E\uFE0F]/g, '').trim();
+
+    const hasHash     = href.includes('#');
+    const hashPart    = hasHash ? href.split('#').pop() : '';
+    const looksFnRef  = /fnref|footnote.*ref|reversefootnote/i.test(cls) ||
+                        /fnref|footnote.*ref|back|return/i.test(hashPart);
+    const looksBack   = /backref|return|footnote[-_]?return/i.test(cls) ||
+                        role.toLowerCase() === 'doc-backlink' ||
+                        ariaLabel.includes('back') || ariaLabel.includes('ritorna') || ariaLabel.includes('torna');
+    const arrowChar   = /↩|↪|↑|⬆/.test(text);
+
+    if ((hasHash && (looksFnRef || looksBack)) || arrowChar) {
+      a.remove();
+    }
+  });
+};
 
 	const getFootnoteHTML = (id) => {
-		let node = document.querySelector(`p.footnote#${cssEscape(id)}`);
-		if (!node) {
-			const any = document.getElementById(id);
-			if (any) node = any.matches('p.footnote') ? any : any.querySelector('p.footnote, p');
-		}
-		if (!node) return '';
+  let node = document.querySelector(`p.footnote#${cssEscape(id)}`);
+  if (!node) {
+    const any = document.getElementById(id);
+    if (any) node = any.matches('p.footnote') ? any : any.querySelector('p.footnote, p');
+  }
+  if (!node) return '';
 
-		const clone = node.cloneNode(true);
-		stripLeadingMarker(clone, id);
-		stripBackrefs(clone);
-		const html = clone.innerHTML.trim();
-		return html || node.innerHTML.trim();
-	};
+  // Version with only backrefs removed (safe fallback)
+  const base = node.cloneNode(true);
+  stripBackrefs(base);
+  const baseHTML = base.innerHTML.trim();
+
+  // Version with marker + backrefs removed (preferred)
+  const clone = node.cloneNode(true);
+  stripLeadingMarker(clone, id);
+  stripBackrefs(clone);
+
+  // If we accidentally stripped too much (empty), fall back
+  const html = clone.textContent.trim() ? clone.innerHTML.trim() : baseHTML;
+  return html || baseHTML;
+};
 
 	// ---------- Label/Title for popup ----------
 	const getFootnoteLabel = (anchor, id) => {
@@ -271,6 +299,7 @@
 	const MOBILE_BREAKPOINT = 680;
 
 	const positionPopup = (popup, anchor) => {
+		popup.style.minWidth = "240px";
 		popup.style.visibility = 'hidden';
 		popup.style.left = '0px';
 		popup.style.top = '0px';
