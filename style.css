@@ -982,6 +982,13 @@ input.form-control[type="password"]:focus {
 	margin-top: 1em;
 }
 
+.success-message {
+	border: 1px solid green;
+	padding: 1em;
+	background-color: #00800017;
+	margin-bottom: 2em;
+}
+
 .error-message {
 	border: 1px solid #f00;
 	text-align: center;
