@@ -129,7 +129,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.7.1...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.8.0...HEAD
+[0.8.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.8.0
 [0.7.1]: https://github.com/erremauro/cigno-zen/releases/tag/v0.7.1
 [0.7.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.7.0
 [0.6.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.6.0

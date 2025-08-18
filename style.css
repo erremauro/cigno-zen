@@ -657,6 +657,7 @@ p.footnote {
 	cursor: pointer;
 	border-top: 1px solid #98989B;
   	margin-top: 1em;
+  	padding-top: .5em;
 }
 
 .footnote-overlay {
