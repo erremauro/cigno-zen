@@ -17,6 +17,7 @@ add_action('user_register', function ($user_id) {
 	// Create and store a fresh token
 	$token = wp_generate_password(32, false, false);
 	update_user_meta($user_id, '_email_verify_token', $token);
+	update_user_meta($user_id, '_email_verify_token_expires', time() + 2 * DAY_IN_SECONDS);
 	delete_user_meta($user_id, 'email_verified'); // ensure not verified
 
 	$user   = get_userdata($user_id);
@@ -54,20 +55,20 @@ add_action('init', function () {
 
 	$user_id = absint($_GET['uid']);
 	$token   = sanitize_text_field(wp_unslash($_GET['token']));
-	$saved   = get_user_meta($user_id, '_email_verify_token', true);
+	$saved = get_user_meta($user_id, '_email_verify_token', true);
+	$exp   = (int) get_user_meta($user_id, '_email_verify_token_expires', true);
 
-	if ($saved && hash_equals($saved, $token)) {
-		// Mark as verified
-		update_user_meta($user_id, 'email_verified', '1');
-		delete_user_meta($user_id, '_email_verify_token');
-
-		// Optional: small message + redirect to login
-		wp_safe_redirect( add_query_arg('email_verified', '1', wp_login_url()) );
-		exit;
+	if ( ! $saved || ! hash_equals($saved, $token) || ($exp && time() > $exp) ) {
+	    // invalid or expired
+	    wp_safe_redirect( add_query_arg('email_verify_error', '1', wp_login_url()) );
+	    exit;
 	}
 
-	// Invalid token -> send to login with error
-	wp_safe_redirect( add_query_arg('email_verify_error', '1', wp_login_url()) );
+	update_user_meta($user_id, 'email_verified', '1');
+	delete_user_meta($user_id, '_email_verify_token');
+	delete_user_meta($user_id, '_email_verify_token_expires');
+
+	wp_safe_redirect( add_query_arg('email_verified', '1', wp_login_url()) );
 	exit;
 });
 
@@ -177,4 +178,26 @@ add_filter('show_admin_bar', function ($show) {
 		return $show;
 	}
 	return false;
+});
+
+
+// 404 author archives for users who are not real content authors
+add_action('template_redirect', function () {
+    if ( ! is_author() ) {
+        return;
+    }
+
+    $author = get_queried_object();
+    $uid = ($author instanceof WP_User) ? $author->ID : (int) get_query_var('author');
+
+    // Allow only users who can write posts (authors, editors, admins, contributors)
+    if ( ! $uid || ! user_can($uid, 'edit_posts') ) {
+        // Return a proper 404 (better for SEO than redirect)
+        global $wp_query;
+        $wp_query->set_404();
+        status_header(404);
+        nocache_headers();
+        include get_404_template();
+        exit;
+    }
 });
