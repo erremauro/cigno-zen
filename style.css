@@ -1324,3 +1324,20 @@ p.separator {
 	text-indent: 0;
 	text-align: center;
 }
+
+.error-404 {
+	text-align: center;;
+}
+
+.error-404 h6 {
+	font-size: 0.8em;
+}
+
+.error-404 .ku {
+	font-size: 8em;
+}
+
+.error-404 .info {
+	font-size: 1.2em;
+	margin-top: 2em;
+}

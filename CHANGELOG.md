@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add `404.php` page
 - Add `inc/authentication.php` to manage user registration email verification, hide the WordPress top bar and disallow accessing the /dashboard to non admin users.
 ### Fixed
 - Fix successfull login redirect
