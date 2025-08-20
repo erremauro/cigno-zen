@@ -10,6 +10,18 @@ add_filter( 'register_url', function( $register_url ) {
 	return home_url( '/registrazione' );
 }, 10 );
 
+add_filter( 'czcr_login_url', function( $url ) {
+    return home_url( '/login' );
+}, 999 );
+
+add_filter( 'czcr_register_url', function( $url ) {
+    return home_url( '/registrazione' );
+}, 999 );
+
+add_filter( 'czcr_home_url', function( $url ) {
+    return home_url( '/' );
+}, 999 );
+
 // === Redirect post-login (i non-admin vanno in home) ===
 add_filter('login_redirect', function ($redirect_to, $requested, $user) {
 	if (is_wp_error($user) || !($user instanceof WP_User)) {
