@@ -7,7 +7,7 @@ add_filter( 'login_url', function( $login_url, $redirect, $force_reauth ) {
 
 add_filter( 'register_url', function( $register_url ) {
 	// Metti il tuo URL personalizzato qui
-	return home_url( '/registrati' );
+	return home_url( '/registrazione' );
 }, 10 );
 
 // === Redirect post-login (i non-admin vanno in home) ===

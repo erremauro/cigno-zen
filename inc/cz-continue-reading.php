@@ -27,7 +27,3 @@
 add_filter( 'czcr_allowed_post_types', function( $types ) {
     return [ 'post' ]; // personalizza qui
 });
-
-add_filter( 'czcr_allowed_post_types', function( $types ) {
-	return [ 'post' ];
-});
