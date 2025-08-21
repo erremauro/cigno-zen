@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `404.php` page
 - Add `inc/authentication.php` to manage user registration email verification, hide the WordPress top bar and disallow accessing the /dashboard to non admin users.
 ### Changed
-- Update Home Page to supper CZ Continue Reading Plugin
+- Update Home Page to support the CZ Continue Reading Plugin
 - Now users can register and are immediately logged in
 ### Fixed
 - Fix successfull login redirect

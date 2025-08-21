@@ -25,10 +25,6 @@ function cigno_zen_styles() {
 	$css_file = get_stylesheet_directory() . '/style.css';
 	$css_version = filemtime($css_file);
 
-
-	error_log('css_path: ' . $css_file);
-	error_log('filemtime: ' . filemtime($css_file));
-
 	wp_enqueue_style(
 		'cigno-zen-style',
 		get_stylesheet_uri(),
