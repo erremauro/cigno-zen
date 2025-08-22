@@ -51,13 +51,14 @@ $pdf_url  = get_field( 'pdf_file', 'volumes_' . $term->term_id );
 if ( $epub_url || $pdf_url ) :
 ?>
 <div class="volumes-downloads centered">
-	Ebook:
+	<label class="volumes-downloads-label">Scarica l'ebook</label>
+	<ul class="volumes-downloads-list">
 		<?php if ( $pdf_url ) : ?>
-			<a href="<?php echo esc_url( $pdf_url ); ?>" download>PDF</a>
+			<li><a href="<?php echo esc_url( $pdf_url ); ?>" download>PDF</a></li>
 		<?php endif; ?>
 		<?php if ( $epub_url ) : ?>
-			<?php if ( $pdf_url ) : ?>, <?php endif; ?>
-			<a href="<?php echo esc_url( $epub_url ); ?>" download>EPUB</a>
+			<li><a href="<?php echo esc_url( $epub_url ); ?>" download>EPUB</a></li>
 		<?php endif; ?>
+	</ul>
 </div>
 <?php endif; ?>
