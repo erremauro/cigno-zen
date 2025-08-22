@@ -863,9 +863,13 @@ li.category-author-group .separator {
 footer {
 	margin-top: 2em;
 	padding-top: 2em;
-	padding-bottom: 4.5em;
+	padding-bottom: 2em;
 	padding-left: 0;
 	padding-right: 0;
+}
+
+.wp-singular footer {
+	padding-bottom: 6em;
 }
 
 footer .wp-group {
@@ -1381,4 +1385,36 @@ p.separator {
 .error-404 .info {
 	font-size: 1.2em;
 	margin-top: 2em;
+}
+
+.privacy-policy small {
+	font-size: 1rem;
+}
+
+.privacy-policy .post-content p,
+.privacy-policy .post-content li {
+	text-align: justify;
+	text-indent: 0;
+	word-wrap: word-break;
+	hyphens: auto;
+	line-height: 1.68;
+	margin-top: .5rem;
+	font-size: 1.2em;
+}
+
+.privacy-policy .post-content li {
+	list-style-type: disc;
+	margin-left: 2em;
+}
+
+.privacy-policy .post-content h1,
+.privacy-policy .post-content h2,
+.privacy-policy .post-content h3 {
+	margin: .5em 0;
+}
+
+.privacy-policy .post-content h3 {
+	font-size: 1.4rem;
+	line-height: 2;
+	text-transform: uppercase;
 }
