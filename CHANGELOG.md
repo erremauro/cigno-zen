@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add `parts/home-welcome` to manage homepage's welcome messages based on user logged-in states. When the user is logged in we show a quotation of the day using the `[zen_quotes]` (from the cz-quotes plugin) shortcode.
 - Add Login/Logout/Register buttons in header's menu
 ### Changed
 - Registration Page Title has been updated to reflect it's naming to "Registrati"

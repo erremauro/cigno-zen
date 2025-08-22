@@ -1,11 +1,5 @@
-<section class="home-section" id="welcome">
-<div class="post-content">
-<h2 class="wp-heading">Benvenuti</h2>
 
-<p>Questo sito ospita un'estesa collezione di traduzioni in italiano della tradizione buddhista Zen Sōtō e non solo.</p>
-</div>
-</section>
-
+<?php get_template_part('parts/home-welcome') ?>
 <?php get_template_part('patterns/template-home-articles'); ?>
 <?php get_template_part('patterns/template-home-readings'); ?>
 <?php get_template_part('patterns/template-home-authors'); ?>
