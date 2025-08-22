@@ -25,4 +25,5 @@
 		?>
 
 		<p><?php echo implode(', ', $links); ?></p>
+		<?php get_template_part( 'parts/user-bar' ); ?>
 </menu>
