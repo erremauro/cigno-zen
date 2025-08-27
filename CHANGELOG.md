@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] 2025-08-27
 ### Added
 - Add `pages/privacy-policy.php` template
 - Add Privacy Policy link to footer
 - Add `parts/home-welcome` to manage homepage's welcome messages based on user logged-in states. When the user is logged in we show a quotation of the day using the `[zen_quotes]` (from the cz-quotes plugin) shortcode.
 - Add Login/Logout/Register buttons in header's menu
 ### Changed
+- Style and scripts are now minified
 - Updates the ebook download link look for taxonomy volumes.
 - Increase `padding-bottom` in footer for singular posts.
 - Registration Page Title has been updated to reflect it's naming to "Registrati"
@@ -148,7 +149,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v0.9.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.0.0
 [0.9.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.9.0
 [0.8.0]: https://github.com/erremauro/cigno-zen/releases/tag/v0.8.0
 [0.7.1]: https://github.com/erremauro/cigno-zen/releases/tag/v0.7.1
