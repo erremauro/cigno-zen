@@ -114,7 +114,7 @@ html[data-theme="light"] {
   --text-muted: #5a5a5a;
   --link: #0b6cbf;
   --link-rgb: 11, 108, 191;
-  --border: #c7c7c7;
+  --border: #98989B;
   --border-muted: #e1e1e1;
   --accent: #a63b31;
   --highlight: #fff3b0;
@@ -134,7 +134,7 @@ html[data-theme="light"] {
   --tt-btn-bg: #fff;
   --tt-btn-bg-hover: #f5f5f5;
 
-  --pt-bg: rgba(225,225,225.1);
+  --pt-bg: #F4F4F4;
   --pt-tag-bg: rgba(230,230,230,1);
 }
 
@@ -672,7 +672,7 @@ article.post:first-child {
 }
 
 .post-tags a {
-  border: 1px solid var(--card-border);
+  border: 1px solid var(--border);
   padding: .5rem 1em;
   border-radius: .25rem;
   background-color: var(--pt-tag-bg);
