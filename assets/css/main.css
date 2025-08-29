@@ -134,8 +134,8 @@ html[data-theme="light"] {
   --tt-btn-bg: #fff;
   --tt-btn-bg-hover: #f5f5f5;
 
-  --pt-bg: #F4F4F4;
-  --pt-tag-bg: rgba(230,230,230,1);
+  --pt-bg: #FFFFFF;
+  --pt-tag-bg: #F4F4F4;
 }
 
 /* Override AUTOMATICO se NON c’è data-theme: usa la preferenza di sistema */
