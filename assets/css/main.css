@@ -93,12 +93,15 @@ table {
   --tt-btn-bc: rgba(60,60,60,1);
   --tt-btn-bg: rgba(30,30,30,1);
   --tt-btn-bg-hover: rgba(60,60,60,1);
+
+  /* Post Tags */
+  --pt-bg: rgba(30,30,30.1);
+  --pt-tag-bg: rgba(25,25,25,1);
 }
 
 /* Override ESPLICITO da toggle */
 html[data-theme="dark"] {
   color-scheme: dark;
-  /* (opzionale) puoi ridefinire qui se vuoi variare qualcosa rispetto a :root */
 }
 
 html[data-theme="light"] {
@@ -130,6 +133,9 @@ html[data-theme="light"] {
   --tt-btn-bc: #ccc;
   --tt-btn-bg: #fff;
   --tt-btn-bg-hover: #f5f5f5;
+
+  --pt-bg: rgba(225,225,225.1);
+  --pt-tag-bg: rgba(230,230,230,1);
 }
 
 /* Override AUTOMATICO se NON c’è data-theme: usa la preferenza di sistema */
@@ -639,9 +645,9 @@ article.post:first-child {
 
 .post-tags-list {
   margin: 0;
-  background-color: rgba(30,30,30.1);
+  background-color: var(--pt-bg);
   padding: 1em;
-  border: 1px solid var(--text);;
+  border: 1px solid var(--border);
 }
 
 .post-tags-list .description {
@@ -666,10 +672,10 @@ article.post:first-child {
 }
 
 .post-tags a {
-  border: 1px solid var(--text);;
+  border: 1px solid var(--card-border);
   padding: .5rem 1em;
   border-radius: .25rem;
-  background-color: rgba(25,25,25,1);
+  background-color: var(--pt-tag-bg);
   user-select: none;
   display: block;
 }
