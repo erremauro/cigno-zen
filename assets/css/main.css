@@ -312,6 +312,7 @@ a.no-color-link:visited {
   width: 8em;
   height: auto;
   margin: 0;
+  cursor: pointer;
 }
 
 .site-logo .stroke-shape {
@@ -320,10 +321,12 @@ a.no-color-link:visited {
   stroke-width: 4px;
   stroke-miterlimit: 13.3;
   transition: all .3s ease-in;
+  cursor: pointer;
 }
 
 .site-logo:hover .stroke-shape {
   fill: var(--sl-hover);
+  cursor: pointer;
 }
 
 /* ========== THEME TOGGLE ========== */
@@ -368,11 +371,13 @@ html[data-theme="light"] .theme-toggle .icon-sun {
   stroke: var(--text);
   transform: translate(-50%, -50%);
   opacity: 1;
+  cursor: pointer;
 }
 
 html[data-theme="light"] .theme-toggle:hover .icon-sun {
   fill: var(--text);
   stroke: var(--text);
+  cursor: pointer;
 }
 
 html[data-theme="dark"] .theme-toggle .icon-sun {
@@ -391,11 +396,13 @@ html[data-theme="dark"] .theme-toggle .icon-moon {
   stroke: var(--text);
   transform: translate(-50%, -50%);
   opacity: 1;
+  cursor: pointer;
 }
 
 html[data-theme="dark"] .theme-toggle:hover .icon-moon {
   fill: var(--text);
   stroke: var(--text);
+  cursor: pointer;
 }
 
 
