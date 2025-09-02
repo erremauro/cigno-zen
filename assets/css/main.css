@@ -1749,3 +1749,106 @@ blockquote.poem p.verse {
     font-size: 1.2em;
   }
 }
+
+/* ======== MASTERS ======== */
+
+.meta-row {
+  margin: 1rem 0;
+  padding: 0 1em;
+}
+
+.meta-row .meta-label {
+  margin-bottom: 1em;
+  display: block;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1rem;
+  line-height: 2;
+}
+
+.meta-row .meta-data {
+  margin-left: 2em;
+  display: block;
+}
+
+.meta-alt-name {
+  text-align: center;
+  font-style: italic;
+  font-size: 1rem;
+  margin-bottom: 1em;
+}
+
+.maestro-layout {
+  display: block;
+  text-align: center;
+  width: 100%;
+  margin: 1em auto;
+}
+
+.maestro-portrait {
+  display: flex;
+  justify-content: center;
+}
+
+.maestro-portrait img {
+  border: .2em solid var(--text);
+  object-fit: contain;
+  object-position: center;
+  display: block;
+  max-height: 100%;
+  height: auto;
+
+}
+
+.master-info {
+  margin-bottom: 2em;
+}
+
+.master-title {
+  text-align: center;
+  font-style: italic;
+}
+
+.meta-original-name {
+  text-align: center;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 4em;
+}
+
+.meta-master-dates {
+  text-align: center;
+  font-size: 1.4em;
+}
+
+.maestro-content {
+  margin-top: 4em;
+}
+
+.compact-text p {
+  margin: 0;
+  padding: 0;
+}
+
+/* ======= COLLAPSABLE SECTION ======= */
+
+.collapsable-section {
+  margin: 1em auto;
+}
+
+.collapsable-toggle {
+  display: inline-flex;
+  align-items: 'center';
+  gap: .5rem;
+  user-select: none;
+}
+
+.collapsable-content {
+  border-top: 1px solid var(--border);
+  padding-top: 1em;
+}
+
+.collapsable-content .wp-block-heading {
+  line-height: 2;
+  margin: 1em 0;
+}

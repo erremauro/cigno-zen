@@ -472,3 +472,107 @@
   });
 })();
 
+/* ===== COLLAPSABLE CONTENT — default: OPEN ===== */
+
+(function () {
+  function rootOf(ctx){ return (ctx && typeof ctx.querySelectorAll === 'function') ? ctx : document; }
+  function $(sel, ctx){ return rootOf(ctx).querySelector(sel); }
+  function qsa(sel, ctx){ return Array.from(rootOf(ctx).querySelectorAll(sel)); }
+  const isButtonLike = (el) => el && (el.tagName === 'BUTTON' || el.getAttribute('role') === 'button');
+
+  const createChevron = () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('width', '48');
+    svg.setAttribute('height', '48');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.flex = '0 0 auto';
+    svg.style.transition = 'transform .2s ease';
+    svg.classList.add('collapsable-chevron');
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d','M6.23 8.97a1 1 0 0 1 1.41 0L12 13.34l4.36-4.37a1 1 0 1 1 1.41 1.42l-5.06 5.06a1 1 0 0 1-1.41 0L6.23 10.4a1 1 0 0 1 0-1.42z');
+    p.setAttribute('fill','currentColor');
+    svg.appendChild(p);
+    return svg;
+  };
+
+  const setOpen = (section, open) => {
+    const toggle  = $('.collapsable-toggle', section);
+    const content = $('.collapsable-content', section);
+    if (!toggle || !content) return;
+
+    const chev = $('.collapsable-chevron', toggle);
+    const wasOpen = section.classList.contains('is-open');
+    if (open === wasOpen) return;
+
+    section.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    content.setAttribute('aria-hidden', open ? 'false' : 'true');
+    content.style.display = open ? '' : 'none';
+    if (chev) chev.style.transform = open ? 'rotate(0deg)' : 'rotate(-90deg)';
+  };
+
+  const ensureOperable = (el) => {
+    if (!isButtonLike(el)) { el.setAttribute('role','button'); el.setAttribute('tabindex','0'); }
+    el.style.cursor = 'pointer';
+  };
+
+  const ensureId = (el, prefix='collapsable-content-') => {
+    if (!el.id) el.id = prefix + Math.random().toString(36).slice(2,9);
+    return el.id;
+  };
+
+  const initSection = (section) => {
+    if (!section || section.__collapsableReady) return;
+    const toggle  = $('.collapsable-toggle', section);
+    const content = $('.collapsable-content', section);
+    if (!toggle || !content) return;
+
+    // Inject chevron (rotation set by setOpen)
+    if (!$('.collapsable-chevron', toggle)) {
+      const chev = createChevron();
+      const wrap = document.createElement('span');
+      wrap.className = 'collapsable-toggle-text';
+      while (toggle.firstChild) wrap.appendChild(toggle.firstChild);
+      toggle.appendChild(wrap);
+      toggle.insertBefore(chev, wrap);
+      toggle.style.display = 'inline-flex';
+      toggle.style.alignItems = 'center';
+      toggle.style.gap = '.5rem';
+    }
+
+    ensureOperable(toggle);
+    ensureId(content);
+    toggle.setAttribute('aria-controls', content.id);
+
+    // === DEFAULT OPEN ===
+    // Se presente data-initial="closed" parte chiuso, altrimenti aperto.
+    const initial = (section.getAttribute('data-initial') || '').toLowerCase();
+    setOpen(section, initial === 'closed' ? false : true);
+
+    const handler = (e)=>{ e.preventDefault(); setOpen(section, !section.classList.contains('is-open')); };
+    toggle.addEventListener('click', handler);
+    toggle.addEventListener('keydown', (e)=>{ if (e.key==='Enter'||e.key===' ') { e.preventDefault(); handler(e); } });
+
+    section.__collapsableReady = true;
+  };
+
+  const initAll = (root) => { qsa('.collapsable-section', root).forEach(initSection); };
+
+  if (document.readyState !== 'loading') initAll();
+  else document.addEventListener('DOMContentLoaded', initAll);
+
+  // Guarded MutationObserver (skip nodes without querySelectorAll)
+  const mo = new MutationObserver((muts) => {
+    for (const m of muts) {
+      m.addedNodes && m.addedNodes.forEach(n => {
+        if (!n || n.nodeType !== 1) return;
+        if (typeof n.querySelectorAll !== 'function') return;
+        if (n.matches && n.matches('.collapsable-section')) initSection(n);
+        else initAll(n);
+      });
+    }
+  });
+  try { mo.observe(document.documentElement, { childList: true, subtree: true }); } catch(_) {}
+})();
+
