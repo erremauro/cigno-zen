@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add `browser-sync` with command `npm run dev` to support live-reload
+### Changed
+- `templates/template-single-post-footer.php` moved to `parts/single-post-footer.php`
 
 ## [1.2.2] 2025-08-30
 ### Fixed
