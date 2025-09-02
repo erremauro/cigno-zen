@@ -2,10 +2,14 @@
 	"name": "cigno-zen",
 	"private": true,
 	"devDependencies": {
+		"browser-sync": "^3.0.4",
+		"concurrently": "^9.2.1",
 		"esbuild": "^0.23.0"
 	},
 	"scripts": {
 		"build": "node scripts/build.js",
-		"watch": "node scripts/build.js --watch"
+		"watch": "node scripts/build.js --watch",
+    "serve": "browser-sync start --config bs-config.js",
+    "dev": "concurrently \"npm:watch\" \"npm:serve\""
 	}
 }
