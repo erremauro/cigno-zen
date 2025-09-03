@@ -1,6 +1,4 @@
 (function(document) {
-  console.log("[cigno-zen] script loaded!");
-
   function onShowSearchClick(event) {
     // Seleziona l'elemento con ID search-bar
     var searchBar = document.getElementById('search-bar');
