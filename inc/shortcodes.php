@@ -90,3 +90,103 @@ add_shortcode('collapsable', function ($atts = [], $content = null, $tag = '') {
   return ob_get_clean();
 });
 
+// === Footnotes shortcodes: [footnotes], [fndef], [fn] =================
+// Output target structure:
+//
+// <div class="footnotes">
+//   <h2 id="footnotes-toggle">Note</h2>
+//   <div class="footnotes-content">
+//     <p class="footnote" id="fn1"><a class="fnref" href="#fnref1">1</a> Contenuto <a href="#fnref1" class="backlink">↩</a></p>
+//   </div>
+// </div>
+
+if (!defined('ABSPATH')) { exit; }
+
+/** Sanitize plain id into slug-ish but preserve digits for anchors */
+function cz_fn_sanitize_id($id_raw) {
+  $id_raw = (string) $id_raw;
+  $id_raw = trim($id_raw);
+  if ($id_raw === '') {
+    static $auto = 0; $auto++;
+    return (string) $auto;
+  }
+  // Allow [A-Za-z0-9_-], strip others
+  $san = preg_replace('~[^A-Za-z0-9_-]+~', '', $id_raw);
+  return $san !== '' ? $san : '1';
+}
+
+/** Inline reference: [fn id="1"] -> <sup><a id="fnref1" href="#fn1">1</a></sup> */
+add_shortcode('fn', function($atts){
+  $atts = shortcode_atts([
+    'id' => '',
+    'label' => '', // optional custom label shown instead of id
+  ], $atts, 'fn');
+
+  $id = cz_fn_sanitize_id($atts['id']);
+  $label = $atts['label'] !== '' ? wp_kses_post($atts['label']) : esc_html($id);
+
+  $ref_id  = 'fnref' . $id;
+  $note_id = 'fn' . $id;
+
+  return sprintf(
+    '<sup class="fn"><a id="%1$s" href="#%2$s">%3$s</a></sup>',
+    esc_attr($ref_id),
+    esc_attr($note_id),
+    $label
+  );
+});
+
+/** Footnote definition to be used *inside* [footnotes]: [footnotedef id="1"]Content[/footnotedef] */
+add_shortcode('fndef', function($atts = [], $content = null){
+  $atts = shortcode_atts([
+    'id' => '',
+  ], $atts, 'fndef');
+
+  $id = cz_fn_sanitize_id($atts['id']);
+  $ref_id  = 'fnref' . $id;
+  $note_id = 'fn' . $id;
+
+  // Allow other shortcodes inside the note content
+  $inner = do_shortcode(shortcode_unautop($content ?? ''));
+  // Safe HTML (paragraph-like): keep links/emphasis/basic formatting
+  $inner = wp_kses_post($inner);
+
+  // Build: <p class="footnote" id="fn1"><a class="fnref" href="#fnref1">1</a> ... <a href="#fnref1" class="backlink">↩</a></p>
+  return sprintf(
+    '<p class="footnote" id="%1$s"><a class="fnref" href="#%2$s">%3$s</a> %4$s <a href="#%2$s" class="backlink">↩</a></p>',
+    esc_attr($note_id),
+    esc_attr($ref_id),
+    esc_html($id),
+    $inner
+  );
+});
+
+/** Wrapper: [footnotes title="Note" heading="h2" toggle_id="footnotes-toggle"]...[/footnotes] */
+add_shortcode('footnotes', function($atts = [], $content = null){
+  $atts = shortcode_atts([
+    'title'     => 'Note',
+    'heading'   => 'h2',                 // h2..h6
+    'toggle_id' => 'footnotes-toggle',   // id for the heading
+    'class'     => '',                   // extra classes on root
+  ], $atts, 'footnotes');
+
+  $heading = in_array(strtolower($atts['heading']), ['h2','h3','h4','h5','h6'], true) ? strtolower($atts['heading']) : 'h2';
+  $title   = wp_kses_post($atts['title']);
+  $toggle_id = sanitize_html_class($atts['toggle_id']);
+  $root_cls = trim('footnotes ' . sanitize_html_class($atts['class']));
+
+  // Process inner content to expand [fndef] items (and any nested shortcodes)
+  $items_html = do_shortcode(shortcode_unautop($content ?? ''));
+
+  ob_start(); ?>
+  <div class="<?php echo esc_attr($root_cls); ?>">
+    <<?php echo $heading; ?> id="<?php echo esc_attr($toggle_id); ?>"><?php echo $title; ?></<?php echo $heading; ?>>
+    <div class="footnotes-content">
+      <?php echo $items_html; ?>
+    </div>
+  </div>
+  <?php
+  return ob_get_clean();
+});
+
+

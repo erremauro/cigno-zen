@@ -125,13 +125,17 @@
 })();
 
 /**
- * Footnotes Plugins
+ * Footnotes plugin – cigno-zen
+ * Struttura prevista dai tuoi shortcode:
+ * - Riferimento inline: <sup class="fn"><a id="fnref1" href="#fn1">1</a></sup>
+ * - Definizione: <p class="footnote" id="fn1"><a class="fnref" href="#fnref1">1</a> ... <a class="backlink" href="#fnref1">↩</a></p>
+ * - Wrapper: <div class="footnotes"><h2 id="...">Note</h2><div class="footnotes-content">...</div></div>
  */
 (() => {
-  // ---------- Small helpers ----------
+  // ---------------- Helpers ----------------
   const qsa = (sel, root = document) => Array.from(root.querySelectorAll(sel));
   const $ = (sel, root = document) => root.querySelector(sel);
-  const cssEscape = (str) => (window.CSS && CSS.escape) ? CSS.escape(str) : str.replace(/[^a-zA-Z0-9_\-]/g, '\\$&');
+  const cssEscape = (str) => (window.CSS && CSS.escape) ? CSS.escape(str) : (str || '').replace(/[^a-zA-Z0-9_\-]/g, '\\$&');
 
   const getHashId = (href) => {
     try {
@@ -140,109 +144,96 @@
     } catch { return ''; }
   };
 
-  // ---------- Footnote extraction & cleanup ----------
+  // ---------------- Cleaners ----------------
   const stripLeadingMarker = (el, id) => {
-  const isElementMarker = (node) => {
-    if (node.nodeType !== 1) return false;
-    const t = (node.textContent || '').trim();
-    const digitsLike = /^\[?\(?\d+\)?[\.\:\]]?$/.test(t);
+    const isElementMarker = (node) => {
+      if (!node || node.nodeType !== 1) return false;
+      const t = (node.textContent || '').trim();
+      const looksDigits = /^\[?\(?\d+\)?[\.\:\]]?$/.test(t);
 
-    if (!digitsLike) return false;
+      if (!looksDigits) return false;
 
-    if (node.tagName === 'A') {
-      const href = (node.getAttribute('href') || '').trim();
-      const cls  = node.className || '';
-      // treat as marker only if it clearly points to a ref for THIS footnote
-      if (href.includes('#')) {
-        const hash = href.split('#').pop();
-        if (hash === id || /fnref|ref|note/i.test(hash) || /fnref|ref|note/i.test(cls)) return true;
+      if (node.tagName === 'A') {
+        const href = (node.getAttribute('href') || '').trim();
+        const cls  = node.className || '';
+        if (href.includes('#')) {
+          const hash = href.split('#').pop();
+          if (hash === ('fnref' + (id.replace(/^fn/, ''))) || /fnref|ref|note/i.test(hash) || /fnref|ref|note/i.test(cls)) return true;
+        }
+        return false;
       }
-      return false;
-    }
-
-    // Typical wrappers for indices
-    return ['SUP','SPAN','EM','STRONG'].includes(node.tagName);
-  };
-
-  // Strip up to a couple of leading element markers
-  let guard = 3;
-  while (el.firstChild && guard-- > 0) {
-    const n = el.firstChild;
-    if (isElementMarker(n)) { el.removeChild(n); continue; }
-    break;
-  }
-};
-
-  const stripBackrefs = (container) => {
-  const anchors = Array.from(container.querySelectorAll('a'));
-  anchors.forEach(a => {
-    const href      = (a.getAttribute('href') || '');
-    const cls       = (a.className || '');
-    const role      = (a.getAttribute('role') || '');
-    const ariaLabel = ((a.getAttribute('aria-label') || a.getAttribute('title') || '')).toLowerCase();
-    // Normalize text (remove variation selectors like U+FE0E/U+FE0F)
-    const text = (a.textContent || '').replace(/[\uFE0E\uFE0F]/g, '').trim();
-
-    const hasHash     = href.includes('#');
-    const hashPart    = hasHash ? href.split('#').pop() : '';
-    const looksFnRef  = /fnref|footnote.*ref|reversefootnote/i.test(cls) ||
-                        /fnref|footnote.*ref|back|return/i.test(hashPart);
-    const looksBack   = /backref|return|footnote[-_]?return/i.test(cls) ||
-                        role.toLowerCase() === 'doc-backlink' ||
-                        ariaLabel.includes('back') || ariaLabel.includes('ritorna') || ariaLabel.includes('torna');
-    const arrowChar   = /↩|↪|↑|⬆/.test(text);
-
-    if ((hasHash && (looksFnRef || looksBack)) || arrowChar) {
-      a.remove();
-    }
-  });
-};
-
-  const getFootnoteHTML = (id) => {
-  let node = document.querySelector(`p.footnote#${cssEscape(id)}`);
-  if (!node) {
-    const any = document.getElementById(id);
-    if (any) node = any.matches('p.footnote') ? any : any.querySelector('p.footnote, p');
-  }
-  if (!node) return '';
-
-  // Version with only backrefs removed (safe fallback)
-  const base = node.cloneNode(true);
-  stripBackrefs(base);
-  const baseHTML = base.innerHTML.trim();
-
-  // Version with marker + backrefs removed (preferred)
-  const clone = node.cloneNode(true);
-  stripLeadingMarker(clone, id);
-  stripBackrefs(clone);
-
-  // If we accidentally stripped too much (empty), fall back
-  const html = clone.textContent.trim() ? clone.innerHTML.trim() : baseHTML;
-  return html || baseHTML;
-};
-
-  // ---------- Label/Title for popup ----------
-  const getFootnoteLabel = (anchor, id) => {
-    const cleanDigits = (s) => {
-      const t = (s || '').trim();
-      // If it's like "1", "[1]", "1.", "1)" -> return only digits; else return t as-is
-      const m = t.match(/^\s*[\[\(]?(\d+)[\]\)\.:]?\s*$/);
-      return m ? m[1] : t;
+      return ['SUP','SPAN','EM','STRONG','B','I'].includes(node.tagName);
     };
 
-    let label = cleanDigits(anchor.textContent || anchor.innerText || '');
-
-    if ((!label || !/^\d+$/.test(label)) && anchor.closest('sup')) {
-      label = cleanDigits(anchor.closest('sup').textContent || '');
+    let guard = 3;
+    while (el.firstChild && guard-- > 0) {
+      if (isElementMarker(el.firstChild)) { el.removeChild(el.firstChild); continue; }
+      break;
     }
-    if (!label || !/^\d+$/.test(label)) {
-      const m = (id || '').match(/(\d+)(?!.*\d)/); // last digits in id
-      label = m ? m[1] : (label || id || '');
+  };
+
+  const stripBackrefs = (container) => {
+    qsa('a', container).forEach(a => {
+      const href      = (a.getAttribute('href') || '');
+      const cls       = (a.className || '');
+      const role      = (a.getAttribute('role') || '');
+      const ariaLabel = ((a.getAttribute('aria-label') || a.getAttribute('title') || '')).toLowerCase();
+      const text      = (a.textContent || '').replace(/[\uFE0E\uFE0F]/g, '').trim();
+      const hasHash   = href.includes('#');
+      const hash      = hasHash ? href.split('#').pop() : '';
+
+      const looksFnRef = /(^|\s)fnref(\s|$)/i.test(cls) || /^fnref/i.test(hash);
+      const looksBack  = /backlink|backref|return|footnote[-_]?return/i.test(cls) ||
+                         role.toLowerCase() === 'doc-backlink' ||
+                         ariaLabel.includes('back') || ariaLabel.includes('ritorna') || ariaLabel.includes('torna') ||
+                         /↩|↪|↑|⬆/.test(text);
+
+      if ((hasHash && (looksFnRef || looksBack)) || looksBack) a.remove();
+    });
+  };
+
+  // ---------------- Extract note HTML ----------------
+  const getFootnoteHTML = (id) => {
+    if (!id) return '';
+    // id è tipicamente "fn1"
+    let node = document.querySelector(`p.footnote#${cssEscape(id)}`);
+    if (!node) {
+      const any = document.getElementById(id);
+      if (any) node = any.matches('p.footnote') ? any : any.querySelector('p.footnote, p');
+    }
+    if (!node) return '';
+
+    const base = node.cloneNode(true);
+    stripBackrefs(base);
+    const baseHTML = base.innerHTML.trim();
+
+    const clone = node.cloneNode(true);
+    stripLeadingMarker(clone, id);
+    stripBackrefs(clone);
+    const html = (clone.textContent || '').trim() ? clone.innerHTML.trim() : baseHTML;
+
+    return html || baseHTML;
+  };
+
+  // ---------------- Label del popup ----------------
+  const getFootnoteLabel = (anchor, id) => {
+    const onlyDigits = (s) => {
+      const m = String(s || '').trim().match(/^\s*[\[\(]?(\d+)[\]\)\.:]?\s*$/);
+      return m ? m[1] : '';
+    };
+
+    let label = onlyDigits(anchor.textContent || anchor.innerText || '');
+    if (!label && anchor.closest('sup')) {
+      label = onlyDigits(anchor.closest('sup').textContent || '');
+    }
+    if (!label) {
+      const m = (id || '').match(/(\d+)(?!.*\d)/);
+      label = m ? m[1] : (anchor.textContent || id || '');
     }
     return label;
   };
 
-  // ---------- Popup machinery ----------
+  // ---------------- Popup ----------------
   let current = { anchor: null, popup: null, overlay: null };
 
   const closePopup = () => {
@@ -265,28 +256,27 @@
     const popup = document.createElement('div');
     popup.className = 'footnote-popup';
     popup.setAttribute('role', 'dialog');
+    popup.setAttribute('aria-modal','true');
 
     const titleId = `footnote-popup-title-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
     popup.setAttribute('aria-labelledby', titleId);
-    popup.setAttribute('aria-modal','true')
 
     const btn = document.createElement('button');
     btn.className = 'footnote-popup-close';
     btn.type = 'button';
     btn.setAttribute('aria-label', 'Chiudi nota');
-    btn.innerHTML = '×';
+    btn.textContent = '×';
     btn.addEventListener('click', closePopup);
 
     const title = document.createElement('div');
     title.className = 'footnote-popup-title';
     title.id = titleId;
-    title.textContent = `${label}`; // change to just `label` if you want only the number
+    title.textContent = `${label}`;
 
     const content = document.createElement('div');
     content.className = 'footnote-popup-content';
     content.innerHTML = html;
 
-    // Order doesn't matter if close button is absolutely positioned
     popup.appendChild(btn);
     popup.appendChild(title);
     popup.appendChild(content);
@@ -297,7 +287,7 @@
   const MOBILE_BREAKPOINT = 680;
 
   const positionPopup = (popup, anchor) => {
-    popup.style.minWidth = "240px";
+    popup.style.minWidth = '240px';
     popup.style.visibility = 'hidden';
     popup.style.left = '0px';
     popup.style.top = '0px';
@@ -321,15 +311,14 @@
     popup.style.top  = `${top}px`;
     popup.style.visibility = 'visible';
 
-    // Center the pop-up on mobile
     if (vw <= MOBILE_BREAKPOINT) {
-      popup.style.right = `${left}px`;
+      popup.style.right = `${left}px`; // centratura mobile grezza
     }
   };
 
   const openFootnote = (anchor, id) => {
     const html = getFootnoteHTML(id);
-    if (!html) return; // fallback to default behavior if not found
+    if (!html) return;
     const label = getFootnoteLabel(anchor, id);
 
     closePopup();
@@ -343,87 +332,125 @@
     (popup.querySelector('button') || popup).focus({ preventScroll: true });
   };
 
-  // ---------- Footnote refs: event delegation ----------
+  // ---------------- Delegation riferimenti ----------------
   const initFootnotePopups = () => {
     document.addEventListener('click', (e) => {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
 
-      const a = e.target.closest('sup a[href], a.footnote-ref[href]');
+      // Riferimenti inline: <sup class="fn"><a ... href="#fnX">X</a></sup>
+      const a = e.target.closest('sup.fn a[href], a.footnote-ref[href], sup a[href^="#fn"]');
       if (!a) return;
 
       const id = getHashId(a.getAttribute('href') || '');
       if (!id) return;
 
+      // Apri popup solo se l'ancora punta ad una definizione esistente
       const hasTarget = document.querySelector(`p.footnote#${cssEscape(id)}`) || document.getElementById(id);
-      if (!hasTarget) return; // let normal anchor behavior happen
+      if (!hasTarget) return;
 
       e.preventDefault();
       openFootnote(a, id);
     });
   };
 
-  // ---------- Collapsible footnotes block ----------
-  const initFootnotesToggle = () => {
-    const container = $('div.footnotes');
-    const toggle = $('#footnotes-toggle'); // <h2 id="footnotes-toggle">Note</h2>
-    if (!toggle || !container) return;
+  // ---------------- Toggle blocchi footnotes ----------------
+  const createChevron = () => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('width', '32');
+    svg.setAttribute('height', '32');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.style.flex = '0 0 auto';
+    svg.style.transition = 'transform .2s ease';
+    svg.classList.add('footnotes-chevron');
+    const p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    p.setAttribute('d','M6.23 8.97a1 1 0 0 1 1.41 0L12 13.34l4.36-4.37a1 1 0 1 1 1.41 1.42l-5.06 5.06a1 1 0 0 1-1.41 0L6.23 10.4a1 1 0 0 1 0-1.42z');
+    p.setAttribute('fill','currentColor');
+    svg.appendChild(p);
+    return svg;
+  }
 
-    // Hide on load
-    container.classList.add('hidden');
+  const initFootnotesToggleFor = (wrapper) => {
+    if (!wrapper || wrapper.__czFootnotesReady) return;
 
-    // Make the header act like a button
-    toggle.setAttribute('role', 'button');
-    toggle.setAttribute('tabindex', '0');
-    toggle.setAttribute('aria-expanded', 'false');
+    // heading: primo elemento con id al livello diretto, altrimenti il primo h2..h6
+    let heading = wrapper.querySelector(':scope > [id]');
+    if (!heading || !/^H[2-6]$/.test(heading.tagName)) {
+      heading = wrapper.querySelector(':scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6');
+    }
+    const content = wrapper.querySelector(':scope > .footnotes-content');
+    if (!heading || !content) return;
 
-    // Inject chevron icon if missing
-    let chev = $('.footnotes-toggle-chevron', toggle);
-    if (!chev) {
-      chev = document.createElement('img');
-      chev.className = 'footnotes-toggle-chevron';
-      chev.src = '/wp-content/themes/cigno-zen/assets/images/chevron-down.svg';
-      chev.width = "32";
-      chev.height = "32";
-      chev.alt = '';
-      chev.setAttribute('aria-hidden', 'true');
-      // Initial rotation to point RIGHT (closed state)
-      chev.style.transform = 'rotate(-90deg)';
-      // You can style spacing in CSS; minimal inline margin here for safety
-      chev.style.marginLeft = '0.5rem';
-      toggle.appendChild(chev);
-    } else {
-      // Ensure initial closed rotation
+    // Accessibilità
+    heading.setAttribute('role', 'button');
+    heading.setAttribute('tabindex', '0');
+    heading.setAttribute('aria-expanded', 'false');
+
+    // Chevron
+    if (!heading.querySelector('.footnotes-chevron')) {
+      const chev = createChevron();
+      // Inserisci a destra del testo
+      const wrap = document.createElement('span');
+      wrap.className = 'footnotes-toggle-text';
+      while (heading.firstChild) wrap.appendChild(heading.firstChild);
+      heading.appendChild(chev);
+      heading.appendChild(wrap);
+      heading.style.display = 'inline-flex';
+      heading.style.alignItems = 'center';
+      heading.style.gap = '.5rem';
+      // Stato iniziale: chiuso
       chev.style.transform = 'rotate(-90deg)';
     }
 
+    // Stato iniziale: collassato (contenuto nascosto)
+    content.hidden = true;
+
     const setOpen = (open) => {
-      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      if (open) {
-        container.classList.remove('hidden');
-        chev.style.transform = ''; // points DOWN (0deg)
-      } else {
-        container.classList.add('hidden');
-        chev.style.transform = 'rotate(-90deg)'; // points RIGHT
-      }
+      const chev = heading.querySelector('.footnotes-chevron');
+      heading.setAttribute('aria-expanded', open ? 'true' : 'false');
+      content.hidden = !open;
+      if (chev) chev.style.transform = open ? 'rotate(0deg)' : 'rotate(-90deg)';
     };
 
-    toggle.addEventListener('click', () => setOpen(container.classList.contains('hidden')));
-    toggle.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        setOpen(container.classList.contains('hidden'));
-      }
+    const handler = (e) => {
+      e.preventDefault();
+      setOpen(content.hidden); // se hidden -> apri, altrimenti chiudi
+    };
+
+    heading.addEventListener('click', handler);
+    heading.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(e); }
     });
+
+    wrapper.__czFootnotesReady = true;
   };
 
-  // ---------- Init ----------
+  const initFootnotesToggle = (root = document) => {
+    qsa('div.footnotes', root).forEach(initFootnotesToggleFor);
+  };
+
+  // ---------------- Init ----------------
   const init = () => {
     initFootnotesToggle();
     initFootnotePopups();
   };
   if (document.readyState !== 'loading') init();
   else document.addEventListener('DOMContentLoaded', init);
+
+  // Osserva DOM dinamico (es. blocchi caricati in AJAX)
+  const mo = new MutationObserver((muts) => {
+    for (const m of muts) {
+      m.addedNodes && m.addedNodes.forEach(n => {
+        if (!n || n.nodeType !== 1) return;
+        if (typeof n.querySelectorAll !== 'function') return;
+        if (n.matches && n.matches('div.footnotes')) initFootnotesToggleFor(n);
+        else initFootnotesToggle(n);
+      });
+    }
+  });
+  try { mo.observe(document.documentElement, { childList: true, subtree: true }); } catch(_) {}
 })();
+
 
 /* ========== THEME TOGGLE ========== */
 (function(){

@@ -1010,11 +1010,14 @@ p.footnote {
   text-indent: 0;
 }
 
+.footnotes {
+  margin-top: 1em;
+  border-top: 1px solid var(--border);
+}
+
 .footnotes-toggle,
 #footnotes-toggle {
   cursor: pointer;
-  border-top: 1px solid var(--border);
-  margin-top: 1em;
   padding-top: .5em;
 }
 
@@ -1061,12 +1064,6 @@ p.footnote {
 
 .footnote-popup-content {
   margin-top:.25rem;
-}
-
-.footnotes-toggle-chevron {
-  position: relative;
-  vertical-align: middle;
-  transition: transform 0.3s ease;
 }
 
 @media print{
@@ -1828,27 +1825,4 @@ blockquote.poem p.verse {
 .compact-text p {
   margin: 0;
   padding: 0;
-}
-
-/* ======= COLLAPSABLE SECTION ======= */
-
-.collapsable-section {
-  margin: 1em auto;
-}
-
-.collapsable-toggle {
-  display: inline-flex;
-  align-items: 'center';
-  gap: .5rem;
-  user-select: none;
-}
-
-.collapsable-content {
-  border-top: 1px solid var(--border);
-  padding-top: 1em;
-}
-
-.collapsable-content .wp-block-heading {
-  line-height: 2;
-  margin: 1em 0;
 }

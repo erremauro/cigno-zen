@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add `[footnotes]`, `[fn]` and `[fndef]` short-code for writing consistent footnotes.
 - Add `[collapsable]` short-code.
 - Add JSON-LD information for Masters
 ### Changed
+- The footnotes plugin in `script.js` has been updated to support the `[footnotes]` short-code
 - Master's school property has been converted to a taxonomy
 
 ## [1.3.0] 2025-09-02
