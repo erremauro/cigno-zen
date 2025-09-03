@@ -1827,6 +1827,10 @@ blockquote.poem p.verse {
   padding: 0;
 }
 
+.compact-text p.separator {
+  margin: 1em 0;
+}
+
 /* ======= COLLAPSABLE SECTION ======= */
 
 .collapsable-section {
@@ -1849,4 +1853,3 @@ blockquote.poem p.verse {
   line-height: 2;
   margin: 1em 0;
 }
-
