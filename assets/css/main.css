@@ -1826,3 +1826,27 @@ blockquote.poem p.verse {
   margin: 0;
   padding: 0;
 }
+
+/* ======= COLLAPSABLE SECTION ======= */
+
+.collapsable-section {
+  margin: 1em auto;
+}
+
+.collapsable-toggle {
+  display: inline-flex;
+  align-items: 'center';
+  gap: .5rem;
+  user-select: none;
+}
+
+.collapsable-content {
+  border-top: 1px solid var(--border);
+  padding-top: 1em;
+}
+
+.collapsable-content .wp-block-heading {
+  line-height: 2;
+  margin: 1em 0;
+}
+
