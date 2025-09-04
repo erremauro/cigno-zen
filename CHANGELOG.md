@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update the cta-link in homepage to use an SVG chevron
 - The footnotes plugin in `script.js` has been updated to support the `[footnotes]` short-code
 - Master's school property has been converted to a taxonomy
+### Fixed
+- Fix form checkbox's checkmark color for light theme.
 
 ## [1.3.0] 2025-09-02
 ### Added

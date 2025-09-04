@@ -1316,7 +1316,7 @@ input.form-control[type="password"]:focus {
 
 .checkbox-label input[type="checkbox"]:checked::after {
   content: "✓";
-  color: white;
+  color: var(--text);
   font-size: 1em;
   position: absolute;
   left: 3px;
