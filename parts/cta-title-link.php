@@ -28,7 +28,5 @@ $class  = 'cta-link' . (isset($args['class']) ? ' ' . esc_attr($args['class']) :
 >
 	<span class="cta-link-label"><?php echo esc_html($title); ?></span>
 
-	<div class="cta-link-chevron">
-		&rsaquo;
-	</div>
+	<svg class="cta-link-chevron" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"><path d="M6.23 8.97a1 1 0 0 1 1.41 0L12 13.34l4.36-4.37a1 1 0 1 1 1.41 1.42l-5.06 5.06a1 1 0 0 1-1.41 0L6.23 10.4a1 1 0 0 1 0-1.42z" fill="currentColor"></path></svg>
 </a>

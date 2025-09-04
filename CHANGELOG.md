@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `[collapsable]` short-code.
 - Add JSON-LD information for Masters
 ### Changed
+- Update the cta-link in homepage to use an SVG chevron
 - The footnotes plugin in `script.js` has been updated to support the `[footnotes]` short-code
 - Master's school property has been converted to a taxonomy
 
