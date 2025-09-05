@@ -1855,3 +1855,7 @@ blockquote.poem p.verse {
   line-height: 2;
   margin: 1em 0;
 }
+
+.czcr-readings-empty .czcr-readings-section {
+  display: none;
+}

@@ -1,5 +1,5 @@
 module.exports = {
-  proxy: "https://zen.cigno.local",
+  proxy: "https://www.cignozen.local",
   open: false,
   notify: false,
   files: [
