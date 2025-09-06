@@ -5,7 +5,7 @@
         null,
         [
             "url"   => "/articoli",
-            "title" => "Ultimi Articoli"
+            "title" => "Leggi gli Articoli"
         ]
     );
 
@@ -27,6 +27,31 @@
             </div>
         </a>
         <?php
+        wp_reset_postdata();
+    endif;
+
+    echo do_shortcode( '[separator]' );
+
+    // --- Successivi 4 articoli in griglia 2x2 ---
+    $args = array(
+        'posts_per_page' => 3,
+        'post_status'    => 'publish',
+        'offset'         => 1, // salta il primo articolo già mostrato
+    );
+    $recent_posts = get_posts($args);
+
+    if ($recent_posts) :
+        echo '<div class="article-grid">';
+        foreach ($recent_posts as $post) :
+            setup_postdata($post);
+            ?>
+            <a class="article-card" href="<?php echo get_permalink($post); ?>">
+                <p class="article-author"><?php the_author(); ?></p>
+                <h3 class="article-title"><?php the_title(); ?></h3>
+            </a>
+            <?php
+        endforeach;
+        echo '</div>';
         wp_reset_postdata();
     endif;
     ?>

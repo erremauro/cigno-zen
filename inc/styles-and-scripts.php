@@ -56,6 +56,9 @@ function cigno_zen_styles() {
 }
 add_action('wp_enqueue_scripts', 'cigno_zen_styles');
 
+// Usiamo gli stilil custom per cz-password-reset
+add_filter('czpr_enqueue_inline_styles', '__return_false');
+
 /**
  * Caricamento di script e stili
  */

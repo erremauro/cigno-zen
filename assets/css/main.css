@@ -161,47 +161,47 @@ html[data-theme="light"] {
     color-scheme: light;
 
     --bg: rgba(250,250,250,1);
-  --card: rgba(255,255,255,1);
-  --text: rgba(44,44,44,1);
-  --link-rgb: 11, 108, 191;
-  --link: rgba(var(--link-rgb),1);
-  --border: rgba(152,152,152,1);
-  --highlight: rgba(255, 243, 176, 1.00);
-  --elev-shadow: 0 2px 8px rgba(0,0,0,.08);
-  --elev-shadow-strong: 0 0px 30px rgba(0,0,0,.05);
+    --card: rgba(255,255,255,1);
+    --text: rgba(44,44,44,1);
+    --link-rgb: 11, 108, 191;
+    --link: rgba(var(--link-rgb),1);
+    --border: rgba(152,152,152,1);
+    --highlight: rgba(255, 243, 176, 1.00);
+    --elev-shadow: 0 2px 8px rgba(0,0,0,.08);
+    --elev-shadow-strong: 0 0px 30px rgba(0,0,0,.05);
 
-  --sl-hover: rgba(255,255,255,1);
+    --sl-hover: rgba(255,255,255,1);
 
-  --sl-fill-hover: var(--text);
-  --sl-stroke-hover: var(--bg);
+    --sl-fill-hover: var(--text);
+    --sl-stroke-hover: var(--bg);
 
-  --card-border: 1px solid rgba(195,195,195,1);
-  --card-hover-shadow: 0 0px 24px rgba(67,156,214,.15);
-  --card-bg: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(250,250,250,1) 50%);
+    --card-border: 1px solid rgba(195,195,195,1);
+    --card-hover-shadow: 0 0px 24px rgba(67,156,214,.15);
+    --card-bg: linear-gradient(0deg, rgba(240,240,240,1) 0%, rgba(250,250,250,1) 50%);
 
-  --vc-bg: linear-gradient(0deg, rgba(250,250,250,1) 0%, rgba(240,240,240,1) 50%);
+    --vc-bg: linear-gradient(0deg, rgba(250,250,250,1) 0%, rgba(240,240,240,1) 50%);
 
-  --tt-btn-bc: rgba(204,204,204,1);
-  --tt-btn-bg: rgba(255,255,255,1);
-  --tt-btn-bg-hover: rgba(245,245,245,1);
+    --tt-btn-bc: rgba(204,204,204,1);
+    --tt-btn-bg: rgba(255,255,255,1);
+    --tt-btn-bg-hover: rgba(245,245,245,1);
 
-  /* Post Tags */
-  --pt-bg: rgba(255,255,255,1);
-  --pt-tag-bg: rgba(250,250,250,1);
-  /* Tag Card */
-  --tag-bg: var(--pt-bg);
-  --tag-title: rgba(85,85,85,1);
-  --tag-source: rgba(155,155,155,1);
+    /* Post Tags */
+    --pt-bg: rgba(255,255,255,1);
+    --pt-tag-bg: rgba(250,250,250,1);
+    /* Tag Card */
+    --tag-bg: var(--pt-bg);
+    --tag-title: rgba(85,85,85,1);
+    --tag-source: rgba(155,155,155,1);
 
-  /* reading pill */
-  --rp-bg: rgba(255,255,255,1);
-  --rp-border: 1px solid rgba(201,201,201,1);
+    /* reading pill */
+    --rp-bg: rgba(255,255,255,1);
+    --rp-border: 1px solid rgba(201,201,201,1);
 
-  /* footnote-popup */
-  --fn-bg: var(--pt-bg);
-  --fn-overlay-bg: rgba(255,255,255,0.25);
-  --fn-elev-shadow: 0 10px 30px rgba(0,0,0,.2);
-  --fn-border: 1px solid rgba(0,0,0,.15);
+    /* footnote-popup */
+    --fn-bg: var(--pt-bg);
+    --fn-overlay-bg: rgba(255,255,255,0.25);
+    --fn-elev-shadow: 0 10px 30px rgba(0,0,0,.2);
+    --fn-border: 1px solid rgba(0,0,0,.15);
   }
 }
 
@@ -1268,6 +1268,7 @@ input.form-control[type="password"] {
   margin-bottom: 1em;
 }
 
+button.form-control[type="submit"],
 input.form-control[type="submit"] {
   box-sizing: border-box;
   font-family: 'Libre Baskerville', serif;
@@ -1570,6 +1571,7 @@ div.random-article {
 .readings-container.hidden {
   display: none;
 }
+
 .reading-pill {
   display: inline-flex;
   flex-direction: column;
@@ -1586,8 +1588,14 @@ div.random-article {
   font-size: .9rem;
   font-style: italic;
 }
+
 .reading-content {
   font-size: .9rem;
+}
+
+/* Hides the reading session whenere there are no articles in the queue */
+.czcr-readings-empty .czcr-readings-section {
+  display: none;
 }
 
 /* ========== HOME → AUTHORS GRID ========== */
@@ -1856,6 +1864,64 @@ blockquote.poem p.verse {
   margin: 1em 0;
 }
 
-.czcr-readings-empty .czcr-readings-section {
-  display: none;
+/* RESET PASSOWRD */
+
+.czpr-form {
+  margin: auto;
+  max-width: 480px;
 }
+
+.czpr-forgot h2 {
+  text-align: center;
+  line-height: 2;
+  margin-bottom: 1em;
+}
+
+.czpr-actions {
+  text-align: center;
+}
+
+.article-grid  {
+  display: flex;
+  margin-top: 1em;
+}
+
+.article-grid .article-card:first-child {
+  border-left: var(--card-border);
+}
+
+.article-grid .article-card {
+  flex: 1;
+  padding: 1em;
+  border-right: var(--card-border);
+  text-align: center;
+}
+
+.article-grid .article-card .article-title {
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+.article-grid .article-card .article-author {
+  font-size: .9em;
+  font-style: italic;
+}
+
+@media (max-width: 587px) {
+  .article-grid .article-card:nth-child(3) {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  .article-grid .article-card:first-child {
+    border: none;
+    text-align: center;
+  }
+
+  .article-grid .article-card:nth-child(2) {
+    display: none;
+  }
+}
+
+
