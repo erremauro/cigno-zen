@@ -601,3 +601,55 @@
   try { mo.observe(document.documentElement, { childList: true, subtree: true }); } catch(_) {}
 })();
 
+/* ======= LATEST ARTICLES CAROUSEL ======= */
+(function () {
+  const ROOT = document.getElementById('latest-articles');
+  if (!ROOT) return;
+
+  function init() {
+    const wrap  = ROOT.querySelector('.cz-carousel');
+    if (!wrap) return;
+    const track = wrap.querySelector('.cz-carousel-track');
+    const slides = Array.from(track.querySelectorAll('.article-card'));
+    const dots   = Array.from(wrap.querySelectorAll('.cz-carousel-dot'));
+    const mq     = window.matchMedia('(max-width: 587px)');
+    let index = 0;
+
+    function applyTransform() {
+      if (!mq.matches) {
+        // Desktop/tablet: no transform (3 columns grid)
+        track.style.transform = 'none';
+        return;
+      }
+      track.style.transform = 'translateX(' + (-index * 100) + '%)';
+    }
+
+    function setActiveDot(i) {
+      dots.forEach((d, k) => {
+        d.classList.toggle('is-active', k === i);
+        d.setAttribute('aria-selected', (k === i) ? 'true' : 'false');
+      });
+    }
+
+    dots.forEach(btn => {
+      btn.addEventListener('click', function () {
+        const i = Math.max(0, Math.min(slides.length - 1, parseInt(this.dataset.index || '0', 10)));
+        index = i;
+        applyTransform();
+        setActiveDot(index);
+      });
+    });
+
+    mq.addEventListener('change', applyTransform);
+    window.addEventListener('resize', applyTransform);
+
+    applyTransform();
+    setActiveDot(index);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+}());

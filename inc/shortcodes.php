@@ -1,4 +1,22 @@
 <?php
+// Strip shortcodes from search results
+add_filter( 'ep_post_sync_args', function( array $post_args, int $post_id ) : array {
+    $raw = get_post_field( 'post_content', $post_id );
+    $no_sc = strip_shortcodes( $raw );
+    $clean = wp_strip_all_tags( $no_sc, true );
+
+    $post_args['post_content'] = $clean;
+
+    if ( ! empty( $post_args['post_excerpt'] ) ) {
+        $post_args['post_excerpt'] = wp_trim_words(
+            wp_strip_all_tags( strip_shortcodes( $post_args['post_excerpt'] ), true ),
+            55
+        );
+    }
+
+    return $post_args;
+}, 10, 2 );
+
 add_shortcode('sentence', function($atts) {
     // Merge defaults
     $atts = shortcode_atts([

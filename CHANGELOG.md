@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Add a filter that strips shortcodes from search risults
 - Add `[footnotes]`, `[fn]` and `[fndef]` short-code for writing consistent footnotes.
 - Add `[collapsable]` short-code.
 - Add JSON-LD information for Masters
 ### Changed
-- Homepage now show 1 featured article and three latest articles
+- Homepage now show 1 featured article and three latest articles. If the screen is too narrow (i.e. mobile) the article are shown as a browsable carousel.
 - Tags now prefer the alternate name when rendered (via the `show_as` ACF custom field) and related tags now create a JSON-LD schema for comma separated tag synonyms.
 - Homepage reading list is now hidden for everyone if there a no articles in the queue.
 - Update the cta-link in homepage to use an SVG chevron

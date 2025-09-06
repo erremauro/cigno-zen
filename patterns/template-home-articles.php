@@ -10,10 +10,10 @@
     );
 
     // --- Ultimo articolo in evidenza ---
-    $args = array(
+    $args = [
         'posts_per_page' => 1,
         'post_status'    => 'publish',
-    );
+    ];
     $latest_post = get_posts($args);
 
     if ($latest_post) :
@@ -22,37 +22,53 @@
         ?>
         <a class="article-featured" href="<?php echo get_permalink($post); ?>">
             <div class="article-meta">
-                <h2 class="article-title"><?php the_title(); ?></h2>
                 <p class="article-author"><?php the_author(); ?></p>
+                <h2 class="article-title"><?php the_title(); ?></h2>
             </div>
         </a>
         <?php
         wp_reset_postdata();
     endif;
 
-    echo do_shortcode( '[separator]' );
+    echo do_shortcode('[separator]');
 
-    // --- Successivi 4 articoli in griglia 2x2 ---
-    $args = array(
+    // --- Successivi 3 articoli ---
+    $args = [
         'posts_per_page' => 3,
         'post_status'    => 'publish',
-        'offset'         => 1, // salta il primo articolo già mostrato
-    );
+        'offset'         => 1,
+    ];
     $recent_posts = get_posts($args);
+    $count_posts  = is_array($recent_posts) ? count($recent_posts) : 0;
 
     if ($recent_posts) :
-        echo '<div class="article-grid">';
-        foreach ($recent_posts as $post) :
-            setup_postdata($post);
-            ?>
-            <a class="article-card" href="<?php echo get_permalink($post); ?>">
-                <p class="article-author"><?php the_author(); ?></p>
-                <h3 class="article-title"><?php the_title(); ?></h3>
-            </a>
-            <?php
-        endforeach;
-        echo '</div>';
-        wp_reset_postdata();
+        ?>
+        <div class="article-grid cz-carousel" data-count="<?php echo esc_attr($count_posts); ?>">
+            <div class="cz-carousel-track">
+                <?php foreach ($recent_posts as $post) : setup_postdata($post); ?>
+                    <a class="article-card" href="<?php echo get_permalink($post); ?>">
+                        <p class="article-author"><?php the_author(); ?></p>
+                        <h3 class="article-title"><?php the_title(); ?></h3>
+                    </a>
+                <?php endforeach; wp_reset_postdata(); ?>
+            </div>
+
+            <?php if ($count_posts > 1): ?>
+                <div class="cz-carousel-dots" role="tablist" aria-label="Scorri articoli">
+                    <?php for ($i = 0; $i < $count_posts; $i++): ?>
+                        <button
+                            type="button"
+                            class="cz-carousel-dot<?php echo $i === 0 ? ' is-active' : ''; ?>"
+                            data-index="<?php echo esc_attr($i); ?>"
+                            role="tab"
+                            aria-selected="<?php echo $i === 0 ? 'true' : 'false'; ?>"
+                            aria-label="Mostra articolo <?php echo esc_attr($i + 1); ?>"
+                        ><?php echo esc_html($i + 1); ?></button>
+                    <?php endfor; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php
     endif;
     ?>
 </section>

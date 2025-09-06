@@ -1392,6 +1392,7 @@ section.home-section .post-content p {
 }
 
 /* Featured article (più grande) */
+/* Featured */
 .article-featured {
   display: block;
   margin-bottom: 2rem;
@@ -1400,6 +1401,115 @@ section.home-section .post-content p {
   border-bottom: 1px solid var(--border);
   text-align: left;
 }
+
+/* Grid wrapper (desktop) */
+.article-grid {
+  margin-top: 1.5em;
+  position: relative;
+  display: block; /* ensure dots sit below, not inline */
+}
+
+/* Cards */
+.article-grid .article-card {
+  padding: 1em;
+  text-align: center;
+  box-sizing: border-box;
+  border-right: var(--card-border);
+}
+
+.article-grid .article-card:nth-child(1) {
+  border-left: var(--card-border);
+}
+
+.article-grid .article-title {
+  font-size: 1em;
+  text-transform: uppercase;
+}
+
+.article-grid .article-author {
+  font-size: .9em;
+  font-style: italic;
+}
+
+/* Track: 3 columns only on desktop/tablet */
+.cz-carousel .cz-carousel-track {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Hide carousel dots by default (desktop) */
+.cz-carousel .cz-carousel-dots {
+  display: none;
+}
+
+/* --- Mobile carousel --- */
+@media (max-width: 587px) {
+  .article-meta { text-align: center; }
+
+  .cz-carousel {
+    width: 100%;
+    overflow: hidden; /* viewport for slides */
+  }
+
+  .cz-carousel .cz-carousel-track {
+    display: flex;                 /* become horizontal track */
+    transition: transform .35s ease;
+    will-change: transform;
+  }
+
+  .article-grid .article-card:nth-child(1),
+  .article-grid .article-card {
+    border: none;
+    border-left: var(--card-border);
+    border-right: var(--card-border);
+  }
+
+  .cz-carousel .article-card {
+    min-width: 100%;
+    flex: 0 0 100%;
+  }
+
+  /* Dots under the card, centered */
+  .cz-carousel .cz-carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .75rem;
+    position: static;   /* ensure not overlaying the card */
+  }
+
+  .cz-carousel .cz-carousel-dot {
+    margin-top: .5em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: var(--card-border);
+    color: var(--text);
+    border-radius: 9999px;
+    background: transparent;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .cz-carousel .cz-carousel-dot.is-active {
+    border-color: var(--link);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--link) 20%, transparent);
+  }
+}
+
+/* Optional: reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .cz-carousel .cz-carousel-track {
+    transition: none;
+  }
+}
+
 
 .volumes-grid {
   display: grid;
@@ -1881,47 +1991,6 @@ blockquote.poem p.verse {
   text-align: center;
 }
 
-.article-grid  {
-  display: flex;
-  margin-top: 1em;
-}
 
-.article-grid .article-card:first-child {
-  border-left: var(--card-border);
-}
-
-.article-grid .article-card {
-  flex: 1;
-  padding: 1em;
-  border-right: var(--card-border);
-  text-align: center;
-}
-
-.article-grid .article-card .article-title {
-  font-size: 1em;
-  text-transform: uppercase;
-}
-
-.article-grid .article-card .article-author {
-  font-size: .9em;
-  font-style: italic;
-}
-
-@media (max-width: 587px) {
-  .article-grid .article-card:nth-child(3) {
-    display: none;
-  }
-}
-
-@media (max-width: 420px) {
-  .article-grid .article-card:first-child {
-    border: none;
-    text-align: center;
-  }
-
-  .article-grid .article-card:nth-child(2) {
-    display: none;
-  }
-}
 
 
