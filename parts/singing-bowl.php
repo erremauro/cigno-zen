@@ -7,9 +7,6 @@
 ?>
 
 <section class="cz-bowl">
-    <p class="cz-bowl-description">
-        Sei arrivato fin qui!<br>Attiva l'audio e suona la campana.
-    </p>
     <div class="cz-bowl-wrap">
         <button class="cz-bowl-btn" type="button" aria-label="Suona la campana">    <?php get_template_part( 'parts/svg/singing-bowl' ); ?>
          </button>

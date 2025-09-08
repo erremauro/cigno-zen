@@ -1027,7 +1027,7 @@
         }
         wave.style.display = 'none';
         section.classList.remove('is-playing');
-      }, 450);
+      }, 0);
     }
 
     // Click = play from start

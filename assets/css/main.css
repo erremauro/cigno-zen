@@ -2015,7 +2015,7 @@ blockquote.poem p.verse {
   --bowl-size: min(125px, 75vw);
   --wave-h: clamp(72px, calc(var(--bowl-size) * 0.28), 280px);
   width: 100%;
-  margin: 1em auto;
+  margin: 4em auto 1em auto;
   text-align: center;
 }
 
@@ -2074,7 +2074,7 @@ blockquote.poem p.verse {
   pointer-events: none;
   z-index: 1;
   height: var(--wave-h);
-  opacity: 0;
+  opacity: 1;
   transition: opacity .15s ease;
 }
 
