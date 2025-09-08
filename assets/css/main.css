@@ -659,6 +659,7 @@ menu.menu-bar {
   margin-top: 2em;
 }
 
+
 .top-toolbar {
   display: flex;
   align-items: center;
@@ -872,7 +873,7 @@ h2.post-title {
   text-align: right;
 }
 
-/* cta-link */
+/* ======= CTA TITLE LINK =======  */
 .cta-link-container {
   margin-bottom: 1em;
 }
@@ -887,13 +888,20 @@ h2.post-title {
   align-items: center;
   gap: .5rem;
   text-decoration: none;
-  font-size: 1.4em;
   font-weight: 600;
 }
 
+
 .cta-link-label {
+  font-size: 1.5em;
   position: relative;
   text-transform: uppercase;
+}
+
+@media (max-width: 420px) {
+ .cta-link-label {
+    font-size: 1.2em;;
+  }
 }
 
 .cta-link-chevron {
