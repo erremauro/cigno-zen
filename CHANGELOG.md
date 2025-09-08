@@ -5,13 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0] 2025-09-08
 ### Added
+- Add singing bowl at the bottom of the page
 - Add a filter that strips shortcodes from search risults
 - Add `[footnotes]`, `[fn]` and `[fndef]` short-code for writing consistent footnotes.
 - Add `[collapsable]` short-code.
 - Add JSON-LD information for Masters
 ### Changed
+- cta link now supports a description that has been implemented.
 - Homepage now show 1 featured article and three latest articles. If the screen is too narrow (i.e. mobile) the article are shown as a browsable carousel.
 - Tags now prefer the alternate name when rendered (via the `show_as` ACF custom field) and related tags now create a JSON-LD schema for comma separated tag synonyms.
 - Homepage reading list is now hidden for everyone if there a no articles in the queue.
@@ -21,6 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Fix highlight color for searches
 - Fix form checkbox's checkmark color for light theme.
+### Polish
+- sun/moon icons have been moved to `parts/svg`
+- The "Dhamma Gift" message has been moved to `parts/dhamma-gift.php`
+- `page-articles.php` moved to `__page-articles.php` as deprecated. (wasn't used)
 
 ## [1.3.0] 2025-09-02
 ### Added
@@ -196,7 +202,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.4.0
 [1.3.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.3.0
 [1.2.2]: https://github.com/erremauro/cigno-zen/releases/tag/v1.2.2
 [1.2.1]: https://github.com/erremauro/cigno-zen/releases/tag/v1.2.1

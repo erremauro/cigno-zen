@@ -1,11 +1,14 @@
 <section class="home-section" id="authors">
     <?php
+        $counts = count_users();
+        $total_authors = isset($counts['avail_roles']['author']) ? $counts['avail_roles']['author'] : 0;
         get_template_part(
             'parts/cta-title-link',
             null,
             [
                 "url"   => "/autori",
-                "title" => "Scopri gli Autori"
+                "title" => "Scopri gli Autori",
+                "desc"  => "Incontra il Dharma diffuso da oltre " . $total_authors . " autori"
             ]
         );
     ?>

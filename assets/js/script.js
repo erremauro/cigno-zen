@@ -653,3 +653,410 @@
     init();
   }
 }());
+
+/* ===== SIGING BOWL ===== */
+(function () {
+  'use strict';
+
+  /* ---------------------------------------
+   *  Utils (from your ESM)
+   * ------------------------------------- */
+  function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0) t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function") {
+      for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+        if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i])) t[p[i]] = s[p[i]];
+      }
+    }
+    return t;
+  }
+
+  /* ---------------------------------------
+   *  ClassicCurve (unchanged)
+   * ------------------------------------- */
+  class ClassicCurve {
+    constructor(ctrl, definition) {
+      this.ATT_FACTOR = 4;
+      this.GRAPH_X = 2;
+      this.AMPLITUDE_FACTOR = 0.6;
+      this.ctrl = ctrl;
+      this.definition = definition;
+    }
+    globalAttFn(x) {
+      return Math.pow(this.ATT_FACTOR / (this.ATT_FACTOR + Math.pow(x, this.ATT_FACTOR)), this.ATT_FACTOR);
+    }
+    xPos(i) {
+      return this.ctrl.width * ((i + this.GRAPH_X) / (this.GRAPH_X * 2));
+    }
+    yPos(i) {
+      return (this.AMPLITUDE_FACTOR *
+        (this.globalAttFn(i) *
+          (this.ctrl.heightMax * this.ctrl.amplitude) *
+          (1 / this.definition.attenuation) *
+          Math.sin(this.ctrl.opt.frequency * i - this.ctrl.phase)));
+    }
+    draw() {
+      const { ctx } = this.ctrl;
+      ctx.moveTo(0, 0);
+      ctx.beginPath();
+      const finalColor = this.definition.color || this.ctrl.color;
+      const colorHex = finalColor.replace(/rgb\(/g, "").replace(/\)/g, "");
+      ctx.strokeStyle = `rgba(${colorHex},${this.definition.opacity})`;
+      ctx.lineWidth = this.definition.lineWidth;
+      for (let i = -this.GRAPH_X; i <= this.GRAPH_X; i += this.ctrl.opt.pixelDepth) {
+        ctx.lineTo(this.xPos(i), this.ctrl.heightMax + this.yPos(i));
+      }
+      ctx.stroke();
+    }
+    static getDefinition() {
+      return [
+        { attenuation: -2, lineWidth: 1, opacity: 0.1 },
+        { attenuation: -6, lineWidth: 1, opacity: 0.2 },
+        { attenuation: 4,  lineWidth: 1, opacity: 0.4 },
+        { attenuation: 2,  lineWidth: 1, opacity: 0.6 },
+        { attenuation: 1,  lineWidth: 1.5, opacity: 1 }
+      ];
+    }
+  }
+
+  /* ---------------------------------------
+   *  iOS9Curve (unchanged)
+   * ------------------------------------- */
+  class iOS9Curve {
+    constructor(ctrl, definition) {
+      this.GRAPH_X = 25;
+      this.AMPLITUDE_FACTOR = 0.8;
+      this.SPEED_FACTOR = 1;
+      this.DEAD_PX = 2;
+      this.ATT_FACTOR = 4;
+      this.DESPAWN_FACTOR = 0.02;
+      this.DEFAULT_NOOFCURVES_RANGES = [2, 5];
+      this.DEFAULT_AMPLITUDE_RANGES = [0.3, 1];
+      this.DEFAULT_OFFSET_RANGES = [-3, 3];
+      this.DEFAULT_WIDTH_RANGES = [1, 3];
+      this.DEFAULT_SPEED_RANGES = [0.5, 1];
+      this.DEFAULT_DESPAWN_TIMEOUT_RANGES = [500, 2000];
+      this.ctrl = ctrl;
+      this.definition = definition;
+      this.noOfCurves = 0;
+      this.spawnAt = 0;
+      this.prevMaxY = 0;
+      this.phases = [];
+      this.offsets = [];
+      this.speeds = [];
+      this.finalAmplitudes = [];
+      this.widths = [];
+      this.amplitudes = [];
+      this.despawnTimeouts = [];
+      this.verses = [];
+    }
+    getRandomRange(e) {
+      return e[0] + Math.random() * (e[1] - e[0]);
+    }
+    spawnSingle(ci) {
+      var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+      this.phases[ci] = 0;
+      this.amplitudes[ci] = 0;
+      this.despawnTimeouts[ci] = this.getRandomRange((_b = (_a = this.ctrl.opt.ranges) === null || _a === void 0 ? void 0 : _a.despawnTimeout) !== null && _b !== void 0 ? _b : this.DEFAULT_DESPAWN_TIMEOUT_RANGES);
+      this.offsets[ci] = this.getRandomRange((_d = (_c = this.ctrl.opt.ranges) === null || _c === void 0 ? void 0 : _c.offset) !== null && _d !== void 0 ? _d : this.DEFAULT_OFFSET_RANGES);
+      this.speeds[ci] = this.getRandomRange((_f = (_e = this.ctrl.opt.ranges) === null || _e === void 0 ? void 0 : _e.speed) !== null && _f !== void 0 ? _f : this.DEFAULT_SPEED_RANGES);
+      this.finalAmplitudes[ci] = this.getRandomRange((_h = (_g = this.ctrl.opt.ranges) === null || _g === void 0 ? void 0 : _g.amplitude) !== null && _h !== void 0 ? _h : this.DEFAULT_AMPLITUDE_RANGES);
+      this.widths[ci] = this.getRandomRange((_k = (_j = this.ctrl.opt.ranges) === null || _j === void 0 ? void 0 : _j.width) !== null && _k !== void 0 ? _k : this.DEFAULT_WIDTH_RANGES);
+      this.verses[ci] = this.getRandomRange([-1, 1]);
+    }
+    getEmptyArray(count) {
+      return new Array(count);
+    }
+    spawn() {
+      var _a, _b;
+      this.spawnAt = Date.now();
+      this.noOfCurves = Math.floor(this.getRandomRange((_b = (_a = this.ctrl.opt.ranges) === null || _a === void 0 ? void 0 : _a.noOfCurves) !== null && _b !== void 0 ? _b : this.DEFAULT_NOOFCURVES_RANGES));
+      this.phases = this.getEmptyArray(this.noOfCurves);
+      this.offsets = this.getEmptyArray(this.noOfCurves);
+      this.speeds = this.getEmptyArray(this.noOfCurves);
+      this.finalAmplitudes = this.getEmptyArray(this.noOfCurves);
+      this.widths = this.getEmptyArray(this.noOfCurves);
+      this.amplitudes = this.getEmptyArray(this.noOfCurves);
+      this.despawnTimeouts = this.getEmptyArray(this.noOfCurves);
+      this.verses = this.getEmptyArray(this.noOfCurves);
+      for (let ci = 0; ci < this.noOfCurves; ci++) this.spawnSingle(ci);
+    }
+    globalAttFn(x) {
+      return Math.pow(this.ATT_FACTOR / (this.ATT_FACTOR + Math.pow(x, 2)), this.ATT_FACTOR);
+    }
+    sin(x, phase) { return Math.sin(x - phase); }
+    yRelativePos(i) {
+      let y = 0;
+      for (let ci = 0; ci < this.noOfCurves; ci++) {
+        let t = 4 * (-1 + (ci / (this.noOfCurves - 1)) * 2);
+        t += this.offsets[ci];
+        const k = 1 / this.widths[ci];
+        const x = i * k - t;
+        y += Math.abs(this.amplitudes[ci] * this.sin(this.verses[ci] * x, this.phases[ci]) * this.globalAttFn(x));
+      }
+      return y / this.noOfCurves;
+    }
+    yPos(i) {
+      return (this.AMPLITUDE_FACTOR *
+        this.ctrl.heightMax *
+        this.ctrl.amplitude *
+        this.yRelativePos(i) *
+        this.globalAttFn((i / this.GRAPH_X) * 2));
+    }
+    xPos(i) {
+      return this.ctrl.width * ((i + this.GRAPH_X) / (this.GRAPH_X * 2));
+    }
+    drawSupportLine() {
+      const { ctx } = this.ctrl;
+      const coo = [0, this.ctrl.heightMax, this.ctrl.width, 1];
+      const gradient = ctx.createLinearGradient.apply(ctx, coo);
+      gradient.addColorStop(0, "transparent");
+      gradient.addColorStop(0.1, "rgba(255,255,255,.5)");
+      gradient.addColorStop(1 - 0.1 - 0.1, "rgba(255,255,255,.5)");
+      gradient.addColorStop(1, "transparent");
+      ctx.fillStyle = gradient;
+      ctx.fillRect.apply(ctx, coo);
+    }
+    draw() {
+      const { ctx } = this.ctrl;
+      ctx.globalAlpha = 0.7;
+      ctx.globalCompositeOperation = this.ctrl.opt.globalCompositeOperation;
+      if (this.spawnAt === 0) this.spawn();
+      if (this.definition.supportLine) return this.drawSupportLine();
+
+      for (let ci = 0; ci < this.noOfCurves; ci++) {
+        if (this.spawnAt + this.despawnTimeouts[ci] <= Date.now()) this.amplitudes[ci] -= this.DESPAWN_FACTOR;
+        else this.amplitudes[ci] += this.DESPAWN_FACTOR;
+        this.amplitudes[ci] = Math.min(Math.max(this.amplitudes[ci], 0), this.finalAmplitudes[ci]);
+        this.phases[ci] = (this.phases[ci] + this.ctrl.speed * this.speeds[ci] * this.SPEED_FACTOR) % (2 * Math.PI);
+      }
+      let maxY = -Infinity;
+      for (const sign of [1, -1]) {
+        ctx.beginPath();
+        for (let i = -this.GRAPH_X; i <= this.GRAPH_X; i += this.ctrl.opt.pixelDepth) {
+          const x = this.xPos(i);
+          const y = this.yPos(i);
+          ctx.lineTo(x, this.ctrl.heightMax - sign * y);
+          maxY = Math.max(maxY, y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = `rgba(${this.definition.color}, 1)`;
+        ctx.strokeStyle = `rgba(${this.definition.color}, 1)`;
+        ctx.fill();
+      }
+      if (maxY < this.DEAD_PX && this.prevMaxY > maxY) this.spawnAt = 0;
+      this.prevMaxY = maxY;
+      return null;
+    }
+    static getDefinition() {
+      return [
+        { color: "255,255,255", supportLine: false },
+        { color: "15, 82, 169" },  // blue
+        { color: "173, 57, 76" },  // red
+        { color: "48, 220, 155" }  // green
+      ];
+    }
+  }
+
+  /* ---------------------------------------
+   *  SiriWave (unchanged API)
+   * ------------------------------------- */
+  class SiriWave {
+    constructor(_a) {
+      var { container } = _a, rest = __rest(_a, ["container"]);
+      this.phase = 0;
+      this.run = false;
+      this.curves = [];
+      const csStyle = window.getComputedStyle(container);
+      this.opt = Object.assign({
+        container,
+        style: "ios",
+        ratio: window.devicePixelRatio || 1,
+        speed: 0.2,
+        amplitude: 1,
+        frequency: 6,
+        color: "#fff",
+        cover: false,
+        width: parseInt(csStyle.width.replace("px", ""), 10),
+        height: parseInt(csStyle.height.replace("px", ""), 10),
+        autostart: true,
+        pixelDepth: 0.02,
+        lerpSpeed: 0.1,
+        globalCompositeOperation: "lighter"
+      }, rest);
+      this.speed = Number(this.opt.speed);
+      this.amplitude = Number(this.opt.amplitude);
+      this.width = Number(this.opt.ratio * this.opt.width);
+      this.height = Number(this.opt.ratio * this.opt.height);
+      this.heightMax = Number(this.height / 2) - 6;
+      this.color = `rgb(${this.hex2rgb(this.opt.color)})`;
+      this.interpolation = { speed: this.speed, amplitude: this.amplitude };
+      this.canvas = document.createElement("canvas");
+      const ctx = this.canvas.getContext("2d");
+      if (ctx === null) throw new Error("Unable to create 2D Context");
+      this.ctx = ctx;
+      this.canvas.width = this.width;
+      this.canvas.height = this.height;
+      if (this.opt.cover === true) {
+        this.canvas.style.width = this.canvas.style.height = "100%";
+      } else {
+        this.canvas.style.width = `${this.width / this.opt.ratio}px`;
+        this.canvas.style.height = `${this.height / this.opt.ratio}px`;
+      }
+      switch (this.opt.style) {
+        case "ios9":
+          this.curves = (this.opt.curveDefinition || iOS9Curve.getDefinition()).map((def) => new iOS9Curve(this, def));
+          break;
+        case "ios":
+        default:
+          this.curves = (this.opt.curveDefinition || ClassicCurve.getDefinition()).map((def) => new ClassicCurve(this, def));
+          break;
+      }
+      this.opt.container.appendChild(this.canvas);
+      if (this.opt.autostart) this.start();
+    }
+    hex2rgb(hex) {
+      const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result ? `${parseInt(result[1], 16).toString()},${parseInt(result[2], 16).toString()},${parseInt(result[3], 16).toString()}` : null;
+    }
+    intLerp(v0, v1, t) { return v0 * (1 - t) + v1 * t; }
+    lerp(propertyStr) {
+      const prop = this.interpolation[propertyStr];
+      if (prop !== null) {
+        this[propertyStr] = this.intLerp(this[propertyStr], prop, this.opt.lerpSpeed);
+        if (this[propertyStr] - prop === 0) this.interpolation[propertyStr] = null;
+      }
+      return this[propertyStr];
+    }
+    clear() {
+      this.ctx.globalCompositeOperation = "destination-out";
+      this.ctx.fillRect(0, 0, this.width, this.height);
+      this.ctx.globalCompositeOperation = "source-over";
+    }
+    draw() { this.curves.forEach((curve) => curve.draw()); }
+    startDrawCycle() {
+      this.clear();
+      this.lerp("amplitude");
+      this.lerp("speed");
+      this.draw();
+      this.phase = (this.phase + (Math.PI / 2) * this.speed) % (2 * Math.PI);
+      if (window.requestAnimationFrame) {
+        this.animationFrameId = window.requestAnimationFrame(this.startDrawCycle.bind(this));
+      } else {
+        this.timeoutId = setTimeout(this.startDrawCycle.bind(this), 20);
+      }
+    }
+    start() {
+      if (!this.canvas) throw new Error("This instance of SiriWave has been disposed, please create a new instance");
+      this.phase = 0;
+      if (!this.run) {
+        this.run = true;
+        this.startDrawCycle();
+      }
+    }
+    stop() {
+      this.phase = 0;
+      this.run = false;
+      if (this.animationFrameId) window.cancelAnimationFrame(this.animationFrameId);
+      if (this.timeoutId) clearTimeout(this.timeoutId);
+    }
+    dispose() {
+      this.stop();
+      if (this.canvas) {
+        this.canvas.remove();
+        this.canvas = null;
+      }
+    }
+    set(propertyStr, value) { this.interpolation[propertyStr] = value; }
+    setSpeed(value) { this.set("speed", value); }
+    setAmplitude(value) { this.set("amplitude", value); }
+  }
+
+  /* ---------------------------------------
+   *  Hook to your template
+   * ------------------------------------- */
+  function setupBowl(section) {
+    var btn = section.querySelector('.cz-bowl-btn');
+    var audio = section.querySelector('.cz-bowl-audio');
+
+    if (!btn || !audio) return;
+
+    // Ensure wave container exists (centered under button)
+    var wave = section.querySelector('.cz-bowl-wave');
+    if (!wave) {
+      wave = document.createElement('div');
+      wave.className = 'cz-bowl-wave';
+      // insert right after button
+      btn.insertAdjacentElement('afterend', wave);
+    }
+
+    var waveInstance = null;
+    var disposeTimer = null;
+
+    function ensureWaveStarted() {
+      if (!waveInstance) {
+        waveInstance = new SiriWave({
+          container: wave,
+          style: 'ios9',
+          cover: true,
+          autostart: true,
+          speed: 0.20,
+          amplitude: 24
+        });
+      } else {
+        waveInstance.start();
+      }
+      if (disposeTimer) { clearTimeout(disposeTimer); disposeTimer = null; }
+      wave.style.display = 'block';
+      section.classList.add('is-playing');
+      // Small ramp up
+      waveInstance.setAmplitude(1);
+    }
+
+    function stopAndDisposeWave() {
+      if (!waveInstance) return;
+      // Fade out amplitude then dispose
+      waveInstance.setAmplitude(0);
+      disposeTimer = setTimeout(function () {
+        if (waveInstance) {
+          waveInstance.dispose();
+          waveInstance = null;
+        }
+        wave.style.display = 'none';
+        section.classList.remove('is-playing');
+      }, 450);
+    }
+
+    // Click = play from start
+    btn.addEventListener('click', function () {
+      try {
+        audio.currentTime = 0;
+      } catch (e) {}
+      audio.play().catch(function(){ /* ignore autoplay errors */ });
+    });
+
+    // Audio events
+    audio.addEventListener('play', ensureWaveStarted);
+    audio.addEventListener('playing', ensureWaveStarted);
+    audio.addEventListener('pause', stopAndDisposeWave);
+    audio.addEventListener('ended', stopAndDisposeWave);
+
+    // Optional: space/enter triggers button
+    btn.addEventListener('keydown', function (e) {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
+  }
+
+  // Init all instances on DOM ready
+  function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded', fn); }
+  ready(function(){
+    document.querySelectorAll('.cz-bowl').forEach(setupBowl);
+  });
+
+})();

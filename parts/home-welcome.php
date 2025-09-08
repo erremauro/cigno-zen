@@ -6,7 +6,7 @@
 <?php else : ?>
 <div class="quote-content">
 <h2>Bentornato, <?php echo wp_get_current_user()->display_name; ?></h2>
-<?php echo do_shortcode( '[zen_quotes frequency="daily"]' ); ?>
+<?php echo do_shortcode( '[zen_quotes frequency="random"]' ); ?>
 <?php endif ?>
 </div>
 </section>

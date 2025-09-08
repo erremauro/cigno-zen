@@ -1,11 +1,60 @@
 <section class="home-section" id="volumes">
 	<?php
+		$taxonomy = 'volumes';
+
+		$completed_ids = get_terms([
+		  'taxonomy'   => $taxonomy,
+		  'hide_empty' => false,         // conteggia anche se non associati a post
+		  'fields'     => 'ids',
+		  'meta_query' => [
+		    [
+		      'key'     => 'completato', // nome del campo ACF
+		      'value'   => '1',          // ACF True/False salva '1' per true
+		      'compare' => '='
+		    ]
+		  ],
+		]);
+		$completed_count = is_wp_error($completed_ids) ? 0 : count($completed_ids);
+
+		$not_completed_ids = get_terms([
+		  'taxonomy'   => $taxonomy,
+		  'hide_empty' => false,
+		  'fields'     => 'ids',
+		  'meta_query' => [
+		    [
+		      'key'     => 'completato',
+		      'value'   => '0',
+		      'compare' => '='
+		    ]
+		  ],
+		]);
+		$not_completed_count = is_wp_error($not_completed_ids) ? 0 : count($not_completed_ids);
+
+        $all_term_ids = get_terms([
+          'taxonomy'   => $taxonomy,
+          'hide_empty' => false,
+          'fields'     => 'ids',
+        ]);
+        $unset_count = 0;
+        if ( ! is_wp_error($all_term_ids) ) {
+          // termini esplicitamente settati (1 o 0)
+          $explicit_ids = array_unique(array_merge($completed_ids ?: [], $not_completed_ids ?: []));
+          $unset_count  = count(array_diff($all_term_ids, $explicit_ids));
+        }
+
+        $not_completed_count = $not_completed_count + $unset_count;
+        $total_count = $completed_count + $not_completed_count;
+
+
+		$total_count = $completed_count + $not_completed_count;
+
 		get_template_part(
 			'parts/cta-title-link',
 			null,
 			[
 				'url'	=> '/volumi',
 				'title'	=> 'Sfoglia i Volumi',
+				'desc'  => $completed_count . ' raccolte complete e ' . $not_completed_count . ' volumi in corso.'
 			]
 		);
 	?>

@@ -1,11 +1,14 @@
 <section class="home-section" id="latest-articles">
     <?php
+    $count_posts = wp_count_posts('post');
+    $total_posts = $count_posts->publish;
     get_template_part(
         'parts/cta-title-link',
         null,
         [
             "url"   => "/articoli",
-            "title" => "Leggi gli Articoli"
+            "title" => "Leggi gli Articoli",
+            "desc"  => "Immergiti tra gli oltre " . $total_posts . " articoli pubblicati"
         ]
     );
 
@@ -71,4 +74,7 @@
         <?php
     endif;
     ?>
+    <div class="more-articles" style="text-align: center; margin: 2em;">
+        <a class="link-pill" href="/articoli/?offset=4">Continua&hellip;</a>
+    </div>
 </section>

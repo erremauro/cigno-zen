@@ -1,17 +1,26 @@
 <?php
-$paged = max( 1, (int) get_query_var('paged') );
+$author_id = is_author() ?
+    get_queried_object_id() :
+    (int) get_query_var('author');
+$category_id = is_category() ?
+    get_queried_object_id() :
+    0;
+$tag_slug = is_tag() ?
+    get_query_var('tag') :
+    get_query_var('tag');
 
-// Context correnti (preferisci ID quando possibile)
-$author_id     = is_author()   ? get_queried_object_id() : (int) get_query_var('author');
-$category_id   = is_category() ? get_queried_object_id() : 0;                 // uso ID
-$tag_slug      = is_tag()      ? get_query_var('tag')     : get_query_var('tag');
+$offset_param   = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
+$post_per_page  = (int) get_option('posts_per_page');
+$paged          = max(1, get_query_var('paged') ?: get_query_var('page') ?: 1);
+$query_offset   = $offset_param + ($paged - 1) * $post_per_page;
 
 // Argomenti per la query
 $args = [
     'post_type'           => 'post',
-    'posts_per_page'      => 5,
+    'posts_per_page'      => $posts_per_page,
     'paged'               => $paged,
     'ignore_sticky_posts' => true,
+    'offset'              => $query_offset,
 ];
 
 // Filtri condizionali
@@ -37,7 +46,7 @@ $the_query = new WP_Query( $args );
         // Categoria
         single_cat_title( 'Categoria: ' );
     } elseif ( is_tag() ) {
-    	echo 'Articoli Correlati';
+        echo 'Articoli Correlati';
     } elseif ( is_home() || is_archive() ) {
         // Elenco generale articoli
         echo 'Tutti gli Articoli';
@@ -47,61 +56,61 @@ $the_query = new WP_Query( $args );
 </header>
 
 <?php if ($the_query->have_posts()) : ?>
-	<?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-			<header class="post-header">
-				<?php
-					if (! is_author() ):
-						display_author_info_conditionally();
-					endif
-				?>
-				<?php display_volumes_name() ?>
-				<h2 class="post-title">
-					<a href="<?php the_permalink(); ?>">
-						<?php the_title(); ?>
-					</a>
-				</h2>
-				<h4 class="post-subtitle">
-					<a href="<?php the_permalink(); ?>">
-						<?php the_subtitle(); ?>
-					</a>
-				<h4>
-			</header>
-			<div class="post-content">
-				<?php the_excerpt(); ?>
-				<div class="more-text">
-					<?php
-						$url = get_permalink( get_the_ID() );
-						get_template_part(
-							'parts/cta-title-link',
-							null,
-							[
-								'url'	=> $url,
-								'title'	=> 'Continua'
-							]
-						);
-					?>
-				</div>
-			</div>
-		</article>
-	<?php endwhile; ?>
+    <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+        <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+            <header class="post-header">
+                <?php
+                    if (! is_author() ):
+                        display_author_info_conditionally();
+                    endif
+                ?>
+                <?php display_volumes_name() ?>
+                <h2 class="post-title">
+                    <a href="<?php the_permalink(); ?>">
+                        <?php the_title(); ?>
+                    </a>
+                </h2>
+                <h4 class="post-subtitle">
+                    <a href="<?php the_permalink(); ?>">
+                        <?php the_subtitle(); ?>
+                    </a>
+                <h4>
+            </header>
+            <div class="post-content">
+                <?php the_excerpt(); ?>
+                <div class="more-text">
+                    <?php
+                        $url = get_permalink( get_the_ID() );
+                        get_template_part(
+                            'parts/cta-title-link',
+                            null,
+                            [
+                                'url'   => $url,
+                                'title' => 'Continua'
+                            ]
+                        );
+                    ?>
+                </div>
+            </div>
+        </article>
+    <?php endwhile; ?>
 
-	<!-- Paginazione -->
-	<?php if ( $the_query->max_num_pages > 1 ) : ?>
-	<div class="pagination">
-		<?php
-		echo paginate_links(array(
-			'total'     => $the_query->max_num_pages,
-			'current'   => $paged,
-			'prev_text' => __('« Precedente'),
-			'next_text' => __('Successivo »'),
-		));
-		?>
-	</div>
-	<?php endif; ?>
+    <!-- Paginazione -->
+    <?php if ( $the_query->max_num_pages > 1 ) : ?>
+    <div class="pagination">
+        <?php
+        echo paginate_links(array(
+            'total'     => $the_query->max_num_pages,
+            'current'   => $paged,
+            'prev_text' => __('« Precedente'),
+            'next_text' => __('Successivo »'),
+        ));
+        ?>
+    </div>
+    <?php endif; ?>
 
 <?php else : ?>
-	<p class="no-article-found"><em><?php _e('Nessun articolo trovato.'); ?></em></p>
+    <p class="no-article-found"><em><?php _e('Nessun articolo trovato.'); ?></em></p>
 <?php endif; ?>
 
 <?php
