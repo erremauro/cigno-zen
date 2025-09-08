@@ -893,15 +893,9 @@ h2.post-title {
 
 
 .cta-link-label {
-  font-size: 1.5em;
+  font-size: clamp(1rem, 2vw + 1rem, 1.5rem);
   position: relative;
   text-transform: uppercase;
-}
-
-@media (max-width: 420px) {
- .cta-link-label {
-    font-size: 1.2em;;
-  }
 }
 
 .cta-link-chevron {
