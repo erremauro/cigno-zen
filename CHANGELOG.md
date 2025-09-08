@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Fixed
 - Fix php tag opening in `parts/cta-title-link`
+- Fix `cta-title-link` label `font-size`
 
 ## [1.4.0] 2025-09-08
 ### Added
