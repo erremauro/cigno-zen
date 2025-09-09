@@ -599,6 +599,20 @@ p.no-article-found {
   margin-bottom: 2em;
 }
 
+.tag-definition ul {
+  list-style-type: disc;
+  list-style-position: inside;
+  text-align: left;
+  padding: 1em;
+}
+
+.tag-definition ol {
+  list-style: decimal;
+  list-style-position: inside;
+  text-align: left;
+  padding: 1em;
+}
+
 .author-bio-full,
 .author-bio-teaser .more-link-toggle,
 .author-bio-full .more-link-toggle {
