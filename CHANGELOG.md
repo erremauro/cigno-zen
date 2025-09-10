@@ -5,7 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.5.0] 2025-09-10
+### Added
+- Add [references] short code to show linked posts
 ### Fixed
 - Fix list style in tag-definitions.
 - Fix php tag opening in `parts/cta-title-link`
@@ -208,7 +210,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.5.0...HEAD
+[1.5.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.5.0
 [1.4.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.4.0
 [1.3.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.3.0
 [1.2.2]: https://github.com/erremauro/cigno-zen/releases/tag/v1.2.2

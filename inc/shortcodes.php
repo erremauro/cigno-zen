@@ -207,4 +207,208 @@ add_shortcode('footnotes', function($atts = [], $content = null){
   return ob_get_clean();
 });
 
+/**
+ * Shortcode: [references title="Riferimenti" id="refs-mazu" class="mb-6" post_id="123"]
+ * - Automatically wraps results inside your existing [collapsable] shortcode.
+ * - If no references are found, returns an empty string (renders nothing).
+ */
+
+add_shortcode('references', function ($atts = [], $content = null, $tag = '') {
+  // Shortcode attrs: wrapper title/id/class + optional target post_id
+  $atts = shortcode_atts([
+    'title'   => 'Riferimenti', // collapsable heading
+    'id'      => '',            // collapsable id
+    'class'   => '',            // extra classes on collapsable root
+    'post_id' => '',            // optional: target post id (default current)
+  ], $atts, $tag);
+
+  // Target post ID
+  $target_id = $atts['post_id'] !== '' ? intval($atts['post_id']) : get_the_ID();
+  if ($target_id <= 0) return '';
+
+  // Cache
+  $cache_key = 'cz_refs_' . $target_id;
+  $groups = get_transient($cache_key);
+  if ($groups === false) {
+    $groups = cz_find_referrers_grouped_by_post_type($target_id);
+    set_transient($cache_key, $groups, MINUTE_IN_SECONDS * 10);
+  }
+
+  // Nothing to show => render nothing (no collapsable either)
+  if (empty($groups)) return '';
+
+  // Build inner HTML list (grouped by post type)
+  $inner = '';
+  foreach ($groups as $ptype => $ids) {
+    $obj = get_post_type_object($ptype);
+    if (!$obj) continue;
+
+    $label = $obj->labels->name ?: $ptype;
+    $inner .= '<div class="cz-references-group cz-references-group--' . esc_attr($ptype) . '">';
+    $inner .= '<h3 class="cz-references-heading">' . esc_html($label) . '</h3>';
+    $inner .= '<ul class="cz-references-list">';
+
+    foreach ($ids as $id) {
+      $title = get_the_title($id);
+      $link  = get_permalink($id);
+      if (!$title || !$link) continue;
+      $inner .= '<li class="cz-references-item"><a href="' . esc_url($link) . '">' . esc_html($title) . '</a></li>';
+    }
+
+    $inner .= '</ul></div>';
+  }
+
+  // Sanitize inner HTML
+  $inner = wp_kses($inner, [
+    'div' => ['class' => true],
+    'h3'  => ['class' => true],
+    'ul'  => ['class' => true],
+    'li'  => ['class' => true],
+    'a'   => ['href' => true, 'class' => true, 'title' => true, 'target' => true, 'rel' => true],
+  ]);
+
+  // Build the [collapsable] wrapper automatically (initial=closed, tag=h3 by default)
+  $title_attr = esc_attr($atts['title']);
+  $id_attr    = $atts['id'] !== '' ? ' id="' . esc_attr($atts['id']) . '"' : '';
+  $class_attr = $atts['class'] !== '' ? ' class="' . esc_attr(trim('references-collapsable ' . $atts['class'])) . '"' : ' class="references-collapsable"';
+
+  // Compose collapsable shortcode string
+  $wrapped = '[collapsable title="' . $title_attr . '" initial="closed" tag="h3"' . $id_attr . $class_attr . ']' . $inner . '[/collapsable]';
+
+  // Render collapsable via do_shortcode
+  return do_shortcode($wrapped);
+});
+
+/* ===== Helpers (same as previous message) ===== */
+
+/** Build robust URL variants to match absolute/relative, www/non-www, scheme-less, with/without trailing slash. */
+function cz_build_link_variants(int $post_id): array {
+  $permalink = get_permalink($post_id);
+  if (!$permalink) return [];
+
+  $abs = rtrim($permalink, '/');
+  $rel = rtrim(wp_make_link_relative($permalink), '/');
+  $abs_no_scheme = preg_replace('#^https?://#i', '//', $abs);
+
+  $swap_www = function ($url) {
+    if (strpos($url, '//') === false) return $url;
+    if (preg_match('#//www\.#i', $url)) return preg_replace('#//www\.#i', '//', $url, 1);
+    return preg_replace('#//#', '//www.', $url, 1);
+  };
+
+  $variants = [];
+  $add = function ($u) use (&$variants) {
+    if (!$u) return;
+    $variants[$u] = true;
+    $variants[$u . '/'] = true;
+    $variants[esc_url_raw($u)] = true;
+    $variants[str_replace('&', '&amp;', $u)] = true;
+    $variants[urlencode($u)] = true;
+  };
+
+  // Absolute
+  $add($abs);
+  $add($abs_no_scheme);
+  $add($swap_www($abs));
+  $add($swap_www($abs_no_scheme));
+
+  // Relative
+  $add($rel);
+  $add('/' . ltrim($rel, '/'));
+
+  // Path only
+  $path = parse_url($abs, PHP_URL_PATH);
+  if ($path) $add(rtrim($path, '/'));
+
+  return array_keys($variants);
+}
+
+/** SQL finder (public, published only). */
+function cz_find_referrers_group_by_sql(array $variants): array {
+  global $wpdb;
+  if (empty($variants)) return [];
+
+  $public_types = get_post_types(['public' => true], 'names');
+  if (empty($public_types)) return [];
+
+  $in_types = implode("','", array_map('esc_sql', $public_types));
+
+  $likes = [];
+  $params = [];
+  foreach ($variants as $v) {
+    $likes[] = "post_content LIKE %s";
+    $params[] = '%' . $wpdb->esc_like($v) . '%';
+  }
+  $likes_sql = implode(' OR ', $likes);
+
+  $sql = "
+    SELECT ID, post_type
+    FROM {$wpdb->posts}
+    WHERE post_status = 'publish'
+      AND post_type IN ('$in_types')
+      AND ( $likes_sql )
+  ";
+
+  return $wpdb->get_results($wpdb->prepare($sql, $params)) ?: [];
+}
+
+/** Order ids by date DESC. */
+function cz_order_ids_by_date_desc(array $ids): array {
+  $ids = array_values(array_filter(array_map('intval', $ids)));
+  if (empty($ids)) return [];
+  $q = new WP_Query([
+    'post__in'       => $ids,
+    'posts_per_page' => -1,
+    'post_status'    => 'publish',
+    'orderby'        => 'date',
+    'order'          => 'DESC',
+    'fields'         => 'ids',
+  ]);
+  return $q->posts ?: $ids;
+}
+
+/** Grouping + sorting + uniqueness + self-exclusion. */
+function cz_find_referrers_grouped_by_post_type(int $target_post_id): array {
+  $variants = cz_build_link_variants($target_post_id);
+  if (empty($variants)) return [];
+
+  $rows = cz_find_referrers_group_by_sql($variants);
+  if (empty($rows)) return [];
+
+  $groups = [];
+  foreach ($rows as $row) {
+    if ((int)$row->ID === $target_post_id) continue;
+    $ptype = $row->post_type ?: 'post';
+    $groups[$ptype][] = (int)$row->ID;
+  }
+  if (empty($groups)) return [];
+
+  foreach ($groups as $ptype => $ids) {
+    $groups[$ptype] = cz_order_ids_by_date_desc(array_unique($ids));
+  }
+
+  uksort($groups, function ($a, $b) {
+    $oa = get_post_type_object($a);
+    $ob = get_post_type_object($b);
+    $la = ($oa && isset($oa->labels->name)) ? $oa->labels->name : $a;
+    $lb = ($ob && isset($ob->labels->name)) ? $ob->labels->name : $b;
+    return strcasecmp($la, $lb);
+  });
+
+  return $groups;
+}
+
+/* Cache busting on content changes */
+add_action('save_post', function ($post_id) {
+  if (wp_is_post_autosave($post_id) || wp_is_post_revision($post_id)) return;
+  global $wpdb;
+  $like = $wpdb->esc_like('cz_refs_') . '%';
+  $wpdb->query($wpdb->prepare("
+    DELETE FROM {$wpdb->options}
+    WHERE option_name LIKE %s
+  ", '_transient_' . $like));
+}, 10, 1);
+
+
+
 

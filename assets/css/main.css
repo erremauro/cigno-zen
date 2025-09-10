@@ -2096,3 +2096,31 @@ blockquote.poem p.verse {
   opacity: 1;
 }
 
+/* ======= REFERENCES ======== */
+.cz-references-group {
+  margin-bottom: 1em;
+}
+
+.cz-references-group:last-child {
+  margin-bottom: 0;
+}
+
+ol.cz-references-list,
+ul.cz-references-list {
+  list-style-position: inside;
+  padding: 0 1em;
+}
+
+ol.cz-references-list {
+  list-style-type: decimal;
+}
+
+ul.cz-references-list {
+  list-style-type: disc;
+}
+
+.cz-references-heading {
+  font-size: 1.4em;
+  line-height: 2;
+  margin-bottom: .5em;
+}
