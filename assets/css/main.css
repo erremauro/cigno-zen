@@ -2024,15 +2024,11 @@ blockquote.poem p.verse {
 }
 
 blockquote.poem p.verse {
-  margin: 1em 0;
+  margin-bottom: 1em;
 }
 
 blockquote.poem p.verse:last-child {
   margin-bottom: 0;
-}
-
-blockquote.poem p.verse:first-child {
-  margin-top: 0;
 }
 
 blockquote.poem.font-size-large p.verse {
