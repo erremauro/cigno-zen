@@ -257,6 +257,7 @@
     popup.className = 'footnote-popup';
     popup.setAttribute('role', 'dialog');
     popup.setAttribute('aria-modal','true');
+    popup.style.boxSizing = 'border-box';
 
     const titleId = `footnote-popup-title-${Date.now().toString(36)}-${Math.random().toString(36).slice(2,7)}`;
     popup.setAttribute('aria-labelledby', titleId);
@@ -277,6 +278,8 @@
     content.className = 'footnote-popup-content';
     content.innerHTML = html;
 
+    enableScrollTrap(content);
+
     popup.appendChild(btn);
     popup.appendChild(title);
     popup.appendChild(content);
@@ -287,34 +290,68 @@
   const MOBILE_BREAKPOINT = 680;
 
   const positionPopup = (popup, anchor) => {
-    popup.style.minWidth = '240px';
-    popup.style.visibility = 'hidden';
-    popup.style.left = '0px';
-    popup.style.top = '0px';
-    document.body.appendChild(popup);
+  const margin = 8;
 
-    const rect = anchor.getBoundingClientRect();
-    const vw = document.documentElement.clientWidth;
-    const vh = document.documentElement.clientHeight;
-    const margin = 8;
+  // Prepare for measurement
+  popup.style.minWidth = '240px';
+  popup.style.visibility = 'hidden';
+  popup.style.left = '0px';
+  popup.style.top = '0px';
 
-    const pr = popup.getBoundingClientRect();
-    let top = window.scrollY + rect.bottom + margin;
-    if (rect.bottom + pr.height + margin > vh) {
-      top = window.scrollY + rect.top - pr.height - margin;
-      if (top < window.scrollY + margin) top = window.scrollY + margin;
-    }
-    let left = window.scrollX + rect.left + (rect.width - pr.width) / 2;
-    left = Math.max(window.scrollX + margin, Math.min(left, window.scrollX + vw - pr.width - margin));
+  // Ensure in DOM for accurate sizes
+  if (!popup.isConnected) document.body.appendChild(popup);
 
-    popup.style.left = `${left}px`;
-    popup.style.top  = `${top}px`;
-    popup.style.visibility = 'visible';
+  const rect = anchor.getBoundingClientRect();
+  const vw   = document.documentElement.clientWidth;
+  const vh   = document.documentElement.clientHeight;
 
-    if (vw <= MOBILE_BREAKPOINT) {
-      popup.style.right = `${left}px`; // centratura mobile grezza
-    }
-  };
+  const contentEl = popup.querySelector('.footnote-popup-content');
+
+  // Available spaces above/below anchor
+  const spaceBelow = Math.max(0, vh - (rect.bottom + margin));
+  const spaceAbove = Math.max(0, rect.top - margin);
+
+  // Where to place? Prefer the side with more space
+  const placeBelow = spaceBelow >= spaceAbove;
+
+  // Measure chrome (title, close btn, paddings)
+  const prevMax = contentEl.style.maxHeight;
+  contentEl.style.maxHeight = ''; // reset to measure true chrome
+  const pr0 = popup.getBoundingClientRect();
+  // Estimate header/edges height (popup minus content)
+  const chromeH = pr0.height - contentEl.getBoundingClientRect().height;
+
+  // Compute max height for content to avoid overflow
+  const usable = (placeBelow ? spaceBelow : spaceAbove);
+  const maxContentH = Math.max(120, Math.floor(usable - chromeH - margin));
+  contentEl.style.maxHeight = `${maxContentH}px`;
+  contentEl.style.overflow = 'auto';
+
+  // Now measure full popup with the constrained content
+  const pr = popup.getBoundingClientRect();
+
+  // Compute top
+  let top = window.scrollY + (placeBelow ? (rect.bottom + margin) : (rect.top - pr.height - margin));
+  if (top < window.scrollY + margin) top = window.scrollY + margin;
+  if (top + pr.height > window.scrollY + vh - margin) {
+    top = window.scrollY + vh - pr.height - margin; // clamp bottom
+  }
+
+  // Compute left (center over anchor, clamped to viewport)
+  let left = window.scrollX + rect.left + (rect.width - pr.width) / 2;
+  left = Math.max(window.scrollX + margin, Math.min(left, window.scrollX + vw - pr.width - margin));
+
+  popup.style.left = `${left}px`;
+  popup.style.top  = `${top}px`;
+  popup.style.visibility = 'visible';
+
+  // Small mobile tweak: allow right clamp for wide screens
+  if (vw <= MOBILE_BREAKPOINT) {
+    popup.style.right = 'auto';
+  } else {
+    popup.style.right = '';
+  }
+};
 
   const openFootnote = (anchor, id) => {
     const html = getFootnoteHTML(id);
@@ -352,6 +389,47 @@
       openFootnote(a, id);
     });
   };
+
+  // Permette lo scroll dentro 'el' anche se esistono body-scroll locks.
+  // Evita il bubbling quando si arriva ai bordi (top/bottom).
+  const enableScrollTrap = (el) => {
+    if (!el) return;
+
+    // Wheel (desktop)
+    el.addEventListener('wheel', (e) => {
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const atTop = scrollTop === 0;
+      const atBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+      if ((atTop && e.deltaY < 0) || (atBottom && e.deltaY > 0)) {
+        e.preventDefault(); // blocca il body scroll-lock dal “mangiare” l’evento
+      }
+      // In ogni caso, non propagare: lo scroll resta nel box
+      e.stopPropagation();
+    }, { passive: false });
+
+    // Touch (mobile/iOS)
+    let lastY = 0;
+    el.addEventListener('touchstart', (e) => {
+      lastY = e.touches ? e.touches[0].clientY : 0;
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      const y = e.touches ? e.touches[0].clientY : 0;
+      const dy = lastY - y; // >0: verso il basso
+
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const atTop = scrollTop === 0;
+      const atBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+      // Se siamo a un bordo e il gesto andrebbe oltre, fermiamo il bubbling
+      if ((atTop && dy < 0) || (atBottom && dy > 0)) {
+        e.preventDefault();
+      }
+      e.stopPropagation();
+    }, { passive: false });
+  };
+
 
   // ---------------- Toggle blocchi footnotes ----------------
   const createChevron = () => {

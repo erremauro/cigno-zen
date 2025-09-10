@@ -103,6 +103,9 @@ table {
   --fn-overlay-bg: rgba(0,0,0,0.25);
   --fn-elev-shadow: 0 10px 30px rgba(0,0,0,.2);
   --fn-border: 1px solid rgba(255,255,255,.15);
+
+  /* Master meta-data */
+  --ml-bg: rgba(22,22,22,1);
 }
 
 /* Override ESPLICITO da toggle */
@@ -155,6 +158,9 @@ html[data-theme="light"] {
   --fn-overlay-bg: rgba(255,255,255,0.25);
   --fn-elev-shadow: 0 10px 30px rgba(0,0,0,.2);
   --fn-border: 1px solid rgba(0,0,0,.15);
+
+  /* Master meta-data */
+  --ml-bg: rgba(237,237,237,1);
 }
 
 /* Override AUTOMATICO se NON c’è data-theme: usa la preferenza di sistema */
@@ -205,6 +211,9 @@ html[data-theme="light"] {
     --fn-overlay-bg: rgba(255,255,255,0.25);
     --fn-elev-shadow: 0 10px 30px rgba(0,0,0,.2);
     --fn-border: 1px solid rgba(0,0,0,.15);
+
+    /* Master meta-data */
+    --ml-bg: rgba(237,237,237,1);
   }
 }
 
@@ -1062,17 +1071,19 @@ p.footnote {
 
 .footnote-popup {
   position: absolute;
-  max-width: min(36rem,calc(100vw - 2rem));
-  max-height: min(70vh,calc(100vh - 4rem));
-  overflow: auto;
-  color: inherit;
+  max-width: min(36rem, calc(100vw - 2rem));
+  /* 👇 spostiamo il limite d'altezza e lo scroll sul contenuto */
+  /* max-height: min(70vh, calc(100vh - 4rem));  <-- rimuovi */
+  /* overflow: auto;                              <-- rimuovi */
+
+  box-sizing: border-box;
   border-radius: 12px;
   box-shadow: var(--fn-elev-shadow);
   padding: 1rem 1rem 1.25rem;
   z-index: 9999;
   border: var(--fn-border);
   background: var(--fn-bg);
-  color: var(--text);;
+  color: var(--text);
 }
 
 .footnote-popup-title {
@@ -1095,17 +1106,31 @@ p.footnote {
 }
 
 .footnote-popup-content {
-  margin-top:.25rem;
+  margin-top: .25rem;
+
+  /* 👇 fa scorrere solo il corpo della nota */
+  max-height: 60vh; /* fallback: il JS poi la ridimensiona in base allo spazio reale */
+  overflow: auto;
+
+  /* qualità di vita */
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable both-edges; /* evita saltelli quando compare la scrollbar */
+}
+
+@media (max-width: 680px) {
+  .footnote-popup {
+    max-width: calc(100vw - 1rem);
+  }
+  .footnote-popup-content {
+    max-height: 65vh; /* un filo più generoso su mobile */
+  }
 }
 
 @media print{
-  .footnotes {
-    display:block !important
-  }
+  .footnotes { display:block !important; }
   .footnote-popup,
-  .footnote-overlay{
-    display:none !important
-  }
+  .footnote-overlay { display:none !important; }
 }
 
 .footnotes .fnref:after {
@@ -1914,11 +1939,14 @@ blockquote.poem p.verse {
   text-transform: uppercase;
   font-size: 1rem;
   line-height: 2;
+  text-align: center;
+  background-color: var(--ml-bg);
+  padding: .5em 0;
 }
 
 .meta-row .meta-data {
-  margin-left: 2em;
   display: block;
+  text-align: center;
 }
 
 .meta-alt-name {
