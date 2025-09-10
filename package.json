@@ -4,12 +4,14 @@
 	"devDependencies": {
 		"browser-sync": "^3.0.4",
 		"concurrently": "^9.2.1",
-		"esbuild": "^0.23.0"
+		"esbuild": "^0.23.0",
+		"prettier": "^3.6.2",
+		"prettifier": "^0.4.0"
 	},
 	"scripts": {
 		"build": "node scripts/build.js",
 		"watch": "node scripts/build.js --watch",
-    "serve": "browser-sync start --config bs-config.js",
-    "dev": "concurrently \"npm:watch\" \"npm:serve\""
+		"serve": "browser-sync start --config bs-config.js",
+		"dev": "concurrently \"npm:watch\" \"npm:serve\""
 	}
 }
