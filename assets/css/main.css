@@ -2018,14 +2018,33 @@ blockquote.poem {
 }
 
 blockquote.poem p.verse {
-  font-size: 1.4em;
+  font-size: 1.2em;
   text-indent: 0;
   padding: 0 1em;
-  margin: 0;
+}
+
+blockquote.poem p.verse {
+  margin: 1em 0;
+}
+
+blockquote.poem p.verse:last-child {
+  margin-bottom: 0;
+}
+
+blockquote.poem p.verse:first-child {
+  margin-top: 0;
+}
+
+blockquote.poem.font-size-large p.verse {
+  font-size: 1.4em;
+}
+
+blockquote.poem.font-size-small p.verse {
+  font-size: 1em;
 }
 
 @media (max-width: 587px) {
-  blockquote.poem p.verse {
+  blockquote.poem.font-size-large p.verse {
     font-size: 1.2em;
   }
 }

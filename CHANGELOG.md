@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Master's Information style has been updated
+- Update poem/verse style
 ### Fixed
 - Footnotes' popup content is now scrollable if the content is too long. 
 
