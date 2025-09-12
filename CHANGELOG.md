@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Master's Information style has been updated
 - Update poem/verse style
+- H3 title top and bottom margin increased
 ### Fixed
 - Strip shortcodes from search results and fix paragraph formatting.
 - Footnotes' popup content is now scrollable if the content is too long. 
