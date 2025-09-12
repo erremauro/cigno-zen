@@ -985,13 +985,12 @@ h2.post-title {
   padding: 1em 0;
 }
 
-.post-content h2,
-.post-content h3 {
+.post-content h2 {
   line-height: 2;
 }
 
 .post-content h3 {
-  margin: 1em 0;
+  margin: 1em 0 .5em 0;
 }
 
 .post-content .colophon {
