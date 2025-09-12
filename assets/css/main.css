@@ -1003,6 +1003,20 @@ h2.post-title {
   text-align: right;
 }
 
+figure.wp-caption {
+  margin: 1em 0;
+}
+
+figure.wp-caption img,
+.wp-block-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+figure.wp-caption figcaption.wp-caption-text {
+  font-size: .9em;
+}
+
 /* ======= CTA TITLE LINK =======  */
 .cta-link-container {
   margin-bottom: 1em;
