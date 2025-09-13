@@ -12,7 +12,7 @@
  */
 
 $args   = $args ?? [];
-$url    = isset($args['url'])   ? $args['url']   : '#';
+$url    = isset($args['url'])   ? $args['url']   : '';
 $title  = isset($args['title']) ? $args['title'] : '';
 $target = isset($args['target']) ? $args['target'] : '';
 $rel    = isset($args['rel'])    ? $args['rel']    : '';
@@ -21,6 +21,7 @@ $desc   = isset($args['desc'])  ? $args['desc'] : '';
 $class  = 'cta-link' . (isset($args['class']) ? ' ' . esc_attr($args['class']) : '');
 ?>
 <div class="cta-link-container">
+<?php if ( $url ): ?>
 <a
 	<?php if ($id) echo 'id="' . esc_attr($id) . '" '; ?>
 	class="<?php echo esc_attr($class); ?>"
@@ -28,10 +29,14 @@ $class  = 'cta-link' . (isset($args['class']) ? ' ' . esc_attr($args['class']) :
 	<?php if ($target) echo 'target="' . esc_attr($target) . '" '; ?>
 	<?php if ($rel) echo 'rel="' . esc_attr($rel) . '" '; ?>
 >
+<?php endif ?>
 	<span class="cta-link-label"><?php echo esc_html($title); ?></span>
 
+<?php if ( $url ): ?>
 	<svg class="cta-link-chevron" viewBox="0 0 24 24" width="48" height="48" aria-hidden="true"><path d="M6.23 8.97a1 1 0 0 1 1.41 0L12 13.34l4.36-4.37a1 1 0 1 1 1.41 1.42l-5.06 5.06a1 1 0 0 1-1.41 0L6.23 10.4a1 1 0 0 1 0-1.42z" fill="currentColor"></path></svg>
 </a>
+<?php endif ?>
+
 <?php if ($desc) : ?>
     <p class="cta-link-desc"><?php echo esc_html($desc); ?></p>
 <?php endif ?>

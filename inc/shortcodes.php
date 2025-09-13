@@ -409,6 +409,151 @@ add_action('save_post', function ($post_id) {
   ", '_transient_' . $like));
 }, 10, 1);
 
+/**
+ * CZ Tag Cloud – theme-integrated
+ * Adds a template tag `cz_tag_cloud()` and a shortcode `[cz_tag_cloud]`.
+ */
+
+/** Core renderer (returns HTML string) */
+if (!function_exists('cz_tag_cloud_render')) {
+    function cz_tag_cloud_render(array $atts = []): string {
+        $d = [
+            // Data
+            'taxonomy'      => 'post_tag',
+            'number'        => 60,
+            'hide_empty'    => true,
+            'orderby'       => 'count',      // 'count' | 'name'
+            'order'         => 'DESC',
+            'min_count'     => 1,
+            // Sizing
+            'min_font'      => 0.85,
+            'max_font'      => 2.00,
+            'unit'          => 'rem',        // 'rem' | 'em' | 'px'
+            'scale'         => 'log',        // 'linear' | 'log'
+            // Display
+            'show_count'    => true,
+            'aria_label'    => 'Tag cloud',
+            'class'         => '',
+            // Cache
+            'cache_minutes' => 30,
+        ];
+        $a = shortcode_atts($d, array_change_key_case($atts, CASE_LOWER), 'cz_tag_cloud');
+
+        // Cache key depends on args + site/lang
+        // This will cache the result and serve it faster, but for now
+        // we disable it since we already use WP Cache. Will use it in the
+        // future if the number of tags grows over a thosands.
+        //
+        // $cache_key = 'cz_tc_' . md5(serialize([$a, get_locale(), get_current_blog_id()]));
+        // if ($html = get_transient($cache_key)) {
+        //     wp_enqueue_style('cz-tag-cloud');
+        //     return $html;
+        // }
+
+        $acf_term_get = function( string $field, WP_Term $term ) {
+            if ( ! function_exists( 'get_field' ) ) return '';
+            // Newer ACF accepts WP_Term or "term_{id}"
+            $val = get_field( $field, $term );
+            if ( $val === null || $val === '' ) {
+                $val = get_field( $field, "{$term->taxonomy}_{$term->term_id}" );
+            }
+            if ( $val === null ) $val = '';
+            return is_string($val) ? trim($val) : $val;
+        };
+
+        // Fetch terms
+        $args  = [
+            'taxonomy'   => $a['taxonomy'],
+            'hide_empty' => (bool)$a['hide_empty'],
+            'number'     => (int)$a['number'],
+            'orderby'    => $a['orderby'],
+            'order'      => $a['order'],
+        ];
+
+        $terms = get_terms($args);
+        if (is_wp_error($terms) || empty($terms)) return '';
+
+        // Filter by min_count
+        $terms = array_values(array_filter($terms, fn($t)=> (int)$t->count >= (int)$a['min_count']));
+        if (empty($terms)) return '';
+
+        // Compute sizing
+        $counts = array_map(fn($t)=> (int)$t->count, $terms);
+        $minC = min($counts); $maxC = max($counts);
+        $minF = (float)$a['min_font']; $maxF = (float)$a['max_font'];
+        $unit = in_array($a['unit'], ['rem','em','px'], true) ? $a['unit'] : 'rem';
+
+        $scaleFn = function (int $c) use ($minC,$maxC,$minF,$maxF,$a): float {
+            if ($maxC === $minC) return ($minF + $maxF) / 2;
+            if ($a['scale'] === 'linear') {
+                $n = ($c - $minC) / ($maxC - $minC);
+            } else {
+                $n = (log($c) - log($minC)) / (log($maxC) - log($minC));
+            }
+            $n = max(0, min(1, $n));
+            return $minF + ($maxF - $minF) * $n;
+        };
+
+        // Stable sort
+        if ($a['orderby'] === 'name') {
+            usort($terms, fn($x,$y)=> strcasecmp($x->name, $y->name));
+            if (strtoupper($a['order']) === 'DESC') $terms = array_reverse($terms);
+        } else { // count
+            usort($terms, fn($x,$y)=> $y->count <=> $x->count);
+            if (strtoupper($a['order']) === 'ASC') $terms = array_reverse($terms);
+        }
+
+        $classes = trim('cz-tag-cloud ' . sanitize_html_class($a['class']));
+        $aria    = esc_attr($a['aria_label']);
+
+        ob_start(); ?>
+<nav class="<?php echo esc_attr($classes); ?>" aria-label="<?php echo $aria; ?>">
+    <ul>
+        <?php foreach ($terms as $t):
+            $size = $scaleFn((int)$t->count);
+            $url  = get_term_link($t);
+            if (is_wp_error($url)) continue;
+            $count = (int)$t->count;
+            // Display name: ACF 'show_as' fallback to term name
+            $show_as = $acf_term_get( 'show_as', $t );
+            $display_name = $show_as !== '' ? $show_as : $t->name;
+            $title = esc_attr(sprintf(_n('%s post', '%s posts', $count, 'default'), number_format_i18n($count)));
+        ?>
+        <li>
+            <a href="<?php echo esc_url($url); ?>"
+               rel="tag"
+               style="font-size: <?php echo esc_attr($size . $unit); ?>;"
+               aria-label="<?php echo esc_attr($name . ' – ' . $title); ?>">
+                <span class="label"><?php echo $display_name; ?></span>
+                <?php if ($a['show_count']): ?>
+                    <span class="count" aria-hidden="true"><?php echo number_format_i18n($count); ?></span>
+                <?php endif; ?>
+            </a>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+</nav>
+<?php
+  $html = trim(ob_get_clean());
+  set_transient($cache_key, $html, (int)$a['cache_minutes'] * MINUTE_IN_SECONDS);
+  wp_enqueue_style('cz-tag-cloud');
+  return $html;
+    }
+}
+
+/** Template tag: echo directly */
+if (!function_exists('cz_tag_cloud')) {
+    function cz_tag_cloud(array $args = []): void {
+        echo cz_tag_cloud_render($args);
+    }
+}
+
+/** Optional shortcode: [cz_tag_cloud ...] */
+add_shortcode('cz_tag_cloud', function ($atts) {
+    return cz_tag_cloud_render((array)$atts);
+});
+
+
 
 
 
