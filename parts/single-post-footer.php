@@ -76,12 +76,9 @@
 </div>
 <?php endif; ?>
 
+<?php if ( class_exists( 'Jetpack_RelatedPosts' ) ): ?>
 <div class="related-articles">
-    <?php
-    // Jetpack related posts (if available)
-    if ( class_exists( 'Jetpack_RelatedPosts' ) ) {
-        echo do_shortcode( '[jprel]' );
-    }
-    ?>
+        <?php echo do_shortcode( '[jprel]' ); ?>
 </div>
+<?php endif; ?>
 </footer>
