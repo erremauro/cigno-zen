@@ -136,7 +136,7 @@ table {
   --highlight: rgba(255, 255, 0, 1);
   --elev-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
   --elev-shadow-strong: 0 10px 30px rgba(0, 0, 0, 0.6);
-  --tag-pill-shadow: 0px 0px 12px rgba(0,0,0,.25);
+  --tag-pill-shadow: 0px 0px 12px rgba(0,0,0,.1);
   --footer-card-shadow: 0px 0px 24px rgba(0,0,0,.25);
 
   --font-body: "Libre Baskerville", serif;
@@ -886,10 +886,9 @@ article.post:first-child {
 }
 
 .post-tags {
-  list-style: none;
   padding: 0;
   margin: 0;
-  display: inline;
+  list-style: none;
 }
 
 .post-tags li {
@@ -898,6 +897,7 @@ article.post:first-child {
 }
 
 .post-tags a {
+  line-height: 1.2;
   border: 1px solid var(--border);
   padding: 0.5rem 1em;
   border-radius: 999px;
@@ -905,6 +905,7 @@ article.post:first-child {
   user-select: none;
   display: block;
   text-decoration: none;
+  box-shadow: var(--tag-pill-shadow);
 }
 
 .post-tags a:hover {

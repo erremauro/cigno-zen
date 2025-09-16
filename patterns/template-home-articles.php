@@ -1,3 +1,5 @@
+<div class="glass-card-container">
+<div class="glass-card">
 <section class="home-section" id="latest-articles">
     <?php
     $count_posts = wp_count_posts('post');
@@ -74,7 +76,9 @@
         <?php
     endif;
     ?>
-    <div class="more-articles" style="text-align: center; margin: 2em;">
+    <div class="more-articles">
         <a class="link-pill" href="/articoli/?offset=4">Continua&hellip;</a>
     </div>
 </section>
+</div>
+</div>
