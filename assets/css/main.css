@@ -925,10 +925,11 @@ article.post:first-child {
   border: 1px solid var(--border);
   padding: 2em;
   border-radius: 2em;
+  background-color: var(--pt-bg);
   box-shadow: var(--footer-card-shadow);
 }
 
-.related-articles h2 {
+.related-articles h2#related-posts {
   font-size: 1.7em;
   font-weight: 600;
   margin-bottom: 1em;
