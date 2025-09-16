@@ -1636,6 +1636,11 @@ section.home-section .post-content p {
   font-style: italic;
 }
 
+.more-articles {
+  text-align: center;
+  margin: 2em 0;
+}
+
 /* Track: 3 columns only on desktop/tablet */
 .cz-carousel .cz-carousel-track {
   display: grid;
@@ -2354,3 +2359,4 @@ ul.cz-references-list {
   font-size: 0.75em;
   opacity: 0.7;
 }
+
