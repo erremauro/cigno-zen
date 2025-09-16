@@ -906,6 +906,7 @@ article.post:first-child {
   display: block;
   text-decoration: none;
   box-shadow: var(--tag-pill-shadow);
+  text-align: center;
 }
 
 .post-tags a:hover {
