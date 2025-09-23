@@ -40,6 +40,7 @@ add_action('wp_head', 'cignozen_add_favicon_meta');
 
 function carica_google_fonts() {
     wp_enqueue_style('libre-baskerville', 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap', false);
+    wp_enqueue_style('hiragino-pro', 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&display=swap', false);
 }
 
 function cigno_zen_styles() {

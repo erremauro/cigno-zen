@@ -140,6 +140,7 @@ table {
   --footer-card-shadow: 0px 0px 24px rgba(0,0,0,.25);
 
   --font-body: "Libre Baskerville", serif;
+  --font-mincho: "Noto Serif JP", serif;
 
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -2017,6 +2018,8 @@ p.separator {
 }
 
 .error-404 .ku {
+  line-height: 1.68;
+  font-family: var(--font-mincho);
   font-size: 8em;
 }
 
@@ -2154,6 +2157,8 @@ blockquote.poem.font-size-small p.verse {
 }
 
 .meta-original-name {
+  line-height: 1.68;
+  font-family: var(--font-mincho);
   text-align: center;
   font-weight: 400;
   font-style: normal;

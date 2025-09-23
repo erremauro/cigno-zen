@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update kanji style serif font.
 - Update styles for `post-tag-list` and `related-articles`
 - Update styles for tag-pills
 
