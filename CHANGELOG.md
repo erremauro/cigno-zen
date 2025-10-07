@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Theme style is now managed by the time of the day and toggle override last
+  only for the day.
 - Update kanji style serif font.
 - Update styles for `post-tag-list` and `related-articles`
 - Update styles for tag-pills

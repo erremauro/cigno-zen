@@ -518,47 +518,89 @@
   } catch (_) {}
 })();
 
-/* ========== THEME TOGGLE ========== */
+/* ========== THEME TOGGLE (time-based with per-day override + legacy reset) ========== */
 (function () {
-  var KEY = "cz-theme";
+  var LEGACY_KEY = "cz-theme"; // old key to remove
+  var OVERRIDE_KEY = "cz-theme-override"; // { theme: "light"|"dark", exp: <ms since epoch at local 23:59:59.999> }
   var root = document.documentElement;
   var btn = document.getElementById("theme-toggle");
   if (!btn) return;
 
+  // --- Helpers ---
   function setTheme(t) {
     root.setAttribute("data-theme", t);
-    try {
-      localStorage.setItem(KEY, t);
-    } catch (e) {}
     btn.setAttribute("aria-pressed", t === "dark");
   }
 
-  // init
-  var saved = localStorage.getItem(KEY);
-  if (saved) {
-    setTheme(saved);
-  } else {
-    var prefersLight =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: light)").matches;
-    setTheme(prefersLight ? "light" : "dark");
+  function endOfTodayMs() {
+    var d = new Date();
+    d.setHours(23, 59, 59, 999);
+    return d.getTime();
   }
 
-  var DUR = 720; // ms (matcha la transition .7s)
+  function nowMs() {
+    return Date.now();
+  }
+
+  function readOverride() {
+    try {
+      var raw = localStorage.getItem(OVERRIDE_KEY);
+      if (!raw) return null;
+      var obj = JSON.parse(raw);
+      if (!obj || (obj.exp || 0) < nowMs() || (obj.theme !== "light" && obj.theme !== "dark")) {
+        localStorage.removeItem(OVERRIDE_KEY);
+        return null;
+      }
+      return obj.theme;
+    } catch (_) {
+      // If corrupted, wipe it
+      try { localStorage.removeItem(OVERRIDE_KEY); } catch (__){}
+      return null;
+    }
+  }
+
+  function writeOverride(theme) {
+    try {
+      localStorage.setItem(OVERRIDE_KEY, JSON.stringify({ theme: theme, exp: endOfTodayMs() }));
+    } catch (_) {}
+  }
+
+  function clearLegacy() {
+    // Remove legacy storage and any accidental stale attributes managed by old script
+    try { localStorage.removeItem(LEGACY_KEY); } catch (_) {}
+  }
+
+  function scheduledTheme() {
+    // Light from 07:00 (inclusive) to 17:59:59, Dark otherwise
+    var h = new Date().getHours();
+    return (h >= 7 && h < 18) ? "light" : "dark";
+  }
+
+  // --- Init ---
+  clearLegacy();
+
+  var activeTheme = readOverride() || scheduledTheme();
+  setTheme(activeTheme);
+
+  // Keep animation behavior from your previous script
+  var DUR = 720; // ms (match .7s CSS transition)
   var timer;
 
   btn.addEventListener("click", function () {
-    if (btn.classList.contains("animating")) return; // evita doppio click
-    var current = root.getAttribute("data-theme") || "dark";
+    if (btn.classList.contains("animating")) return; // prevent double click during animation
+
+    var current = root.getAttribute("data-theme") || scheduledTheme();
     var next = current === "dark" ? "light" : "dark";
     var dirClass = next === "dark" ? "anim-to-dark" : "anim-to-light";
 
     btn.classList.add("animating", dirClass);
 
-    // 1 frame per applicare la classe d’animazione “da destra”
+    // Next animation frame to allow CSS to pick up classes
     requestAnimationFrame(function () {
-      // cambia tema: le regole sopra faranno entrare da destra e uscire a sinistra
+      // Apply chosen theme immediately
       setTheme(next);
+      // Persist override only for the rest of the current day
+      writeOverride(next);
 
       clearTimeout(timer);
       timer = setTimeout(function () {
@@ -566,7 +608,16 @@
       }, DUR);
     });
   });
+
+  // Optional: at page visibility change, re-apply schedule if override expired while tab was hidden
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState !== "visible") return;
+    var o = readOverride();
+    if (o) return;
+    setTheme(scheduledTheme());
+  });
 })();
+
 
 /* ===== COLLAPSABLE CONTENT — default: OPEN ===== */
 
