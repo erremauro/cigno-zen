@@ -5,8 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.7.0] 2025-10-13
 ### Changed
+- Update `patterns/template-single-maestro.php` to reflect the new ACF fields.
+- Add `inc/masters.php` to add custom columns to the Master post-type list.
 - Theme style is now managed by the time of the day and toggle override last
   only for the day.
 - Update kanji style serif font.

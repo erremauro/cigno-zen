@@ -2121,7 +2121,6 @@ blockquote.poem.font-size-small p.verse {
 
 .meta-alt-name {
   text-align: center;
-  font-style: italic;
   font-size: 1rem;
   margin-bottom: 1em;
 }
@@ -2136,6 +2135,7 @@ blockquote.poem.font-size-small p.verse {
 .maestro-portrait {
   display: flex;
   justify-content: center;
+  margin: 1em 0;
 }
 
 .maestro-portrait img {
@@ -2165,9 +2165,20 @@ blockquote.poem.font-size-small p.verse {
   font-size: 4em;
 }
 
+.meta-honorific {
+  text-align: center;
+  font-style: italic;
+  font-style: .8rem;
+}
+
 .meta-master-dates {
   text-align: center;
   font-size: 1.4em;
+}
+
+.meta-master-dates .age {
+  display: block;
+  font-size: .7em;
 }
 
 .maestro-content {
