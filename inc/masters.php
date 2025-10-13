@@ -1,12 +1,16 @@
 <?php
 
 // Genera UUID al salvataggio se assente
-add_action('save_post_maestro', function($post_id){
-  if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
-  if (!get_post_meta($post_id, 'cz_uuid', true)) {
-    update_post_meta($post_id, 'cz_uuid', wp_generate_uuid4());
+add_filter('acf/update_value/name=cz_uuid', function ($value, $post_id, $field) {
+  $current = get_post_meta($post_id, 'cz_uuid', true);
+  if ($current) {
+    return $current; // già presente → non toccare
   }
-}, 10, 1);
+  if (empty($value)) {
+    $value = wp_generate_uuid4();
+  }
+  return $value;
+}, 10, 3);
 
 // Rende cz_uuid readonly in ACF (CSS veloce)
 add_action('admin_head', function () {
@@ -14,11 +18,17 @@ add_action('admin_head', function () {
 });
 
 // Use Title if Name Latin is empty
-add_action('save_post_maestro', function($post_id){
-  if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
-  $latin = get_post_meta($post_id, 'name_latin', true);
-  if (!$latin) update_post_meta($post_id, 'name_latin', get_the_title($post_id));
-}, 11, 1);
+add_filter('acf/update_value/name=name_latin', function($value, $post_id, $field) {
+
+  $current = get_post_meta($post_id, 'name_latin', true);
+  if ($current) {
+    return $current;
+  }
+  if (empty($value)) {
+    $value = get_the_title($post_id);
+  }
+  return $value;
+}, 10, 3);
 
 // Show Additional Columns
 add_filter('manage_maestro_posts_columns', function($cols){
