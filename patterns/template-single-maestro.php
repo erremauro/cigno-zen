@@ -1,11 +1,4 @@
 <?php
-/**
- * Single Maestro — Cigno Zen
- * - Campi ACF Free: name_latin, name_hanzi, name_romaji, honorific_name,
- *   portrait(+alt/credit), date strutturate, luoghi (name+lat/lng),
- *   tassonomie: school, generazione, relazioni: teachers, primary_teacher, is_dharma_heir_of.
- * - Resiliente: funziona anche senza ACF (fallback post_meta per text/number).
- */
 
 if (have_posts()) : while (have_posts()) : the_post();
 
@@ -13,85 +6,43 @@ if (have_posts()) : while (have_posts()) : the_post();
  * Helpers
  * --------------------------------------------------------------------- */
 
-/** Build a map URL (solo se lat/lng presenti). Supporta: google | osm | ohm (default). */
-$build_map_url = function (?string $name, $lat = null, $lng = null, string $provider = 'ohm', int $zoom = 10): ?string {
-  // Normalizza coordinate
+/** Build a Google Maps URL (solo se lat/lng presenti). */
+$build_map_url = function ($lat = null, $lng = null): ?string {
   $lat = is_numeric($lat) ? (float)$lat : null;
   $lng = is_numeric($lng) ? (float)$lng : null;
+  if ($lat === null || $lng === null) return null;
 
-  if ($lat !== null && $lng !== null) {
-    $lat_s = number_format($lat, 6, '.', '');
-    $lng_s = number_format($lng, 6, '.', '');
-
-    if ($provider === 'osm') {
-      return sprintf('https://www.openstreetmap.org/?mlat=%s&mlon=%s#map=%d/%s/%s',
-        rawurlencode($lat_s), rawurlencode($lng_s), $zoom, rawurlencode($lat_s), rawurlencode($lng_s));
-    }
-    if ($provider === 'ohm') {
-      // OpenHistoricalMap (viewer storico)
-      return sprintf('https://www.openhistoricalmap.org/#map=%d/%s/%s',
-        $zoom, rawurlencode($lat_s), rawurlencode($lng_s));
-    }
-    // google (fallback)
-    return sprintf('https://www.google.com/maps/search/?api=1&query=%s%%2C%s',
-      rawurlencode($lat_s), rawurlencode($lng_s));
-  }
-  // niente coord → nessun link
-  return null;
-};
-
-/** Costruisce query OHM ?date=...&daterange=... a partire dagli anni. */
-$ohm_time_query = function (?int $year_focus, ?int $year_start, ?int $year_end): string {
-  $qs = [];
-  if ($year_focus) {
-    $qs['date'] = sprintf('%04d-01-01', $year_focus);
-  }
-  if ($year_start || $year_end) {
-    $start = $year_start ? sprintf('%04d-01-01', $year_start) : '0001-01-01';
-    $end   = $year_end   ? sprintf('%04d-12-31', $year_end)   : '2100-12-31';
-    $qs['daterange'] = $start . ',' . $end;
-  }
-  return $qs ? ('?' . http_build_query($qs)) : '';
-};
-
-/** Inserisce la query PRIMA di "#map=" nell'URL di OpenHistoricalMap. */
-$ohm_with_time = function (?string $ohm_url, string $query): ?string {
-  if (!$ohm_url || $query === '') return $ohm_url;
-  // Inserisce i parametri prima di #map=
-  $pos = strpos($ohm_url, '#map=');
-  if ($pos === false) return $ohm_url;
-  // Se l'URL ha già una query (poco probabile), la sostituiamo in blocco
-  $base = substr($ohm_url, 0, $pos);
-  $hash = substr($ohm_url, $pos);
-  // Evita doppio "?" se già presente
-  if (strpos($base, '?') !== false) {
-    // rimpiazza qualsiasi cosa dopo il ? con la nuova query
-    $base = preg_replace('/\?.*$/', '', $base);
-  }
-  return $base . $query . $hash;
+  $lat_s = number_format($lat, 6, '.', '');
+  $lng_s = number_format($lng, 6, '.', '');
+  return sprintf('https://www.google.com/maps/search/?api=1&query=%s%%2C%s',
+    rawurlencode($lat_s), rawurlencode($lng_s)
+  );
 };
 
 /** Calcola anni tra nascita e morte. Ritorna int o null se non calcolabile. */
 $calc_years = function (int $by = null, int $bm = null, int $bd = null, int $dy = null, int $dm = null, int $dd = null): ?int {
   if (!$by || !$dy) return null;
-
-  // Se abbiamo date complete, usa DateTime per un'età precisa
   if ($by && $bm && $bd && $dy && $dm && $dd) {
     try {
       $b = new DateTime(sprintf('%04d-%02d-%02d', $by, $bm, $bd));
       $d = new DateTime(sprintf('%04d-%02d-%02d', $dy, $dm, $dd));
       if ($d < $b) return null;
       return (int)$b->diff($d)->y;
-    } catch (Exception $e) { /* degrada sotto */ }
+    } catch (Exception $e) { /* degrade */ }
   }
-
-  // Altrimenti differenza anni (con correzione grossolana se mese/giorno disponibili)
   $age = $dy - $by;
   if ($bm && $dm) {
-    if ($dm < $bm)        $age -= 1;
+    if ($dm < $bm) $age -= 1;
     elseif ($dm === $bm && $bd && $dd && $dd < $bd) $age -= 1;
   }
   return ($age >= 0) ? $age : null;
+};
+
+/** Durata attività in anni interi (inclusiva se entrambi presenti). */
+$calc_active_years = function (?int $start, ?int $end): ?int {
+  if (!$start || !$end) return null;
+  $dur = ($end - $start + 1);
+  return ($dur > 0) ? $dur : null;
 };
 
 /** Estrae ID interi da vari formati (int|WP_Post|array). */
@@ -109,6 +60,34 @@ $link_for = function (int $id): ?string {
   $title = get_the_title($id);
   if (!$title) return null;
   return sprintf('<a href="%s">%s</a>', esc_url(get_permalink($id)), esc_html($title));
+};
+
+/** Ritorna gli ID dei maestri che hanno $current_id nel meta $meta_key (Post Object ACF). */
+$get_reverse_rel_ids = function (int $current_id, string $meta_key): array {
+  if (!$current_id) return [];
+  $q = new WP_Query([
+    'post_type'      => 'maestro',
+    'post_status'    => 'publish',
+    'posts_per_page' => -1,
+    'fields'         => 'ids',
+    'meta_query'     => [[
+      'key'     => $meta_key,
+      'value'   => $current_id,
+      'compare' => '='
+    ]],
+    'no_found_rows'  => true,
+  ]);
+  return $q->posts ?: [];
+};
+
+/** Linka una lista di ID come anchor comma-separated. */
+$links_from_ids = function (array $ids): string {
+  $out = [];
+  foreach ($ids as $id) {
+    $t = get_the_title($id);
+    if ($t) $out[] = sprintf('<a href="%s">%s</a>', esc_url(get_permalink($id)), esc_html($t));
+  }
+  return implode(', ', $out);
 };
 
 /** Safe ACF getter con fallback a post_meta. */
@@ -153,10 +132,8 @@ $build_display_date = function (?int $y, ?int $m, ?int $d, ?string $prec): strin
   switch ($prec) {
     case 'full':
       if ($m && $d) return "{$y}-{$pad($m)}-{$pad($d)}";
-      // degrade gracefully
     case 'year-month':
       if ($m) return "{$y}-{$pad($m)}";
-      // degrade
     case 'circa':
       return "c. {$y}";
     case 'year':
@@ -186,11 +163,9 @@ $honorific    = (string) $acf_get('honorific_name', '');
 
 // Ritratto
 $portrait_id      = (int) $acf_get('portrait', 0);
-$portrait_alt     = (string) $acf_get('portrait_alt', '');
-$portrait_credit  = (string) $acf_get('portrait_credit', '');
 $portrait_size    = [320, 0]; // width-limited
 
-// Date
+// Date nascita/morte
 $by = (int) $acf_get('birth_year', 0);
 $bm = (int) $acf_get('birth_month', 0);
 $bd = (int) $acf_get('birth_day', 0);
@@ -200,6 +175,10 @@ $dy = (int) $acf_get('death_year', 0);
 $dm = (int) $acf_get('death_month', 0);
 $dd = (int) $acf_get('death_day', 0);
 $dp = (string) $acf_get('death_precision', 'year');
+
+// Anni attività (floruit)
+$fs = (int) $acf_get('floruit_start_year', 0);
+$fe = (int) $acf_get('floruit_end_year', 0);
 
 $birth_display = $build_display_date($by ?: null, $bm ?: null, $bd ?: null, $bp ?: null);
 $death_display = $build_display_date($dy ?: null, $dm ?: null, $dd ?: null, $dp ?: null);
@@ -222,7 +201,7 @@ $teachers_ids     = $normalize_ids($acf_get('teachers', []));
 $primary_id       = $normalize_ids($acf_get('primary_teacher', 0))[0] ?? 0;
 $heir_id          = $normalize_ids($acf_get('is_dharma_heir_of', 0))[0] ?? 0;
 
-// Logica anti-ridondanza
+// Logica anti-ridondanza (un unico maestro copre primary+heir+teachers)
 $single_master_id = 0;
 if ($primary_id && $heir_id && $primary_id === $heir_id) {
   if (count($teachers_ids) === 0 || (count($teachers_ids) === 1 && $teachers_ids[0] === $primary_id)) {
@@ -244,14 +223,18 @@ if (!$single_master_id) {
   }
 }
 
-// Header: c'è almeno una data?
-$has_dates = ($birth_display !== '' || $death_display !== '');
+// Successori (discendenti) da relazioni inverse
+$current_id = get_the_ID();
+$heirs_ids = $get_reverse_rel_ids($current_id, 'is_dharma_heir_of');   // eredi formali
+$primary_students_ids = $get_reverse_rel_ids($current_id, 'primary_teacher'); // allievi principali
+$primary_non_heir_ids = array_values(array_diff($primary_students_ids, $heirs_ids));
 
-// Determina se c'è almeno una riga “maestri” da mostrare
-$has_master_rows = $single_master_id
-  || count($teachers_list) > 0
-  || ($primary_id && $primary_id !== $heir_id)
-  || ($heir_id && $heir_id !== $primary_id);
+$heirs_html            = $links_from_ids($heirs_ids);
+$primary_students_html = $links_from_ids($primary_non_heir_ids);
+
+// Header: priorità dati — 1) nascita/morte, 2) floruit
+$has_birth_death = ($birth_display !== '' || $death_display !== '');
+$active_range    = ($fs ?: null) || ($fe ?: null);
 
 // Sezione meta: c'è qualcosa?
 $has_meta =
@@ -259,7 +242,11 @@ $has_meta =
   ($death_place_name !== '') ||
   ($school_html !== '') ||
   ($generation_html !== '') ||
-  $has_master_rows;
+  $single_master_id ||
+  count($teachers_list) > 0 ||
+  ($primary_id && $primary_id !== $heir_id) ||
+  ($heir_id && $heir_id !== $primary_id) ||
+  ($heirs_html !== '' || $primary_students_html !== '');
 
 ?>
 <article id="post-<?php the_ID(); ?>" <?php post_class('maestro-article'); ?> itemscope itemtype="https://schema.org/Person">
@@ -282,6 +269,7 @@ $has_meta =
     <?php if ($portrait_id): ?>
       <figure class="maestro-portrait">
         <?php
+          // NIENTE 'alt' passato => WP usa l'alt nativo dell'allegato
           echo wp_get_attachment_image(
             $portrait_id,
             $portrait_size,
@@ -289,23 +277,26 @@ $has_meta =
             [
               'class'    => 'portrait-img',
               'itemprop' => 'image',
-              'alt'      => esc_attr($portrait_alt ?: ($name_latin . ' – Ritratto')),
               'loading'  => 'lazy',
               'decoding' => 'async',
               'sizes'    => '(max-width: 480px) 50vw, 320px',
             ]
           );
-          if ($portrait_credit) {
-            echo '<figcaption class="portrait-credit">'. esc_html($portrait_credit) .'</figcaption>';
-          }
         ?>
       </figure>
     <?php endif; ?>
 
     <?php
-      $age_years = $calc_years($by ?: null, $bm ?: null, $bd ?: null, $dy ?: null, $dm ?: null, $dd ?: null);
+      $age_years = $has_birth_death
+        ? $calc_years($by ?: null, $bm ?: null, $bd ?: null, $dy ?: null, $dm ?: null, $dd ?: null)
+        : null;
+
+      $active_years = (!$has_birth_death && $active_range)
+        ? $calc_active_years($fs ?: null, $fe ?: null)
+        : null;
     ?>
-    <?php if ($birth_display || $death_display): ?>
+
+    <?php if ($has_birth_death): ?>
       <div class="meta-master-dates">
         <?php if ($birth_display): ?>
           <span class="birth" itemprop="birthDate"><?php echo esc_html($birth_display); ?></span>
@@ -315,7 +306,21 @@ $has_meta =
           <span class="death" itemprop="deathDate"><?php echo esc_html($death_display); ?></span>
         <?php endif; ?>
         <?php if ($age_years !== null): ?>
-          <span class="age"> (<?php echo esc_html($age_years . ' ' . __('anni','cignozen')); ?>)</span>
+          <div class="age"> (<?php echo esc_html($age_years . ' ' . __('anni','cignozen')); ?>)</div>
+        <?php endif; ?>
+      </div>
+    <?php elseif ($active_range): ?>
+      <div class="meta-master-dates">
+        <div class="active-label"><?php echo esc_html__('Periodo di attività', 'cignozen'); ?></div>
+        <div class="active-range">
+          <?php
+            $start = $fs ? (string)$fs : '—';
+            $end   = $fe ? (string)$fe : '—';
+            echo esc_html($start . ' – ' . $end);
+          ?>
+        </div>
+        <?php if ($active_years !== null): ?>
+          <div class="active-years"> (<?php echo esc_html($active_years . ' ' . __('anni','cignozen')); ?>)</div>
         <?php endif; ?>
       </div>
     <?php endif; ?>
@@ -326,13 +331,8 @@ $has_meta =
       <h2 id="master-meta-title" class="collapsable-toggle"><?php echo esc_html__('Informazioni', 'cignozen'); ?></h2>
       <div class="collapsable-content">
         <?php
-          // Luogo di nascita – OHM con time slider (se coord presenti)
-          $birth_map = $build_map_url($birth_place_name, $birth_place_lat, $birth_place_lng, 'google', 10);
-          if ($birth_map) {
-            // focus sull'anno di nascita; range nascita–morte
-            $q_birth  = $ohm_time_query($by ?: null, $by ?: null, $dy ?: null);
-            $birth_map = $ohm_with_time($birth_map, $q_birth);
-          }
+          // Luogo di nascita (link solo se lat/lng presenti)
+          $birth_map = $build_map_url($birth_place_lat, $birth_place_lng);
           if ($birth_place_name) {
             $bp_html = $birth_map
               ? sprintf('<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
@@ -341,13 +341,8 @@ $has_meta =
             $meta_row(__('Luogo di nascita', 'cignozen'), $bp_html, 'meta-birth-place');
           }
 
-          // Luogo del decesso – OHM con time slider (se coord presenti)
-          $death_map = $build_map_url($death_place_name, $death_place_lat, $death_place_lng, 'google', 10);
-          if ($death_map) {
-            // focus sull'anno di morte; stesso range nascita–morte
-            $q_death  = $ohm_time_query($dy ?: null, $by ?: null, $dy ?: null);
-            $death_map = $ohm_with_time($death_map, $q_death);
-          }
+          // Luogo del decesso (link solo se lat/lng presenti)
+          $death_map = $build_map_url($death_place_lat, $death_place_lng);
           if ($death_place_name) {
             $dp_html = $death_map
               ? sprintf('<a href="%s" target="_blank" rel="noopener nofollow">%s</a>',
@@ -363,31 +358,34 @@ $has_meta =
             $meta_row(esc_html__('Generazione', 'cignozen'), $generation_html, 'meta-generation');
           }
 
-          // --- Sezione Maestri senza ridondanze ---
+          // --- Maestri (anti-ridondanza) ---
           if ($single_master_id) {
             if ($html = $link_for($single_master_id)) {
               $meta_row(__('Maestro','cignozen'), $html, 'meta-master-single');
             }
           } else {
-            // Mostra "Maestri" se ci sono più maestri in totale o "altri" oltre a primary/heir
             $total_teachers = count($teachers_ids);
             if ($total_teachers > 1 || count($teachers_list) > 0) {
               $meta_row(__('Maestri','cignozen'), implode(', ', $teachers_list), 'meta-teachers');
             }
-
-            // Primary Teacher (solo se diverso dall'Heir)
             if ($primary_id && $primary_id !== $heir_id) {
               if ($html = $link_for($primary_id)) {
                 $meta_row(__('Maestro principale','cignozen'), $html, 'meta-primary-teacher');
               }
             }
-
-            // Dharma Heir (solo se diverso dal Primary)
             if ($heir_id && $heir_id !== $primary_id) {
               if ($html = $link_for($heir_id)) {
                 $meta_row(__('Erede del Dharma di','cignozen'), $html, 'meta-dharma-heir-of');
               }
             }
+          }
+
+          // --- Successori (discendenti) ---
+          if ($heirs_html !== '') {
+            $meta_row(__('Eredi del Dharma','cignozen'), $heirs_html, 'meta-heirs');
+          }
+          if ($primary_students_html !== '') {
+            $meta_row(__('Allievi principali','cignozen'), $primary_students_html, 'meta-primary-students');
           }
         ?>
       </div>
@@ -398,7 +396,6 @@ $has_meta =
     <?php
       the_content();
 
-      // Paginazione multipagina classica
       wp_link_pages([
         'before' => '<div class="post-pagination"><h5>' . esc_html__('Pagine', 'cignozen') . '</h5><p class="page-links">',
         'next_or_number' => 'number',
@@ -475,7 +472,7 @@ $person = array_filter([
                         'geo'   => ($birth_place_lat !== '' && $birth_place_lng !== '') ? [
                           '@type' => 'GeoCoordinates',
                           'latitude'  => (float)$birth_place_lat,
-                          'longitude' => (float)$death_place_lng, // <- note: typo fix below
+                          'longitude' => (float)$birth_place_lng,
                         ] : null,
                       ]) : null,
   'deathPlace'      => $death_place_name ? array_filter([
@@ -495,11 +492,6 @@ $person = array_filter([
                       ))) ?: null,
   'description'     => has_excerpt() ? wp_strip_all_tags(get_the_excerpt()) : null,
 ], fn($v) => $v !== null && $v !== '' && $v !== []);
-
-// FIX: longitude del birthPlace (copiaincolla) — corregge l'errore di campo
-if (isset($person['birthPlace']['geo']['longitude'])) {
-  $person['birthPlace']['geo']['longitude'] = (float)$birth_place_lng;
-}
 
 echo '<script type="application/ld+json">' .
      wp_json_encode($person, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) .

@@ -2176,9 +2176,15 @@ blockquote.poem.font-size-small p.verse {
   font-size: 1.4em;
 }
 
-.meta-master-dates .age {
+.meta-master-dates .age,
+.meta-master-dates .active-years {
   display: block;
   font-size: .7em;
+}
+
+.meta-master-dates .active-label {
+  font-size: .7em;
+  font-style: italic;
 }
 
 .maestro-content {
