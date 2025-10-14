@@ -125,15 +125,15 @@ $meta_row = function (string $label, $value, string $class = '') {
   );
 };
 
-/** Compone una data display da year/month/day + precision. */
+/** Compone una data display da day/month/year + precision. */
 $build_display_date = function (?int $y, ?int $m, ?int $d, ?string $prec): string {
   if (!$y) return '';
   $pad = fn($n) => str_pad((string)$n, 2, '0', STR_PAD_LEFT);
   switch ($prec) {
     case 'full':
-      if ($m && $d) return "{$y}-{$pad($m)}-{$pad($d)}";
+      if ($m && $d) return "{$pad($d)}/{$pad($m)}/{$y}";
     case 'year-month':
-      if ($m) return "{$y}-{$pad($m)}";
+      if ($m) return "{$pad($m)}/{$y}";
     case 'circa':
       return "c. {$y}";
     case 'year':

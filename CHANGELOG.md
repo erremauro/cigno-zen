@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Updates some master's information label related to predecessors and heirs.
+### Fixed
+- Fix date format
+- Fix honorific name margin
 
 ## [1.7.2] 2025-10-14
 ### Changed
