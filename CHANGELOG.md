@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Updates some master's information label related to predecessors and heirs.
+
 ## [1.7.2] 2025-10-14
 ### Changed
 - If Master's floruit dates are provided in place of birth/death dates, show

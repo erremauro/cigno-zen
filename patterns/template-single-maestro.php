@@ -370,22 +370,22 @@ $has_meta =
             }
             if ($primary_id && $primary_id !== $heir_id) {
               if ($html = $link_for($primary_id)) {
-                $meta_row(__('Maestro principale','cignozen'), $html, 'meta-primary-teacher');
+                $meta_row(__('Maestro','cignozen'), $html, 'meta-primary-teacher');
               }
             }
             if ($heir_id && $heir_id !== $primary_id) {
               if ($html = $link_for($heir_id)) {
-                $meta_row(__('Erede del Dharma di','cignozen'), $html, 'meta-dharma-heir-of');
+                $meta_row(__('Predecessore','cignozen'), $html, 'meta-dharma-heir-of');
               }
             }
           }
 
           // --- Successori (discendenti) ---
           if ($heirs_html !== '') {
-            $meta_row(__('Eredi del Dharma','cignozen'), $heirs_html, 'meta-heirs');
+            $meta_row(__('Successori','cignozen'), $heirs_html, 'meta-heirs');
           }
           if ($primary_students_html !== '') {
-            $meta_row(__('Allievi principali','cignozen'), $primary_students_html, 'meta-primary-students');
+            $meta_row(__('Allievi Principali','cignozen'), $primary_students_html, 'meta-primary-students');
           }
         ?>
       </div>
