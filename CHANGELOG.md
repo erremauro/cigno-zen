@@ -8,7 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Add the page `genealogia-dei-maestri`
+- Add the page `memorizzazione-sutra`
+- Add the page `utilita`
 ### Changed
+- Updates `footer.php` adding links to Instagram and the page "Utilità".
 - Updates some master's information label related to predecessors and heirs.
 ### Fixed
 - Fix date format
