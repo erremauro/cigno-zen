@@ -40,7 +40,7 @@
             </div>
             <div class="utility-item">
                 <div class="utility-name">
-                    <a href="<?php echo esc_url(home_url('utilita/memorizzazione-sutra')) ?>">Memorizzazione dei Sutra</a>
+                    <a href="<?php echo esc_url(home_url('utilita/studio-dei-sutra')) ?>">Studio dei Sutra</a>
                 </div>
                 <div class="utility-description">
                     Questo tool scompone i sutra in parti e ti aiuta a memorizzarli con il supporto dell'audio.
