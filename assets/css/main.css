@@ -2089,6 +2089,51 @@ blockquote.poem.font-size-small p.verse {
   font-size: 1em;
 }
 
+blockquote.poem p { 
+  line-height: 1.68; 
+  padding: 0; 
+  text-indent: 0; 
+}
+blockquote.poem p.v1 { 
+  padding-left:6%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v2 { 
+  padding-left:10%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v3 { 
+  padding-left:14%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v4 { 
+  padding-left:18%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v5 { 
+  padding-left:22%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v6 { 
+  padding-left:26%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v7 { 
+  padding-left:30%; 
+  text-indent:-2%;
+}
+blockquote.poem p.v8 { 
+  padding-left:34%; 
+  text-indent:-2%;
+}
+blockquote.poem p.verse { 
+  line-height: 1.68; 
+  margin: 0; 
+  margin-top: 1em; 
+  text-indent: 0; 
+  padding: 0; 
+}
+
 @media (max-width: 587px) {
   blockquote.poem.font-size-large p.verse {
     font-size: 1.2em;
