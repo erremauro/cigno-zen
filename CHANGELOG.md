@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Update styles adding poem's verse identation
+- Update `patterns/template-featured-posts.php` to show up to three featured posts as uniform cards without carousel.
+- Support `featured=1` on `/articoli/` to list only posts with `is_featured`, ordered by `featured_order`.
 
 ## [1.7.3]
 ### Added

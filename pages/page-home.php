@@ -1,13 +1,14 @@
 
 <?php get_template_part('parts/home-welcome') ?>
 <?php get_template_part('patterns/template-home-articles'); ?>
+<?php get_template_part('patterns/template-featured-posts'); ?>
 <?php get_template_part('patterns/template-home-readings'); ?>
 <?php get_template_part('patterns/template-home-authors'); ?>
 <?php get_template_part('patterns/template-home-volumes'); ?>
 <?php get_template_part('patterns/template-home-categories'); ?>
 <?php get_template_part('parts/tag-cloud', null, [
     'args' => [
-        'number' => 80,
+        'number' => 20,
         'order'  => 'DESC',
         'scale'  => 'log',
         'show_count' => false,

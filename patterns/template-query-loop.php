@@ -10,9 +10,10 @@ $tag_slug = is_tag() ?
     get_query_var('tag');
 
 $offset_param   = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
-$post_per_page  = (int) get_option('posts_per_page');
+$posts_per_page = (int) get_option('posts_per_page');
 $paged          = max(1, get_query_var('paged') ?: get_query_var('page') ?: 1);
-$query_offset   = $offset_param + ($paged - 1) * $post_per_page;
+$query_offset   = $offset_param + ($paged - 1) * $posts_per_page;
+$featured_only  = isset($_GET['featured']) && intval($_GET['featured']) === 1;
 
 // Argomenti per la query
 $args = [
@@ -24,6 +25,22 @@ $args = [
 ];
 
 // Filtri condizionali
+if ( $featured_only ) {
+    $args['meta_query'] = [
+        [
+            'key'     => 'is_featured',
+            'value'   => '1',
+            'compare' => '=',
+        ],
+    ];
+    $args['meta_key'] = 'featured_order';
+    $args['meta_type'] = 'NUMERIC';
+    $args['orderby'] = [
+        'meta_value_num' => 'ASC',
+        'date'           => 'DESC',
+    ];
+    $args['offset'] = 0; // lista curata, no pagine saltate da offset
+}
 if ( $author_id ) {
     $args['author'] = $author_id;
 }
@@ -45,6 +62,8 @@ $the_query = new WP_Query( $args );
     if ( is_category() ) {
         // Categoria
         single_cat_title( 'Categoria: ' );
+    } elseif ( $featured_only ) {
+        echo 'Articoli in Evidenza';
     } elseif ( is_tag() ) {
         echo 'Articoli Correlati';
     } elseif ( is_home() || is_archive() ) {

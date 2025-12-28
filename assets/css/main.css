@@ -1753,9 +1753,34 @@ section.home-section .post-content p {
   background: var(--card-bg);
 }
 
+.featured-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.featured-card {
+  display: block;
+  padding: 1em;
+  text-decoration: none;
+  color: var(--text);
+  border: var(--card-border);
+  border-radius: 0.5em;
+  background: var(--card-bg);
+  text-align: center;
+  color: var(--link);
+  user-select: none;
+}
+
+.featured-card:hover {
+  border-color: var(--link);
+  box-shadow: var(--card-hover-shadow);
+}
+
 section.home-section#authors .author-card,
 section.home-section#categories .category-card,
-section.home-section#volumes .volume-card {
+section.home-section#volumes .volume-card,
+section.home-section .featured-card {
   transition: all 0.3s ease;
 }
 
