@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.7.4] 2025-12-29
 ### Changed
+- Footnote's text is now paginated.
 - Update styles adding poem's verse identation
-- Update `patterns/template-featured-posts.php` to show up to three featured posts as uniform cards without carousel.
+- Update `patterns/template-featured-posts.php` to show up to three featured posts.
 - Support `featured=1` on `/articoli/` to list only posts with `is_featured`, ordered by `featured_order`.
 
 ## [1.7.3]
@@ -270,7 +271,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.7.3...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.7.4...HEAD
+[1.7.4]: https://github.com/erremauro/cigno-zen/releases/tag/v1.7.4
 [1.7.3]: https://github.com/erremauro/cigno-zen/releases/tag/v1.7.3
 [1.7.2]: https://github.com/erremauro/cigno-zen/releases/tag/v1.7.2
 [1.7.1]: https://github.com/erremauro/cigno-zen/releases/tag/v1.7.1

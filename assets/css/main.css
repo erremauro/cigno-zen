@@ -1284,6 +1284,15 @@ p.footnote {
   content: ".";
 }
 
+.footnote-pagination {
+  margin-top: 1em;
+  text-align: center;
+}
+
+.footnote-pagination-indicator {
+  padding: 0 1em;
+}
+
 /* VOLUMI, AUTORI, CATEGORIE */
 .volumes-list,
 .author-list,

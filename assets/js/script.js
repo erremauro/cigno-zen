@@ -175,6 +175,9 @@
     }
   };
 
+  // Regola la soglia per la paginazione delle note (numero di caratteri)
+  const FOOTNOTE_PAGINATION_THRESHOLD = 256;
+
   // ---------------- Cleaners ----------------
   const stripLeadingMarker = (el, id) => {
     const isElementMarker = (node) => {
@@ -332,13 +335,196 @@
 
     const content = document.createElement("div");
     content.className = "footnote-popup-content";
-    content.innerHTML = html;
+    const pages = paginateFootnoteHTML(html, FOOTNOTE_PAGINATION_THRESHOLD);
+    let pagination = null;
+    if (pages.length > 1) {
+      content.classList.add("footnote-popup-content--paged");
+      content.style.overflow = "hidden";
+      content.style.maxHeight = "none";
+      pages.forEach((page, index) => {
+        if (index !== 0) page.hidden = true;
+        content.appendChild(page);
+      });
+      pagination = buildPaginationControls(pages);
+    } else {
+      content.innerHTML = html;
+    }
 
     popup.appendChild(btn);
     popup.appendChild(title);
     popup.appendChild(content);
+    if (pagination) popup.appendChild(pagination);
 
     return { popup, overlay };
+  };
+
+  const paginateFootnoteHTML = (html, threshold) => {
+    const container = document.createElement("div");
+    container.innerHTML = html || "";
+    const nodes = Array.from(container.childNodes);
+    const pages = [];
+    let page = document.createElement("div");
+    page.className = "footnote-page";
+    let remaining = threshold;
+
+    const getNodeTextLength = (node) => (node.textContent || "").length;
+
+    const splitTextNode = (node, maxChars) => {
+      if (maxChars <= 0) return [null, node];
+      const text = node.nodeValue || "";
+      if (text.length <= maxChars) return [node, null];
+
+      let cut = maxChars;
+      while (cut > 0 && !/\s/.test(text.charAt(cut - 1))) cut -= 1;
+      if (cut === 0) cut = maxChars;
+
+      const head = document.createTextNode(text.slice(0, cut));
+      const tailText = text.slice(cut).replace(/^\s+/, "");
+      const tail = tailText ? document.createTextNode(tailText) : null;
+      return [head, tail];
+    };
+
+    const splitNodeByChars = (node, maxChars) => {
+      if (maxChars <= 0) return [null, node];
+      if (node.nodeType === 3) return splitTextNode(node, maxChars);
+      if (node.nodeType !== 1) return [node, null];
+
+      const head = node.cloneNode(false);
+      const tail = node.cloneNode(false);
+      let remainingChars = maxChars;
+      const children = Array.from(node.childNodes);
+
+      for (let i = 0; i < children.length; i += 1) {
+        const child = children[i];
+        const childLen = getNodeTextLength(child);
+
+        if (childLen <= remainingChars) {
+          head.appendChild(child);
+          remainingChars -= childLen;
+          continue;
+        }
+
+        if (remainingChars > 0) {
+          const [childHead, childTail] = splitNodeByChars(
+            child,
+            remainingChars,
+          );
+          if (childHead) head.appendChild(childHead);
+          if (childTail) tail.appendChild(childTail);
+        } else {
+          tail.appendChild(child);
+        }
+
+        for (let j = i + 1; j < children.length; j += 1) {
+          tail.appendChild(children[j]);
+        }
+        break;
+      }
+
+      return [
+        head.childNodes.length ? head : null,
+        tail.childNodes.length ? tail : null,
+      ];
+    };
+
+    const pushPage = () => {
+      if (page.childNodes.length) pages.push(page);
+      page = document.createElement("div");
+      page.className = "footnote-page";
+      remaining = threshold;
+    };
+
+    let idx = 0;
+    while (idx < nodes.length) {
+      let node = nodes[idx];
+      const textLen = getNodeTextLength(node);
+
+      if (textLen <= remaining || textLen === 0) {
+        page.appendChild(node);
+        remaining -= textLen;
+        idx += 1;
+        continue;
+      }
+
+      const [head, tail] = splitNodeByChars(node, remaining);
+      if (head) page.appendChild(head);
+      pushPage();
+      if (tail) {
+        node = tail;
+      } else {
+        idx += 1;
+        continue;
+      }
+
+      while (node) {
+        const len = getNodeTextLength(node);
+        if (len <= remaining || len === 0) {
+          page.appendChild(node);
+          remaining -= len;
+          node = null;
+          idx += 1;
+          break;
+        }
+        const [h, t] = splitNodeByChars(node, remaining);
+        if (h) page.appendChild(h);
+        pushPage();
+        node = t;
+      }
+    }
+    if (page.childNodes.length) pages.push(page);
+
+    return pages.length ? pages : [page];
+  };
+
+  const buildPaginationControls = (pages) => {
+    let index = 0;
+    const nav = document.createElement("div");
+    nav.className = "footnote-pagination";
+
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "footnote-pagination-prev";
+    prev.setAttribute("aria-label", "Pagina precedente");
+    prev.textContent = "←";
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "footnote-pagination-next";
+    next.setAttribute("aria-label", "Pagina successiva");
+    next.textContent = "→";
+
+    const indicator = document.createElement("span");
+    indicator.className = "footnote-pagination-indicator";
+
+    const update = () => {
+      pages.forEach((page, i) => {
+        page.hidden = i !== index;
+      });
+      prev.disabled = index === 0;
+      next.disabled = index === pages.length - 1;
+      indicator.textContent = `${index + 1}/${pages.length}`;
+    };
+
+    prev.addEventListener("click", () => {
+      if (index > 0) {
+        index -= 1;
+        update();
+      }
+    });
+
+    next.addEventListener("click", () => {
+      if (index < pages.length - 1) {
+        index += 1;
+        update();
+      }
+    });
+
+    nav.appendChild(prev);
+    nav.appendChild(indicator);
+    nav.appendChild(next);
+    update();
+
+    return nav;
   };
 
   const MOBILE_BREAKPOINT = 680;
