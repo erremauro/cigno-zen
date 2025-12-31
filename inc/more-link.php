@@ -7,17 +7,19 @@
  * @param string $expanded_label     Label when expanded (bottom visible).
  * @param string $extra_class        Extra classes for wrapper.
  * @param string $scroll_target_id   (optional) Element ID to scroll to on collapse.
+ * @param bool   $expanded           (optional) Default state for the toggle.
  */
-function cz_render_more_link_toggle( string $target_id, string $collapsed_label = 'MOSTRA TUTTO', string $expanded_label = 'CHIUDI', string $extra_class = '', string $scroll_target_id = '' ): void {
+function cz_render_more_link_toggle( string $target_id, string $collapsed_label = 'MOSTRA TUTTO', string $expanded_label = 'CHIUDI', string $extra_class = '', string $scroll_target_id = '', bool $expanded = false ): void {
 	$chevron_url = esc_url( get_template_directory_uri() . '/assets/images/chevron-down.svg' );
 	$data_scroll = $scroll_target_id ? ' data-scroll-target="#' . esc_attr( $scroll_target_id ) . '"' : '';
+	$aria_state  = $expanded ? 'true' : 'false';
 	?>
 	<!-- MORE LINK CHEVRON TOGGLE -->
 	<div class="more-link-toggle js-toggle <?php echo esc_attr( $extra_class ); ?>"
 		role="button"
 		tabindex="0"
 		aria-controls="<?php echo esc_attr( $target_id ); ?>"
-		aria-expanded="false"
+		aria-expanded="<?php echo esc_attr( $aria_state ); ?>"
 		data-toggle-target="#<?php echo esc_attr( $target_id ); ?>"<?php echo $data_scroll; ?>>
 		<label class="more-link-label more-link-lable-top"><?php echo esc_html( $collapsed_label ); ?></label>
 		<img class="more-link-button" src="<?php echo $chevron_url; ?>" alt="" width="32" height="auto">

@@ -44,9 +44,9 @@
 <div class="nav-drawer-backdrop" data-nav-drawer-close></div>
 <aside id="nav-drawer" class="nav-drawer" aria-hidden="true">
     <div class="collapsable-section" data-initial="open">
-        <h3 class="collapsable-toggle" role="button" tabindex="0" aria-controls="nav-drawer-contenuti" aria-expanded="true">
+        <h5 class="collapsable-toggle" role="button" tabindex="0" aria-controls="nav-drawer-contenuti" aria-expanded="true">
             Contenuti
-        </h3>
+        </h5>
         <div id="nav-drawer-contenuti" class="collapsable-content" aria-hidden="false">
             <ul class="menu">
                 <li><a href="<?php echo esc_url( home_url( '/articoli' ) ); ?>">Articoli</a></li>
@@ -58,11 +58,12 @@
     </div>
 
     <div class="collapsable-section" data-initial="open">
-        <h3 class="collapsable-toggle" role="button" tabindex="0" aria-controls="nav-drawer-utilita" aria-expanded="true">
+        <h5 class="collapsable-toggle" role="button" tabindex="0" aria-controls="nav-drawer-utilita" aria-expanded="true">
             Utilità
-        </h3>
+        </h5>
         <div id="nav-drawer-utilita" class="collapsable-content" aria-hidden="false">
             <ul class="menu">
+                <li><a href="<?php echo esc_url( home_url( '/dizionario' ) ); ?>">Dizionario</a></li>
                 <li><a href="<?php echo esc_url( home_url( '/genealogia-dei-maestri' ) ); ?>">Genealogia dei Maestri</a></li>
                 <li><a href="<?php echo esc_url( home_url( '/studio-dei-sutra' ) ); ?>">Studio dei Sutra</a></li>
             </ul>

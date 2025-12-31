@@ -10,6 +10,7 @@ $short_definition   = get_field( 'short_definition', $term );
 $full_description   = get_field( 'description', $term );
 $wp_description     = term_description( $term->term_id, $term->taxonomy );
 $definition_source  = get_field( 'definition_source', $term );
+$show_all           = isset( $_GET['show_all'] ) && $_GET['show_all'] === '1';
 
 $panel_id = 'tag-full-description-' . $term->term_id;
 ?>
@@ -38,12 +39,12 @@ $panel_id = 'tag-full-description-' . $term->term_id;
 
 			<?php if ( $full_description ) : ?>
 				<?php if ( function_exists( 'cz_render_more_link_toggle' ) ) {
-					cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle', 'term' );
+					cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle', 'term', $show_all );
 				} ?>
-				<div id="<?php echo esc_attr( $panel_id ); ?>" class="tag-full-description" hidden>
+				<div id="<?php echo esc_attr( $panel_id ); ?>" class="tag-full-description"<?php if ( ! $show_all ) : ?> hidden<?php endif; ?>>
 					<?php echo wp_kses_post( apply_filters( 'the_content', $full_description ) ); ?>
 					<?php if ( function_exists( 'cz_render_more_link_toggle' ) ) {
-						cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle-bottom', 'term' );
+						cz_render_more_link_toggle( $panel_id, 'MOSTRA TUTTO', 'CHIUDI', 'tag-more-toggle-bottom', 'term', $show_all );
 					} ?>
 				</div>
 			<?php endif; ?>

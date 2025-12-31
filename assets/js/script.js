@@ -142,8 +142,9 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     qsa(".js-toggle").forEach(function (w) {
-      // Initialize UI to collapsed
-      setState(w, false);
+      // Initialize UI to the declared state (defaults to collapsed)
+      var isExpanded = w.getAttribute("aria-expanded") === "true";
+      setState(w, isExpanded);
       w.addEventListener("click", toggle);
       w.addEventListener("keydown", onKey);
     });
