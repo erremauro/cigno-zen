@@ -32,6 +32,14 @@
         <div class="utility-list">
             <div class="utility-item">
                 <div class="utility-name">
+                    <a href="<?php echo esc_url(home_url('dizionario')) ?>">Dizionario</a>
+                </div>
+                <div class="utility-description">
+                    Cerca tra i lemmi del dizionario buddhista per trovare definizioni e spiegazioni dettagliate.
+                </div>
+            </div>
+            <div class="utility-item">
+                <div class="utility-name">
                     <a href="<?php echo esc_url(home_url('utilita/genealogia-dei-maestri')) ?>">Genealogia dei Maestri</a>
                 </div>
                 <div class="utility-description">
