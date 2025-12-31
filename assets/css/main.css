@@ -852,6 +852,7 @@ html[data-theme="light"] {
   top: var(--top-nav-height, 72px);
   left: 0;
   height: calc(100vh - var(--top-nav-height, 72px));
+  height: calc(100dvh - var(--top-nav-height, 72px));
   width: 320px;
   transform: translateX(-100%);
   background: var(--bg);
@@ -861,6 +862,8 @@ html[data-theme="light"] {
   transition: transform 0.25s ease;
   z-index: 997;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  will-change: transform;
 }
 
 .nav-drawer .nav-drawer-header {

@@ -1561,7 +1561,19 @@
       );
     }
 
+    var topNavHeightPending = false;
+
+    function scheduleTopNavHeight() {
+      if (topNavHeightPending) return;
+      topNavHeightPending = true;
+      window.requestAnimationFrame(function () {
+        topNavHeightPending = false;
+        setTopNavHeight();
+      });
+    }
+
     function setOpen(isOpen) {
+      setTopNavHeight();
       document.body.classList.toggle("nav-drawer-open", isOpen);
       toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
       drawer.setAttribute("aria-hidden", isOpen ? "false" : "true");
@@ -1585,7 +1597,12 @@
     });
 
     setTopNavHeight();
-    window.addEventListener("resize", setTopNavHeight);
+    window.addEventListener("resize", scheduleTopNavHeight);
+    window.addEventListener("scroll", scheduleTopNavHeight, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", scheduleTopNavHeight);
+      window.visualViewport.addEventListener("scroll", scheduleTopNavHeight);
+    }
   });
 })();
 
