@@ -1005,7 +1005,7 @@ body.nav-drawer-open .content-area {
   stroke: var(--text);
   stroke-miterlimit: 10;
   stroke-linecap: round;
-  stroke-width: 54px;
+  stroke-width: 58px;
 }
 
 .search-bar form[role="search"] {
