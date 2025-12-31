@@ -704,6 +704,27 @@
   } catch (_) {}
 })();
 
+// Close user menu when clicking outside.
+(() => {
+  function initUserMenu() {
+    var userMenu = document.querySelector(".nav-user");
+    if (!userMenu) return;
+
+    document.addEventListener("click", function (event) {
+      if (!userMenu.hasAttribute("open")) return;
+      if (userMenu.contains(event.target)) return;
+      userMenu.removeAttribute("open");
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key !== "Escape") return;
+      if (userMenu.hasAttribute("open")) userMenu.removeAttribute("open");
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", initUserMenu);
+})();
+
 /* ========== THEME TOGGLE (time-based with per-day override + legacy reset) ========== */
 (function () {
   var LEGACY_KEY = "cz-theme"; // old key to remove
@@ -1514,5 +1535,117 @@
   }
   ready(function () {
     document.querySelectorAll(".cz-bowl").forEach(setupBowl);
+  });
+})();
+
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  ready(function () {
+    var toggle = document.querySelector(".top-nav-bar .nav-toggle");
+    var drawer = document.getElementById("nav-drawer");
+    var closeTargets = document.querySelectorAll("[data-nav-drawer-close]");
+    var topNav = document.querySelector(".top-nav-bar");
+
+    if (!toggle || !drawer || !topNav) return;
+
+    function setTopNavHeight() {
+      var rect = topNav.getBoundingClientRect();
+      var height = rect.bottom || topNav.offsetHeight || 72;
+      document.documentElement.style.setProperty(
+        "--top-nav-height",
+        height + "px"
+      );
+    }
+
+    function setOpen(isOpen) {
+      document.body.classList.toggle("nav-drawer-open", isOpen);
+      toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      drawer.setAttribute("aria-hidden", isOpen ? "false" : "true");
+    }
+
+    toggle.addEventListener("click", function () {
+      var isOpen = document.body.classList.contains("nav-drawer-open");
+      setOpen(!isOpen);
+    });
+
+    closeTargets.forEach(function (target) {
+      target.addEventListener("click", function () {
+        setOpen(false);
+      });
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    });
+
+    setTopNavHeight();
+    window.addEventListener("resize", setTopNavHeight);
+  });
+})();
+
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  ready(function () {
+    var topNav = document.querySelector(".top-nav-bar");
+    var openBtn = topNav ? topNav.querySelector(".nav-search-toggle") : null;
+    var closeBtn = topNav ? topNav.querySelector(".nav-search-close") : null;
+    var search = document.getElementById("top-nav-search");
+    var searchField = search ? search.querySelector(".search-field") : null;
+    var mq = window.matchMedia("(max-width: 768px)");
+
+    if (!topNav || !openBtn || !closeBtn || !search) return;
+
+    function setOpen(isOpen) {
+      if (!mq.matches) {
+        topNav.classList.remove("is-search-open");
+        openBtn.setAttribute("aria-expanded", "false");
+        search.removeAttribute("aria-hidden");
+        return;
+      }
+
+      topNav.classList.toggle("is-search-open", isOpen);
+      openBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      search.setAttribute("aria-hidden", isOpen ? "false" : "true");
+
+      if (isOpen && searchField) {
+        searchField.focus({ preventScroll: true });
+      }
+    }
+
+    openBtn.addEventListener("click", function () {
+      setOpen(true);
+    });
+
+    closeBtn.addEventListener("click", function () {
+      setOpen(false);
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && topNav.classList.contains("is-search-open")) {
+        setOpen(false);
+      }
+    });
+
+    if (mq.addEventListener) {
+      mq.addEventListener("change", function () {
+        setOpen(false);
+      });
+    } else if (mq.addListener) {
+      mq.addListener(function () {
+        setOpen(false);
+      });
+    }
+
+    setOpen(false);
   });
 })();

@@ -56,6 +56,9 @@ get_template_part( 'parts/header', null, array( 'show_menu' => false ) );
 			<div class="password-recovery-control">
 				<a href="<?php echo wp_lostpassword_url(); ?>">Password dimenticata?</a>
 			</div>
+			<div class="registration-control">
+				Non sei registrato? <a href="<?php echo esc_url( home_url( '/registrazione' ) ); ?>">Iscriviti</a>
+			</div>
 		</form>
 	</main>
 </div>
