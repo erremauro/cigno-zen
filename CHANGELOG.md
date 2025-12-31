@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Changed
 - Add `dictionary` in the `page-utilita.php`
+### Fixed
+- Fix an issue with bottom space in the sidebar
 
 ## [1.8.1] 2025-12-31
 ### Added
