@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update site-logo to multi-colored
+- Update "Login" button color scheme
 - Add `dictionary` in the `page-utilita.php`
 ### Fixed
 - Fix search-icon width
@@ -18,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Dictionary's lemmas now support `show_all=1` URL param to show the whole
 definition
-
+ 
 ## [1.8.0] 2025-12-31
 ### Changed
 - Replace the header with a brand-new top navigation bar!

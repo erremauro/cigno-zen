@@ -454,16 +454,73 @@ a.no-color-link:visited {
 }
 
 :root {
-  --logo-fill: 240, 240, 240;
+  --logo-c1: 161, 206, 234;
+  --logo-c2: 67, 156, 214;
+  --logo-c3: 67, 156, 214;
+  --logo-c4: 44, 141, 202;
+  --logo-c5: 25, 81, 116;
+  --logo-c6: 254, 254, 254;
+  --logo-c7: 225, 239, 248;
+  --logo-c8: 87, 168, 218;
+  --logo-c9: 89, 169, 219;
+  --logo-c10: 67, 156, 214;
 }
 
 html[data-theme="light"] {
-  --logo-fill: 20, 20, 20;
+  --logo-c1: 123, 193, 247;
+  --logo-c2: 12, 108, 191;
+  --logo-c3: 12, 108, 191;
+  --logo-c4: 12, 108, 191;
+  --logo-c5: 8, 82, 138;
+  --logo-c6: 254, 254, 254;
+  --logo-c7: 186, 223, 250;
+  --logo-c8: 23, 147, 241;
+  --logo-c9: 23, 147, 241;
+  --logo-c10: 12, 108, 191;
 }
 
 .site-logo path {
-  fill: rgb(var(--logo-fill));
   transition: fill 0.2s ease;
+}
+
+.site-logo .logo-c1 {
+  fill: rgb(var(--logo-c1));
+}
+
+.site-logo .logo-c2 {
+  fill: rgb(var(--logo-c2));
+}
+
+.site-logo .logo-c3 {
+  fill: rgb(var(--logo-c3));
+}
+
+.site-logo .logo-c4 {
+  fill: rgb(var(--logo-c4));
+}
+
+.site-logo .logo-c5 {
+  fill: rgb(var(--logo-c5));
+}
+
+.site-logo .logo-c6 {
+  fill: rgb(var(--logo-c6));
+}
+
+.site-logo .logo-c7 {
+  fill: rgb(var(--logo-c7));
+}
+
+.site-logo .logo-c8 {
+  fill: rgb(var(--logo-c8));
+}
+
+.site-logo .logo-c9 {
+  fill: rgb(var(--logo-c9));
+}
+
+.site-logo .logo-c10 {
+  fill: rgb(var(--logo-c10));
 }
 
 /* ========== THEME TOGGLE ========== */
@@ -730,19 +787,19 @@ header.site-header {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0.85rem;
-  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
   line-height: 1;
   text-decoration: none;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  color: var(--text);
+  border: 1px solid var(--link);
+  color: var(--link);
   background: transparent;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .top-nav-bar .nav-login:hover {
-  background-color: var(--top-nav-hover);
+  background-color: rgba(var(--link-rgb), 0.15);
 }
 
 .top-nav-bar .search-bar {
