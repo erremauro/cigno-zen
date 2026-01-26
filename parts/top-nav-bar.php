@@ -19,7 +19,11 @@
 
     <div class="nav-right">
         <?php if ( ! is_user_logged_in() ) : ?>
-            <a class="nav-login" href="<?php echo esc_url( home_url( '/login' ) ); ?>">Accedi</a>
+            <?php
+            $current_path = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
+            $login_url    = add_query_arg( 'redirect_to', $current_path, home_url( '/login' ) );
+            ?>
+            <a class="nav-login" href="<?php echo esc_url( $login_url ); ?>">Accedi</a>
         <?php endif; ?>
         <button class="nav-search-toggle" type="button" aria-label="Apri ricerca" aria-expanded="false" aria-controls="top-nav-search">
             <?php get_template_part( 'parts/svg/search-icon' ); ?>

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update "Login" button color scheme
 - Add `dictionary` in the `page-utilita.php`
 ### Fixed
+- Fix Login Redirect to 
 - Fix search-icon width
 - Fix an issue with bottom space in the sidebar
 

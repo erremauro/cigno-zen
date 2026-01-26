@@ -1,8 +1,13 @@
 <?php
 
-// Fa un reidrect se l'utente è già loggato
+// Redirect target (default home) and handle logged-in users.
+$redirect_to = home_url( '/' );
+if ( isset( $_REQUEST['redirect_to'] ) ) {
+	$redirect_to = wp_validate_redirect( wp_unslash( $_REQUEST['redirect_to'] ), home_url( '/' ) );
+}
+
 if ( is_user_logged_in() ) {
-	wp_redirect(home_url());
+	wp_safe_redirect( $redirect_to );
 	exit;
 }
 
@@ -18,7 +23,7 @@ if ($_POST && isset($_POST['cigno_zen_login'])) {
 	if (is_wp_error($user)) {
 		$ERROR_MESSAGE = $user->get_error_message();
 	} else {
-		wp_redirect(home_url()); // redirect dopo login
+		wp_safe_redirect( $redirect_to ); // redirect dopo login
 		exit;
 	}
 }
@@ -31,6 +36,7 @@ get_template_part( 'parts/header', null, array( 'show_menu' => false ) );
 	<main id="main" class="site-main">
 		<h1 style="text-align: center; margin-bottom: 1em;">Accedi</h1>
 		<form method="post" class="login-form">
+			<input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>">
 			<?php if ( $ERROR_MESSAGE ) : ?>
 				<div class="error-message">
 					<p><?php echo $ERROR_MESSAGE ?></p>
