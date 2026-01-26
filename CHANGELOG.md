@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
+- Update "remember me" authentication session to 14 days with refreshing sessions
 - Update site-logo to multi-colored
 - Update "Login" button color scheme
 - Add `dictionary` in the `page-utilita.php`
