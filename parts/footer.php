@@ -4,8 +4,7 @@
 			<p>
 				<a href="<?php echo esc_url('https://www.instagram.com/cignozen'); ?>">Instagram</a> ・
 				<a href="<?php echo esc_url(home_url('/contatti')); ?>">Contatti</a> ・
-				<a href="<?php echo esc_url(home_url('/privacy-policy')); ?>">Privacy</a> ・
-				<a href="<?php echo esc_url(home_url('/utilita')); ?>">Utilità</a>
+				<a href="<?php echo esc_url(home_url('/privacy-policy')); ?>">Privacy</a>
 			</p>
 		</div>
 	</footer>
