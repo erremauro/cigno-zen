@@ -61,6 +61,30 @@ add_shortcode('separator', function() {
 });
 
 /**
+ * Shortcode: [LS id="1.68"]
+ * Renders: <a href="/riferimenti-al-sutra-del-loto#ls-1-68" title="Consulta il riferimento al Sutra del Loto" target="_blank">LS 1.68</a>
+ */
+add_shortcode('LS', function($atts) {
+    $atts = shortcode_atts([
+        'id' => '',
+    ], $atts, 'LS');
+
+    $raw_id = trim(wp_strip_all_tags((string)$atts['id']));
+    if ($raw_id === '') {
+        return '';
+    }
+
+    $converted_id = str_replace('.', '-', $raw_id);
+    $href = '/riferimenti-al-sutra-del-loto#ls-' . $converted_id;
+
+    return sprintf(
+        '<a href="%1$s" title="Consulta il riferimento al Sutra del Loto" target="_blank">LS %2$s</a>',
+        esc_attr($href),
+        esc_html($raw_id)
+    );
+});
+
+/**
  * [collapsable title="Biografia" initial="open" tag="h2" id="bio"]
  * Contenuto...
  * [/collapsable]
@@ -552,7 +576,6 @@ if (!function_exists('cz_tag_cloud')) {
 add_shortcode('cz_tag_cloud', function ($atts) {
     return cz_tag_cloud_render((array)$atts);
 });
-
 
 
 
