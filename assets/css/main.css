@@ -429,6 +429,10 @@ a.no-color-link:visited {
   color: var(--text);
 }
 
+p.has-no-indent {
+  text-indent: 0 !important;
+}
+
 /* ========== SITE LOGO ========== */
 
 .site-logo {

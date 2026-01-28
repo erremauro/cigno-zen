@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Change
+- Add 'has-no-indent' css style
+
 ## [1.9.1] 2026-01-28
 ### Change
 - Add 'hide_from_list' option for Articles to hide an article from the article list and in the home
@@ -300,7 +304,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.9.1...HEAD
+[1.9.1]: https://github.com/erremauro/cigno-zen/releases/tag/v1.9.1
 [1.9.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.9.0
 [1.8.1]: https://github.com/erremauro/cigno-zen/releases/tag/v1.8.1
 [1.8.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.8.0
