@@ -375,9 +375,24 @@
       const text = node.nodeValue || "";
       if (text.length <= maxChars) return [node, null];
 
-      let cut = maxChars;
-      while (cut > 0 && !/\s/.test(text.charAt(cut - 1))) cut -= 1;
-      if (cut === 0) cut = maxChars;
+      // Prefer splitting on whitespace BEFORE the limit so we don't break words.
+      let cut = -1;
+      for (let i = maxChars; i > 0; i -= 1) {
+        if (/\s/.test(text.charAt(i - 1))) {
+          cut = i;
+          break;
+        }
+      }
+
+      // If there's whitespace somewhere in the node but not before the limit,
+      // move the whole word to the next page by returning no head.
+      // If there is no whitespace at all (single very long "word"), fall back
+      // to a hard split to guarantee forward progress.
+      if (cut <= 0) {
+        const hasWhitespace = /\s/.test(text);
+        if (hasWhitespace && maxChars < threshold) return [null, node];
+        cut = maxChars;
+      }
 
       const head = document.createTextNode(text.slice(0, cut));
       const tailText = text.slice(cut).replace(/^\s+/, "");

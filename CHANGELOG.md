@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.9.0] 2025-01-26
+## [1.9.1] 2026-01-28
+### Change
+- Add 'hide_from_list' option for Articles to hide an article from the article list and in the home
+### Fix
+- Fix footnotes popup pagination
+
+## [1.9.0] 2026-01-26
 ### Changed
 - Remove "utilità" from the footer
 - Update "remember me" authentication session to 14 days with refreshing sessions

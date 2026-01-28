@@ -14,6 +14,18 @@ $posts_per_page = (int) get_option('posts_per_page');
 $paged          = max(1, get_query_var('paged') ?: get_query_var('page') ?: 1);
 $query_offset   = $offset_param + ($paged - 1) * $posts_per_page;
 $featured_only  = isset($_GET['featured']) && intval($_GET['featured']) === 1;
+$hide_from_list_filter = [
+    'relation' => 'OR',
+    [
+        'key'     => 'hide_from_list',
+        'compare' => 'NOT EXISTS',
+    ],
+    [
+        'key'     => 'hide_from_list',
+        'value'   => '1',
+        'compare' => '!=',
+    ],
+];
 
 // Argomenti per la query
 $args = [
@@ -27,11 +39,13 @@ $args = [
 // Filtri condizionali
 if ( $featured_only ) {
     $args['meta_query'] = [
+        'relation' => 'AND',
         [
             'key'     => 'is_featured',
             'value'   => '1',
             'compare' => '=',
         ],
+        $hide_from_list_filter,
     ];
     $args['meta_key'] = 'featured_order';
     $args['meta_type'] = 'NUMERIC';
@@ -40,6 +54,9 @@ if ( $featured_only ) {
         'date'           => 'DESC',
     ];
     $args['offset'] = 0; // lista curata, no pagine saltate da offset
+}
+if ( ! $featured_only ) {
+    $args['meta_query'] = [ $hide_from_list_filter ];
 }
 if ( $author_id ) {
     $args['author'] = $author_id;

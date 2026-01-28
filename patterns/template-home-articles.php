@@ -18,6 +18,18 @@
     $args = [
         'posts_per_page' => 1,
         'post_status'    => 'publish',
+        'meta_query'     => [
+            'relation' => 'OR',
+            [
+                'key'     => 'hide_from_list',
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key'     => 'hide_from_list',
+                'value'   => '1',
+                'compare' => '!=',
+            ],
+        ],
     ];
     $latest_post = get_posts($args);
 
@@ -42,6 +54,18 @@
         'posts_per_page' => 3,
         'post_status'    => 'publish',
         'offset'         => 1,
+        'meta_query'     => [
+            'relation' => 'OR',
+            [
+                'key'     => 'hide_from_list',
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key'     => 'hide_from_list',
+                'value'   => '1',
+                'compare' => '!=',
+            ],
+        ],
     ];
     $recent_posts = get_posts($args);
     $count_posts  = is_array($recent_posts) ? count($recent_posts) : 0;
