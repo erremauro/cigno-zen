@@ -75,8 +75,9 @@ add_shortcode('LS', function($atts) {
     }
 
     $converted_id = str_replace('.', '-', $raw_id);
-    $base_url = add_query_arg('cr', 'disabled', '/riferimenti-al-sutra-del-loto');
+    $base_url = '/riferimenti-al-sutra-del-loto';
     $href = $base_url . '#ls-' . $converted_id;
+    $href = add_query_arg('cr', 'disabled', $href);
 
     return sprintf(
         '<a href="%1$s" title="Consulta il riferimento al Sutra del Loto" target="_blank">LS %2$s</a>',
@@ -577,6 +578,5 @@ if (!function_exists('cz_tag_cloud')) {
 add_shortcode('cz_tag_cloud', function ($atts) {
     return cz_tag_cloud_render((array)$atts);
 });
-
 
 
