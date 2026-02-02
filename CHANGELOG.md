@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Add
-- Add the shortcut '[author]' to create a link to an author
+- Add the shortcut '[autore]' to create a link to an author
 ### Change
 - Move 'author' link to '/autore/'
 ### Polish

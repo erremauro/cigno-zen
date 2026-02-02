@@ -61,10 +61,10 @@ add_shortcode('separator', function() {
 });
 
 /** 
- * Shortcode: [author id="3"]Mario Rossi[/author]
+ * Shortcode: [autore id="3"]Mario Rossi[/autore]
  * Renders: <a href="/autore/mario-rossi" title="Visualizza la Pagina Autore di Mario Rossi">Mario Rossi</a>
  */
-add_shortcode('author', function ($atts, $content = null) {
+add_shortcode('autore', function ($atts, $content = null) {
 
     $atts = shortcode_atts([
         'id' => null,
