@@ -777,10 +777,19 @@ header.site-header {
 }
 
 .top-nav-bar .nav-user-menu a {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
   padding: 0.5rem 0.65rem;
   text-decoration: none;
   color: var(--text);
+}
+
+.top-nav-bar .nav-user-menu a svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
 }
 
 .top-nav-bar .nav-user-menu a:hover {

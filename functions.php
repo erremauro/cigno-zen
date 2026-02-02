@@ -1,5 +1,10 @@
 <?php
 
+add_action('init', function () {
+    global $wp_rewrite;
+    $wp_rewrite->author_base = 'autore';
+});
+
 require_once get_template_directory() . '/inc/styles-and-scripts.php';
 require_once get_template_directory() . '/inc/shortcodes.php';
 require_once get_template_directory() . '/inc/jetpack.php';

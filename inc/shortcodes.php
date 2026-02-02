@@ -60,6 +60,34 @@ add_shortcode('separator', function() {
     return $html;
 });
 
+/** 
+ * Shortcode: [author id="3"]Mario Rossi[/author]
+ * Renders: <a href="/autore/mario-rossi" title="Visualizza la Pagina Autore di Mario Rossi">Mario Rossi</a>
+ */
+add_shortcode('author', function ($atts, $content = null) {
+
+    $atts = shortcode_atts([
+        'id' => null,
+    ], $atts);
+
+    if (!$atts['id']) {
+        return '';
+    }
+
+    $url = get_author_posts_url((int) $atts['id']);
+
+    // fallback se il contenuto è vuoto
+    $label = $content ?: get_the_author_meta('display_name', $atts['id']);
+
+    return sprintf(
+        '<a href="%s" title="Visualizza la Pagina Autore di %s">%s</a>',
+        esc_url($url),
+        esc_html($label),
+        esc_html($label)
+    );
+});
+
+
 /**
  * Shortcode: [LS id="1.68"]
  * Renders: <a href="/riferimenti-al-sutra-del-loto#ls-1-68" title="Consulta il riferimento al Sutra del Loto" target="_blank">LS 1.68</a>
