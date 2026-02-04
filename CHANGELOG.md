@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the shortcut '[autore]' to create a link to an author
 ### Change
 - Move 'author' link to '/autore/'
+## Fix
+- Missing birth or death date now shows 'n.d.' label
+- Fix a bug that prevented to show the predecessor if a primary teacher was specified
 ### Polish
 - Add Logout icon
 

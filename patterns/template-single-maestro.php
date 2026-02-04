@@ -203,7 +203,7 @@ $heir_id          = $normalize_ids($acf_get('is_dharma_heir_of', 0))[0] ?? 0;
 
 // Logica anti-ridondanza (un unico maestro copre primary+heir+teachers)
 $single_master_id = 0;
-if ($primary_id && $heir_id && $primary_id === $heir_id) {
+if ($primary_id && !$heir_id) {
   if (count($teachers_ids) === 0 || (count($teachers_ids) === 1 && $teachers_ids[0] === $primary_id)) {
     $single_master_id = $primary_id;
   }
@@ -291,6 +291,11 @@ $has_meta =
         ? $calc_years($by ?: null, $bm ?: null, $bd ?: null, $dy ?: null, $dm ?: null, $dd ?: null)
         : null;
 
+      $birth_output = $birth_display;
+      $death_output = $death_display;
+      if ($birth_display && !$death_display) $death_output = __('n.d.', 'cignozen');
+      if (!$birth_display && $death_display) $birth_output = __('n.d.', 'cignozen');
+
       $active_years = (!$has_birth_death && $active_range)
         ? $calc_active_years($fs ?: null, $fe ?: null)
         : null;
@@ -298,13 +303,9 @@ $has_meta =
 
     <?php if ($has_birth_death): ?>
       <div class="meta-master-dates">
-        <?php if ($birth_display): ?>
-          <span class="birth" itemprop="birthDate"><?php echo esc_html($birth_display); ?></span>
-        <?php endif; ?>
-        <?php if ($death_display): ?>
-          <span class="sep" aria-hidden="true"> – </span>
-          <span class="death" itemprop="deathDate"><?php echo esc_html($death_display); ?></span>
-        <?php endif; ?>
+        <span class="birth" itemprop="birthDate"><?php echo esc_html($birth_output); ?></span>
+        <span class="sep" aria-hidden="true"> – </span>
+        <span class="death" itemprop="deathDate"><?php echo esc_html($death_output); ?></span>
         <?php if ($age_years !== null): ?>
           <div class="age"> (<?php echo esc_html($age_years . ' ' . __('anni','cignozen')); ?>)</div>
         <?php endif; ?>
@@ -373,7 +374,7 @@ $has_meta =
                 $meta_row(__('Maestro','cignozen'), $html, 'meta-primary-teacher');
               }
             }
-            if ($heir_id && $heir_id !== $primary_id) {
+            if ($heir_id) {
               if ($html = $link_for($heir_id)) {
                 $meta_row(__('Predecessore','cignozen'), $html, 'meta-dharma-heir-of');
               }
