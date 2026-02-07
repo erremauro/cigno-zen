@@ -67,7 +67,8 @@ add_shortcode('separator', function() {
 add_shortcode('autore', function ($atts, $content = null) {
 
     $atts = shortcode_atts([
-        'id' => null,
+        'id'     => null,
+        'target' => '',
     ], $atts);
 
     if (!$atts['id']) {
@@ -75,13 +76,50 @@ add_shortcode('autore', function ($atts, $content = null) {
     }
 
     $url = get_author_posts_url((int) $atts['id']);
+    $target = trim((string) $atts['target']);
+    $target_attr = $target !== '' ? sprintf(' target="%s"', esc_attr($target)) : '';
 
     // fallback se il contenuto è vuoto
     $label = $content ?: get_the_author_meta('display_name', $atts['id']);
 
     return sprintf(
-        '<a href="%s" title="Visualizza la Pagina Autore di %s">%s</a>',
+        '<a href="%s" title="Visualizza la Pagina Autore di %s"%s>%s</a>',
         esc_url($url),
+        esc_html($label),
+        $target_attr,
+        esc_html($label)
+    );
+});
+
+/**
+ * Shortcode: [maestro slug="daisaku-ikeda"]Daisaku Ikeda[/maestro]
+ * Renders: <a href="/maestro/daisaku-ikeda" title="Leggi la biografia del Maestro Daisaku Ikeda su Cigno Zen">Daisaku Ikeda</a>
+ */
+add_shortcode('maestro', function ($atts, $content = null) {
+    $atts = shortcode_atts([
+        'slug' => '',
+    ], $atts, 'maestro');
+
+    $label = trim(wp_strip_all_tags((string) $content));
+    if ($label === '') {
+        return '';
+    }
+
+    $slug = trim(wp_strip_all_tags((string) $atts['slug']));
+    if ($slug === '') {
+        $slug = strtolower(str_replace("'", '', $label));
+        $slug = preg_replace('/\s+/', '-', trim($slug));
+    }
+
+    if ($slug === '') {
+        return '';
+    }
+
+    $href = '/maestro/' . $slug;
+
+    return sprintf(
+        '<a href="%1$s" title="Leggi la biografia del Maestro %2$s su Cigno Zen">%3$s</a>',
+        esc_url($href),
         esc_html($label),
         esc_html($label)
     );
@@ -606,5 +644,3 @@ if (!function_exists('cz_tag_cloud')) {
 add_shortcode('cz_tag_cloud', function ($atts) {
     return cz_tag_cloud_render((array)$atts);
 });
-
-

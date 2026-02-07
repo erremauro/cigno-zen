@@ -106,6 +106,24 @@ $render_term_list = function (int $post_id, string $tax): string {
   if (!$terms || is_wp_error($terms)) return '';
   $links = [];
   foreach ($terms as $t) {
+    if ($tax === 'generazione' && $t->parent) {
+      $parent = get_term($t->parent, $tax);
+      if (!is_wp_error($parent) && $parent) {
+        $parent_url = get_term_link($parent);
+        $child_url  = get_term_link($t);
+        if (!is_wp_error($parent_url) && !is_wp_error($child_url)) {
+          $links[] = sprintf(
+            '<a href="%s">%s</a><br><a href="%s">%s</a>',
+            esc_url($parent_url),
+            esc_html($parent->name),
+            esc_url($child_url),
+            esc_html($t->name)
+          );
+          continue;
+        }
+      }
+    }
+
     $url = get_term_link($t);
     if (!is_wp_error($url)) {
       $links[] = sprintf('<a href="%s">%s</a>', esc_url($url), esc_html($t->name));
@@ -121,7 +139,7 @@ $meta_row = function (string $label, $value, string $class = '') {
     '<div class="meta-row %s"><span class="meta-label">%s</span> <span class="meta-data">%s</span></div>',
     esc_attr($class),
     esc_html($label),
-    wp_kses($value, ['a' => ['href' => [], 'title' => [], 'target' => [], 'rel' => []]])
+    wp_kses($value, ['a' => ['href' => [], 'title' => [], 'target' => [], 'rel' => []], 'br' => []])
   );
 };
 
@@ -293,8 +311,8 @@ $has_meta =
 
       $birth_output = $birth_display;
       $death_output = $death_display;
-      if ($birth_display && !$death_display) $death_output = __('n.d.', 'cignozen');
-      if (!$birth_display && $death_display) $birth_output = __('n.d.', 'cignozen');
+      if ($birth_display && !$death_display) $death_output = __('?', 'cignozen');
+      if (!$birth_display && $death_display) $birth_output = __('?', 'cignozen');
 
       $active_years = (!$has_birth_death && $active_range)
         ? $calc_active_years($fs ?: null, $fe ?: null)
