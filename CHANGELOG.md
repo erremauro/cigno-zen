@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Add
+- Add 'download PDF' button for single-post article if the file is available
+### Change
+- Reduce font size for mobile view
 ### Fix
 - Add support for 'target' property for the shortcode [maestro]
 

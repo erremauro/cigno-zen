@@ -1444,6 +1444,17 @@ article.post:first-child {
   padding: 0.5em 0;
 }
 
+@media (max-width: 768px) {
+  .post-content p,
+  .post-excerpt p,
+  .post-content blockquote p,
+  .post-content blockquote.poem p,
+  .post-content blockquote.poem p.verse {
+    font-size: 1.0em;
+  }
+
+}
+
 .post-content p.question {
   text-indent: 0;
   margin: 1.5em 0;
@@ -1491,6 +1502,19 @@ h2.post-title {
   font-style: italic;
   font-weight: 400;
   padding: 1em 0;
+}
+
+.post-downloads {
+  display: flex;
+  justify-content: center;
+  margin: 1em 0 2em;
+}
+
+.post-downloads .link-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
 }
 
 .post-content h2 {

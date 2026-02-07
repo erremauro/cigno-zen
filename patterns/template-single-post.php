@@ -2,6 +2,26 @@
 // Start the WordPress Loop
 while ( have_posts() ) : the_post();
 
+    $pdf_file = function_exists('get_field') ? get_field('article_pdf', get_the_ID()) : '';
+    $pdf_id = 0;
+    $pdf_url = '';
+
+    if (is_numeric($pdf_file)) {
+        $pdf_id = (int) $pdf_file;
+    } elseif (is_array($pdf_file)) {
+        if (!empty($pdf_file['ID'])) {
+            $pdf_id = (int) $pdf_file['ID'];
+        } elseif (!empty($pdf_file['id'])) {
+            $pdf_id = (int) $pdf_file['id'];
+        } elseif (!empty($pdf_file['url'])) {
+            $pdf_url = (string) $pdf_file['url'];
+        }
+    }
+
+    if ($pdf_id > 0) {
+        $pdf_url = (string) wp_get_attachment_url($pdf_id);
+    }
+
     ?>
 
     <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
@@ -10,6 +30,13 @@ while ( have_posts() ) : the_post();
             <?php display_volumes_name(); ?>
             <h1 class="post-title"><?php the_title(); ?></h1>
             <h3 class="post-subtitle"><?php the_subtitle(); ?></h3>
+            <?php if ($pdf_url !== '') : ?>
+                <div class="post-downloads">
+                    <a class="link-pill" href="<?php echo esc_url($pdf_url); ?>" download>
+                        PDF
+                    </a>
+                </div>
+            <?php endif; ?>
         </header>
 
         <div class="post-content">
