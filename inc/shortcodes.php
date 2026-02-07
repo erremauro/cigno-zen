@@ -97,7 +97,8 @@ add_shortcode('autore', function ($atts, $content = null) {
  */
 add_shortcode('maestro', function ($atts, $content = null) {
     $atts = shortcode_atts([
-        'slug' => '',
+        'slug'   => '',
+        'target' => '',
     ], $atts, 'maestro');
 
     $label = trim(wp_strip_all_tags((string) $content));
@@ -116,11 +117,14 @@ add_shortcode('maestro', function ($atts, $content = null) {
     }
 
     $href = '/maestro/' . $slug;
+    $target = trim((string) $atts['target']);
+    $target_attr = $target !== '' ? sprintf(' target="%s"', esc_attr($target)) : '';
 
     return sprintf(
-        '<a href="%1$s" title="Leggi la biografia del Maestro %2$s su Cigno Zen">%3$s</a>',
+        '<a href="%1$s" title="Leggi la biografia del Maestro %2$s su Cigno Zen"%3$s>%4$s</a>',
         esc_url($href),
         esc_html($label),
+        $target_attr,
         esc_html($label)
     );
 });
