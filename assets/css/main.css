@@ -1445,14 +1445,13 @@ article.post:first-child {
 }
 
 @media (max-width: 768px) {
-  .post-content p,
+  /* .post-content p,
   .post-excerpt p,
   .post-content blockquote p,
   .post-content blockquote.poem p,
   .post-content blockquote.poem p.verse {
     font-size: 1.0em;
-  }
-
+  } */
 }
 
 .post-content p.question {
@@ -1504,17 +1503,22 @@ h2.post-title {
   padding: 1em 0;
 }
 
-.post-downloads {
-  display: flex;
-  justify-content: center;
-  margin: 1em 0 2em;
-}
-
-.post-downloads .link-pill {
+.article-actions {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45em;
+  margin: 1em auto 0;
+  padding: 0.55em 0.7em;
+  width: auto;
+  max-width: 100%;
+  font-family: sans-serif;
+}
+
+.post-header.has-article-actions {
+  margin-bottom: 2em;
+  padding-bottom: 2em;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
 }
 
 .post-content h2 {

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Add
+- Add 'article-actions' section under the post title in template-single-post
 - Add 'download PDF' button for single-post article if the file is available
 ### Change
 - Reduce font size for mobile view
