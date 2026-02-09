@@ -1682,3 +1682,45 @@
     setOpen(false);
   });
 })();
+
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  ready(function () {
+    var revealButtons = Array.from(
+      document.querySelectorAll(".js-reveal-audio-player")
+    );
+    if (!revealButtons.length) return;
+
+    revealButtons.forEach(function (button) {
+      var collapsedLabel =
+        button.getAttribute("data-label-collapsed") || "Ascolta Audio";
+      var expandedLabel =
+        button.getAttribute("data-label-expanded") || "Nascondi Audio";
+
+      button.textContent = collapsedLabel;
+
+      button.addEventListener("click", function () {
+        var panelId = (button.getAttribute("aria-controls") || "").trim();
+        if (!panelId) return;
+
+        var panel = document.getElementById(panelId);
+        if (!panel) return;
+
+        var isHidden = panel.hasAttribute("hidden");
+        if (isHidden) {
+          panel.removeAttribute("hidden");
+          button.setAttribute("aria-expanded", "true");
+          button.textContent = expandedLabel;
+        } else {
+          panel.setAttribute("hidden", "");
+          button.setAttribute("aria-expanded", "false");
+          button.textContent = collapsedLabel;
+        }
+      });
+    });
+  });
+})();

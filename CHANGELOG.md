@@ -5,10 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.12.0] 2026-02-09
 ### Add
 - Add 'article-actions' section under the post title in template-single-post
 - Add 'download PDF' button for single-post article if the file is available
+- Add 'Ascolta Audio' button for playing audio file if available
 ### Change
 - Reduce font size for mobile view
 ### Fix
@@ -331,7 +332,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.12.0
 [1.11.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.11.0
 [1.10.1]: https://github.com/erremauro/cigno-zen/releases/tag/v1.10.1
 [1.10.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.10.0
