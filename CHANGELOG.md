@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Changed mobile's font size for poem's verses
+- Font size is now adaptive
 
 ## [1.12.0] 2026-02-09
 ### Add
