@@ -7,7 +7,7 @@
 		null,
 		[
 			'url'   => '/articoli/?featured=1',
-			'title' => 'Articoli in Evidenza',
+			'title' => 'In Evidenza',
 			'desc'  => 'Una selezione curata di contenuti consigliati'
 		]
 	);
