@@ -1452,6 +1452,7 @@ article.post:first-child {
   .post-content blockquote.poem p.verse {
     font-size: 1.0em;
   }
+}
 
 .post-content p.question {
   text-indent: 0;
