@@ -1446,7 +1446,8 @@ article.post:first-child {
   .post-excerpt p,
   .post-content blockquote p,
   .post-content blockquote.poem p,
-  .post-content blockquote.poem p.verse {
+  .post-content blockquote.poem p.verse,
+  .footnote-popup-content {
     font-size: 1.0em;
   }
 
