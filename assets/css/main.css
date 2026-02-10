@@ -1446,13 +1446,12 @@ article.post:first-child {
 
 @media (max-width: 768px) {
   /* .post-content p,
-  .post-excerpt p,
+  .post-excerpt p, */
   .post-content blockquote p,
   .post-content blockquote.poem p,
   .post-content blockquote.poem p.verse {
     font-size: 1.0em;
-  } */
-}
+  }
 
 .post-content p.question {
   text-indent: 0;
