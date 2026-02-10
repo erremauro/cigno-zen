@@ -1231,9 +1231,6 @@ p.no-article-found {
   cursor: pointer;
 }
 
-.site-menu-toggle img {
-}
-
 .site-menu-toggle svg {
   width: 64px;
   height: auto;
@@ -1445,14 +1442,18 @@ article.post:first-child {
 }
 
 @media (max-width: 768px) {
-  /* .post-content p,
-  .post-excerpt p, */
+  .post-content p,
+  .post-excerpt p,
   .post-content blockquote p,
   .post-content blockquote.poem p,
   .post-content blockquote.poem p.verse {
     font-size: 1.0em;
   }
-}
+
+  .post-content h3 {
+    font-size: 1.25em;
+  }
+} 
 
 .post-content p.question {
   text-indent: 0;
