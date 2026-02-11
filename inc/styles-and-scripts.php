@@ -53,9 +53,80 @@ function cigno_zen_styles() {
         $css_main_ver
     );
 
+    $user_text_size = cignozen_get_user_root_font_size_clamp();
+
+    if ( '' !== $user_text_size ) {
+        wp_add_inline_style(
+            'cigno-zen-style',
+            ':root { --fs-root: ' . $user_text_size . '; }'
+        );
+    }
+
     carica_google_fonts();
 }
 add_action('wp_enqueue_scripts', 'cigno_zen_styles');
+
+function cignozen_get_user_root_font_size_clamp() {
+    if ( ! is_user_logged_in() ) {
+        return '';
+    }
+
+    $user_id = get_current_user_id();
+    if ( ! $user_id || ! metadata_exists( 'user', $user_id, 'czup_text_size' ) ) {
+        return '';
+    }
+
+    $raw_value = trim( (string) get_user_meta( $user_id, 'czup_text_size', true ) );
+    if ( '' === $raw_value ) {
+        return '';
+    }
+
+    $base_px = null;
+
+    if ( preg_match( '/^\d+(\.\d+)?$/', $raw_value ) ) {
+        $base_px = (float) $raw_value;
+    } elseif ( preg_match( '/^(\d+(\.\d+)?)\s*px$/i', $raw_value, $matches ) ) {
+        $base_px = (float) $matches[1];
+    }
+
+    if ( null === $base_px || $base_px < 12 || $base_px > 24 ) {
+        return '';
+    }
+
+    $min_px   = $base_px - 0.5;
+    $fluid_px = $base_px - 0.8;
+    $max_px   = $base_px;
+
+    return sprintf(
+        'clamp(%spx, %spx + 0.1vw, %spx)',
+        cignozen_format_css_number( $min_px ),
+        cignozen_format_css_number( $fluid_px ),
+        cignozen_format_css_number( $max_px )
+    );
+}
+
+function cignozen_get_user_theme_mode() {
+    if ( ! is_user_logged_in() ) {
+        return 'auto';
+    }
+
+    $user_id = get_current_user_id();
+    if ( ! $user_id || ! metadata_exists( 'user', $user_id, 'czup_theme' ) ) {
+        return 'auto';
+    }
+
+    $raw_value = strtolower( trim( (string) get_user_meta( $user_id, 'czup_theme', true ) ) );
+
+    if ( 'dark' === $raw_value || 'light' === $raw_value ) {
+        return $raw_value;
+    }
+
+    return 'auto';
+}
+
+function cignozen_format_css_number( $value ) {
+    return rtrim( rtrim( number_format( (float) $value, 3, '.', '' ), '0' ), '.' );
+}
 
 // Usiamo gli stilil custom per cz-password-reset
 add_filter('czpr_enqueue_inline_styles', '__return_false');

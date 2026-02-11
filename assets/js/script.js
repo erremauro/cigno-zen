@@ -747,12 +747,12 @@
   var OVERRIDE_KEY = "cz-theme-override"; // { theme: "light"|"dark", exp: <ms since epoch at local 23:59:59.999> }
   var root = document.documentElement;
   var btn = document.getElementById("theme-toggle");
-  if (!btn) return;
+  var userThemeMode = (root.getAttribute("data-user-theme") || "auto").toLowerCase();
 
   // --- Helpers ---
   function setTheme(t) {
     root.setAttribute("data-theme", t);
-    btn.setAttribute("aria-pressed", t === "dark");
+    if (btn) btn.setAttribute("aria-pressed", t === "dark");
   }
 
   function endOfTodayMs() {
@@ -799,11 +799,26 @@
     return (h >= 7 && h < 18) ? "light" : "dark";
   }
 
+  function isForcedTheme(theme) {
+    return theme === "dark" || theme === "light";
+  }
+
   // --- Init ---
   clearLegacy();
 
-  var activeTheme = readOverride() || scheduledTheme();
+  var activeTheme = isForcedTheme(userThemeMode) ? userThemeMode : (readOverride() || scheduledTheme());
   setTheme(activeTheme);
+
+  // Forced mode from user settings: always use dark/light and disable runtime overrides.
+  if (isForcedTheme(userThemeMode)) {
+    if (btn) {
+      btn.setAttribute("aria-disabled", "true");
+      btn.setAttribute("disabled", "disabled");
+    }
+    return;
+  }
+
+  if (!btn) return;
 
   // Keep animation behavior from your previous script
   var DUR = 720; // ms (match .7s CSS transition)

@@ -6,9 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Add
+- User Preferences
+- 'Pagina Iniziale' button has been added to the side-bar
 ### Changed
 - "Articoli in Evidenza" has been renamed to "In Evidenza"
-- Font size is now adaptive
+- Font size is now adaptive and can be changed in the User Preferences
 
 ## [1.12.0] 2026-02-09
 ### Add
@@ -337,7 +340,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.13.0
 [1.12.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.12.0
 [1.11.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.11.0
 [1.10.1]: https://github.com/erremauro/cigno-zen/releases/tag/v1.10.1

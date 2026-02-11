@@ -962,6 +962,32 @@ html[data-theme="light"] {
   cursor: pointer;
 }
 
+.nav-drawer .nav-drawer-home-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  width: 100%;
+  margin: 0 0 1.25rem;
+  padding: 0.65rem 0.8rem;
+  border: none;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text);
+  background: transparent;
+  box-sizing: border-box;
+}
+
+.nav-drawer .nav-drawer-home-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+
+.nav-drawer .nav-drawer-home-btn:hover {
+  background-color: var(--top-nav-hover);
+}
+
 .nav-drawer .menu {
   list-style: none;
   padding: 0;

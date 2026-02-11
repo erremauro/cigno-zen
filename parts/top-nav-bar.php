@@ -38,7 +38,14 @@
                     <?php get_template_part( 'parts/svg/user' ); ?>
                 </summary>
                 <div class="nav-user-menu" role="menu">
-                    <a role="menuitem" href="<?php echo esc_url( home_url( '/logout' ) ); ?>">Logout</a>
+                    <a role="menuitem" href="<?php echo esc_url( home_url( '/logout' ) ); ?>">
+                        <?php get_template_part( 'parts/svg/logout' ); ?>
+                        <span>Logout</span>
+                    </a>
+                    <a role="menuitem" href="<?php echo esc_url( home_url( '/utente/preferenze' ) ); ?>">
+                        <?php get_template_part( 'parts/svg/settings' ); ?>
+                        <span>Impostazioni</span>
+                    </a>
                 </div>
             </details>
         <?php endif; ?>
@@ -47,6 +54,11 @@
 
 <div class="nav-drawer-backdrop" data-nav-drawer-close></div>
 <aside id="nav-drawer" class="nav-drawer" aria-hidden="true">
+    <a class="nav-drawer-home-btn" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+        <?php get_template_part( 'parts/svg/home' ); ?>
+        <span>Pagina Iniziale</span>
+    </a>
+
     <div class="collapsable-section" data-initial="open">
         <h5 class="collapsable-toggle" role="button" tabindex="0" aria-controls="nav-drawer-contenuti" aria-expanded="true">
             Contenuti

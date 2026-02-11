@@ -13,11 +13,39 @@
     <script>
     (function () {
       try {
-        var KEY = 'cz-theme';
-        var stored = localStorage.getItem(KEY);
-        var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-        var theme = stored || (prefersLight ? 'light' : 'dark');
-        document.documentElement.setAttribute('data-theme', theme);
+        var root = document.documentElement;
+        var userTheme = <?php echo wp_json_encode( cignozen_get_user_theme_mode() ); ?>;
+        var OVERRIDE_KEY = 'cz-theme-override';
+
+        function scheduledTheme() {
+          var h = new Date().getHours();
+          return (h >= 7 && h < 18) ? 'light' : 'dark';
+        }
+
+        function readOverride() {
+          try {
+            var raw = localStorage.getItem(OVERRIDE_KEY);
+            if (!raw) return null;
+            var obj = JSON.parse(raw);
+            if (!obj || (obj.exp || 0) < Date.now() || (obj.theme !== 'light' && obj.theme !== 'dark')) {
+              localStorage.removeItem(OVERRIDE_KEY);
+              return null;
+            }
+            return obj.theme;
+          } catch (err) {
+            try { localStorage.removeItem(OVERRIDE_KEY); } catch (_) {}
+            return null;
+          }
+        }
+
+        root.setAttribute('data-user-theme', userTheme);
+
+        if (userTheme === 'dark' || userTheme === 'light') {
+          root.setAttribute('data-theme', userTheme);
+          return;
+        }
+
+        root.setAttribute('data-theme', readOverride() || scheduledTheme());
       } catch (e) {}
     })();
     </script>

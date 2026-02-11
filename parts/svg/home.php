@@ -1,5 +1,3 @@
-<svg class="icon-home" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="24" height="24" fill="none" aria-hidden="true">
-  <path d="M10 30L32 12L54 30" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M18 28V52H46V28" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M28 52V38H36V52" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<svg class="icon-home" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="24" height="24" aria-hidden="true">
+  <path fill="currentColor" fill-rule="evenodd" d="M32 7L6 27v4h4v25h44V31h4v-4L32 7zm0 24a8 8 0 018 8v17H24V39a8 8 0 018-8z" clip-rule="evenodd"/>
 </svg>
