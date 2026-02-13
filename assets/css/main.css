@@ -1671,8 +1671,47 @@ p.page-links {
 }
 
 /* Series */
+.volumes-description {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 2em;
+  font-size: 1rem;
+}
 .volumes-chapters {
   text-align: left;
+  width: 100%;
+  margin: 2.25em 0 0;
+}
+
+.volumes-index-title {
+  width: 100%;
+  margin: 2.75em 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.9em;
+  font-family: sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text);
+}
+
+.volumes-index-title::before,
+.volumes-index-title::after {
+  content: "";
+  height: 1px;
+  flex: 1 1 auto;
+  background: var(--border);
+}
+
+.volumes-posts {
+  margin-top: 0.9em;
+}
+
+.volumes-posts li {
+  margin: 0;
+  padding: 0.95em 0;
 }
 
 .volumes-author {
@@ -1681,7 +1720,7 @@ p.page-links {
 
 .volumes-title {
   text-align: center;
-  margin: 1em 0em 2em 0em;
+  margin-top: 1em;
   padding: 1em 0em;
   font-style: italic;
   border-bottom: 1px solid var(--border);
@@ -1735,8 +1774,24 @@ p.page-links {
 
 .chapter-title {
   font-size: 1.6em;
-  margin-bottom: 1em;
+  margin: 0;
   font-weight: normal;
+  line-height: 1.35;
+}
+
+.chapter-title a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.chapter-title a:hover {
+  text-decoration: none;
+}
+
+@media (max-width: 900px) {
+  .volumes-index-title {
+    margin-top: 2.25em;
+  }
 }
 
 li.related-post {

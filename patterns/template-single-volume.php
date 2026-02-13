@@ -50,6 +50,10 @@ while ( have_posts() ) :
 		<?php endif; ?>
 	</div>
 
+	<?php if ( $has_description ) : ?>
+		<h2 class="volumes-index-title">Indice</h2>
+	<?php endif; ?>
+
 	<div class="volumes-chapters">
 		<?php if ( ! empty( $front_sections ) || ! empty( $numbered_chapters ) || ! empty( $back_sections ) ) : ?>
 			<ul class="volumes-posts">
