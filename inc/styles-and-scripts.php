@@ -153,17 +153,12 @@ function cignozen_get_title() {
         $volume_name   = '';
         $article_title = get_the_title();
 
-        $volumes_terms = get_the_terms( get_the_ID(), 'volumes' );
-        if ( $volumes_terms && ! is_wp_error( $volumes_terms ) ) {
-            $volumes_term = array_shift( $volumes_terms );
-            $volume_name  = $volumes_term->name ?? '';
-
-            $author = get_field( 'author', $volumes_term->taxonomy . '_' . $volumes_term->term_id );
-            if ( is_array( $author ) ) {
-                $author = reset( $author );
-            }
-            if ( $author instanceof WP_User ) {
-                $author_name = $author->display_name;
+        $volume_post = function_exists( 'cignozen_get_post_volume' ) ? cignozen_get_post_volume( get_the_ID() ) : null;
+        if ( $volume_post instanceof WP_Post ) {
+            $volume_name = get_the_title( $volume_post->ID );
+            $author_id   = (int) get_post_field( 'post_author', $volume_post->ID );
+            if ( $author_id ) {
+                $author_name = get_the_author_meta( 'display_name', $author_id );
             }
         }
 
@@ -193,6 +188,9 @@ function cignozen_get_title() {
     if (is_page('volumi')) {
       return 'Cigno Zen - Tutti i Volumi';
   }
+    if ( is_post_type_archive( 'volume' ) ) {
+        return 'Cigno Zen - Tutti i Volumi';
+    }
 
     // Default: nome del sito
     return get_bloginfo( 'name' );

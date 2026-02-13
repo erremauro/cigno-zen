@@ -1,49 +1,32 @@
 <section class="volumes-list">
 	<h1>Tutti i Volumi</h1>
 	<?php
-	$terms = get_terms([
-		'taxonomy'   => 'volumes',
-		'hide_empty' => false,
-	]);
+	$volumes_query = new WP_Query(
+		array(
+			'post_type'      => 'volume',
+			'post_status'    => 'publish',
+			'posts_per_page' => -1,
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		)
+	);
 
-	// Prepara array con autore e termine
-	$volumes_with_authors = [];
-
-	foreach ( $terms as $term ) {
-		$author = get_field( 'author', 'volumes_' . $term->term_id );
-		if ( is_array($author) ) {
-			$author = reset($author);
-		}
-		$volumes_with_authors[] = [
-			'term'   => $term,
-			'author' => $author,
-			'name'   => is_object($author) ? $author->display_name : '',
-		];
-	}
-
-	// Ordina per nome autore
-	usort($volumes_with_authors, function($a, $b) {
-		return strcasecmp($a['name'], $b['name']);
-	});
-
-	if ( ! empty($volumes_with_authors) ) :
+	if ( $volumes_query->have_posts() ) :
 		echo '<ul class="volumes-items">';
-		foreach ( $volumes_with_authors as $entry ) :
-			$term = $entry['term'];
-			$author = $entry['author'];
-			$author_name = is_object($author) ? $author->display_name : '—';
-			$term_link = get_term_link( $term );
+
+		while ( $volumes_query->have_posts() ) :
+			$volumes_query->the_post();
 			?>
 			<li class="volumes-item">
-				<h6 class="volumes-author"><?php echo esc_html( $author_name ); ?></h6>
-				<h4 class="volume-title"><a href="<?php echo esc_url( $term_link ); ?>">
-					<?php echo esc_html( $term->name ); ?>
-				</a></h4>
-				<?php echo do_shortcode( '[separator]' ) ?>
+				<?php echo display_volume_author( get_the_ID(), false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<h4 class="volume-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h4>
+				<?php echo do_shortcode( '[separator]' ); ?>
 			</li>
 			<?php
-		endforeach;
+		endwhile;
+
 		echo '</ul>';
+		wp_reset_postdata();
 	else :
 		echo '<p>Nessun volume trovato.</p>';
 	endif;

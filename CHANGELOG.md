@@ -5,11 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] 2026-02-13
 ### Add
+- New Custom Post Type 'Volume' to manage post collections
 - User Preferences
 - 'Pagina Iniziale' button has been added to the side-bar
 ### Changed
+- Taxonomy 'Volume' has been dismissed
 - "Articoli in Evidenza" has been renamed to "In Evidenza"
 - Font size is now adaptive and can be changed in the User Preferences
 
@@ -340,7 +342,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v1.13.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.0.0
 [1.13.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.13.0
 [1.12.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.12.0
 [1.11.0]: https://github.com/erremauro/cigno-zen/releases/tag/v1.11.0
