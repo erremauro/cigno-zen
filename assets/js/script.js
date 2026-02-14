@@ -1704,6 +1704,213 @@
     else document.addEventListener("DOMContentLoaded", fn);
   }
 
+  function escapeHtml(text) {
+    return String(text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  ready(function () {
+    var cfg = window.cignoZenSearch || {};
+    var ajaxUrl = cfg.ajaxUrl || "";
+    var action = cfg.action || "cignozen_search_suggestions";
+    var minChars = Number(cfg.minChars || 2);
+    var form = document.querySelector(".js-live-search-form");
+    var input = form ? form.querySelector(".js-live-search-input") : null;
+    var list = form ? form.querySelector(".search-suggestions") : null;
+
+    if (!form || !input || !list || !ajaxUrl) return;
+
+    var activeIndex = -1;
+    var items = [];
+    var debounceTimer = null;
+    var blurTimer = null;
+    var requestController = null;
+    function closeSuggestions() {
+      list.hidden = true;
+      list.innerHTML = "";
+      items = [];
+      activeIndex = -1;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+    }
+
+    function setActive(nextIndex) {
+      activeIndex = nextIndex;
+      var options = list.querySelectorAll(".search-suggestions__item");
+
+      options.forEach(function (option, idx) {
+        option.classList.toggle("is-active", idx === activeIndex);
+      });
+
+      if (activeIndex >= 0 && options[activeIndex]) {
+        input.setAttribute("aria-activedescendant", options[activeIndex].id);
+        options[activeIndex].scrollIntoView({ block: "nearest" });
+      } else {
+        input.removeAttribute("aria-activedescendant");
+      }
+    }
+
+    function renderSuggestions(results) {
+      items = results || [];
+      activeIndex = -1;
+
+      if (!items.length) {
+        closeSuggestions();
+        return;
+      }
+
+      var term = escapeHtml(input.value.trim());
+      var itemsHtml = items
+        .map(function (item, index) {
+          var title = escapeHtml(item.title || "");
+          var label = item.label ? escapeHtml(item.label) : "";
+          return (
+            '<a href="' +
+            escapeHtml(item.url || "#") +
+            '" id="search-suggestion-' +
+            index +
+            '" role="option" class="search-suggestions__item" data-index="' +
+            index +
+            '">' +
+            '<span class="search-suggestions__title">' +
+            title +
+            "</span>" +
+            (label
+              ? '<span class="search-suggestions__type">' + label + "</span>"
+              : "") +
+            "</a>"
+          );
+        })
+        .join("");
+
+      list.innerHTML =
+        '<div class="search-suggestions__list">' +
+        itemsHtml +
+        "</div>" +
+        '<div class="search-suggestions__footer">' +
+        '<span class="search-suggestions__footer-key">Invio</span>' +
+        '<span class="search-suggestions__footer-text">per vedere tutti i risultati per “' +
+        term +
+        '”</span>' +
+        "</div>";
+
+      list.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+    }
+
+    function fetchSuggestions(term) {
+      if (requestController) {
+        requestController.abort();
+      }
+
+      requestController = new AbortController();
+
+      var params = new URLSearchParams({
+        action: action,
+        q: term,
+      });
+
+      fetch(ajaxUrl + "?" + params.toString(), {
+        method: "GET",
+        credentials: "same-origin",
+        signal: requestController.signal,
+      })
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Search request failed");
+          }
+          return response.json();
+        })
+        .then(function (payload) {
+          var rows = payload && payload.success ? payload.data.items || [] : [];
+          renderSuggestions(rows);
+        })
+        .catch(function (error) {
+          if (error && error.name === "AbortError") return;
+          closeSuggestions();
+        });
+    }
+
+    input.addEventListener("input", function () {
+      var term = input.value.trim();
+
+      if (debounceTimer) {
+        window.clearTimeout(debounceTimer);
+      }
+
+      if (term.length < minChars) {
+        closeSuggestions();
+        return;
+      }
+
+      debounceTimer = window.setTimeout(function () {
+        fetchSuggestions(term);
+      }, 180);
+    });
+
+    input.addEventListener("keydown", function (event) {
+      if (list.hidden || !items.length) {
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        setActive((activeIndex + 1) % items.length);
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        setActive((activeIndex - 1 + items.length) % items.length);
+      } else if (event.key === "Escape") {
+        closeSuggestions();
+      } else if (event.key === "Enter" && activeIndex >= 0 && items[activeIndex]) {
+        event.preventDefault();
+        window.location.href = items[activeIndex].url;
+      }
+    });
+
+    list.addEventListener("mousemove", function (event) {
+      var target = event.target.closest(".search-suggestions__item");
+      if (!target || !list.contains(target)) return;
+
+      var idx = Number(target.getAttribute("data-index"));
+      if (!Number.isNaN(idx) && idx !== activeIndex) {
+        setActive(idx);
+      }
+    });
+
+    list.addEventListener("click", function (event) {
+      var target = event.target.closest(".search-suggestions__item");
+      if (!target || !list.contains(target)) return;
+      closeSuggestions();
+    });
+
+    input.addEventListener("blur", function () {
+      blurTimer = window.setTimeout(closeSuggestions, 140);
+    });
+
+    input.addEventListener("focus", function () {
+      if (blurTimer) {
+        window.clearTimeout(blurTimer);
+      }
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!form.contains(event.target)) {
+        closeSuggestions();
+      }
+    });
+  });
+})();
+
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
   ready(function () {
     var revealButtons = Array.from(
       document.querySelectorAll(".js-reveal-audio-player")

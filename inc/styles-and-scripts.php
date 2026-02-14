@@ -143,6 +143,16 @@ function cigno_zen_scripts() {
         $js_ver,
         true
     );
+
+    wp_localize_script(
+        'cigno-zen-script',
+        'cignoZenSearch',
+        array(
+            'ajaxUrl'  => admin_url( 'admin-ajax.php' ),
+            'action'   => 'cignozen_search_suggestions',
+            'minChars' => 2,
+        )
+    );
 }
 add_action('wp_enqueue_scripts', 'cigno_zen_scripts');
 
