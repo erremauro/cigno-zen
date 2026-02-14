@@ -36,21 +36,77 @@ while ( have_posts() ) :
 
 	$raw_content     = (string) get_the_content();
 	$has_description = '' !== trim( wp_strip_all_tags( $raw_content ) );
+	$resolve_attachment = static function ( $meta_key, $legacy_field = '' ) {
+		$id  = (int) get_post_meta( get_the_ID(), $meta_key, true );
+		$url = '';
+
+		if ( $id > 0 ) {
+			$url = (string) wp_get_attachment_url( $id );
+		}
+
+		if ( '' === $url && '' !== $legacy_field && function_exists( 'get_field' ) ) {
+			$file = get_field( $legacy_field, get_the_ID() );
+			if ( is_numeric( $file ) ) {
+				$id = (int) $file;
+			} elseif ( is_array( $file ) ) {
+				if ( ! empty( $file['ID'] ) ) {
+					$id = (int) $file['ID'];
+				} elseif ( ! empty( $file['id'] ) ) {
+					$id = (int) $file['id'];
+				} elseif ( ! empty( $file['url'] ) ) {
+					$url = (string) $file['url'];
+				}
+			} elseif ( is_string( $file ) && '' !== $file ) {
+				$url = $file;
+			}
+
+			if ( $id <= 0 && '' !== $url ) {
+				$id = (int) attachment_url_to_postid( $url );
+			}
+			if ( $id > 0 && '' === $url ) {
+				$url = (string) wp_get_attachment_url( $id );
+			}
+		}
+
+		return array(
+			'id'  => $id,
+			'url' => $url,
+		);
+	};
+
+	$pdf  = $resolve_attachment( '_cz_volume_pdf_file_id', 'pdf_file' );
+	$epub = $resolve_attachment( '_cz_volume_epub_file_id', 'epub_file' );
+	$has_downloads = '' !== $pdf['url'] || '' !== $epub['url'];
 	?>
 
-	<div class="wp-group">
+	<header class="post-header volume-header<?php echo $has_downloads ? ' has-article-actions' : ''; ?>">
 		<?php echo display_volume_author( get_the_ID(), false ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 
 		<h1 class="volumes-title"><?php the_title(); ?></h1>
 
-		<?php if ( $has_description ) : ?>
-			<div class="post-content volumes-description">
-				<?php echo apply_filters( 'the_content', $raw_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-			</div>
+		<?php if ( $has_downloads ) : ?>
+			<section class="article-actions" aria-label="<?php esc_attr_e( 'Azioni volume', 'textdomain' ); ?>">
+				<?php if ( '' !== $pdf['url'] ) : ?>
+					<a class="link-pill" href="<?php echo esc_url( $pdf['url'] ); ?>" download>
+						<?php esc_html_e( 'Scarica PDF', 'textdomain' ); ?>
+					</a>
+				<?php endif; ?>
+				<?php if ( '' !== $epub['url'] ) : ?>
+					<a class="link-pill" href="<?php echo esc_url( $epub['url'] ); ?>" download>
+						<?php esc_html_e( 'Scarica EPUB', 'textdomain' ); ?>
+					</a>
+				<?php endif; ?>
+			</section>
 		<?php endif; ?>
-	</div>
+	</header>
 
 	<?php if ( $has_description ) : ?>
+		<div class="post-content volumes-description">
+			<?php echo apply_filters( 'the_content', $raw_content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
+	<?php endif; ?>
+
+	<?php if ( $has_description && ! $has_downloads ) : ?>
 		<h2 class="volumes-index-title">Indice</h2>
 	<?php endif; ?>
 

@@ -1546,6 +1546,10 @@ h2.post-title {
   text-align: center;
 }
 
+.volume-header.has-article-actions {
+  border-bottom: 0;
+}
+
 .article-audio-player {
   margin-top: 0.75em;
 }
