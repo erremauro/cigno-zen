@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Unreleased]
 ### Changed
 - Search Bar results has been enhanced.
+- Add support for symbol in footnotes anchors
 
 [2.0.1] 2026-02-14
 ## Changed

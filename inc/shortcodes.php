@@ -216,17 +216,38 @@ add_shortcode('collapsable', function ($atts = [], $content = null, $tag = '') {
 
 if (!defined('ABSPATH')) { exit; }
 
-/** Sanitize plain id into slug-ish but preserve digits for anchors */
-function cz_fn_sanitize_id($id_raw) {
-  $id_raw = (string) $id_raw;
-  $id_raw = trim($id_raw);
+/**
+ * Build footnote id parts:
+ * - anchor: safe token used in HTML id/href fragments
+ * - label: visible marker shown to users (can be symbols like * or †)
+ */
+function cz_fn_build_id_parts($id_raw) {
+  $id_raw = trim((string) $id_raw);
   if ($id_raw === '') {
     static $auto = 0; $auto++;
-    return (string) $auto;
+    return [
+      'anchor' => (string) $auto,
+      'label'  => (string) $auto,
+    ];
   }
-  // Allow [A-Za-z0-9_-], strip others
-  $san = preg_replace('~[^A-Za-z0-9_-]+~', '', $id_raw);
-  return $san !== '' ? $san : '1';
+
+  // Preserve historical behavior for normal alphanumeric IDs.
+  $anchor = preg_replace('~[^A-Za-z0-9_-]+~', '', $id_raw);
+
+  // Symbol-only markers (e.g. "*" or "†") need a stable anchor token.
+  if ($anchor === '') {
+    $symbol_map = [
+      '*' => 'asterisk',
+      '†' => 'dagger',
+      '‡' => 'double-dagger',
+    ];
+    $anchor = $symbol_map[$id_raw] ?? ('sym-' . substr(md5($id_raw), 0, 8));
+  }
+
+  return [
+    'anchor' => $anchor,
+    'label'  => $id_raw,
+  ];
 }
 
 /** Inline reference: [fn id="1"] -> <sup><a id="fnref1" href="#fn1">1</a></sup> */
@@ -236,11 +257,13 @@ add_shortcode('fn', function($atts){
     'label' => '', // optional custom label shown instead of id
   ], $atts, 'fn');
 
-  $id = cz_fn_sanitize_id($atts['id']);
-  $label = $atts['label'] !== '' ? wp_kses_post($atts['label']) : esc_html($id);
+  $id_parts = cz_fn_build_id_parts($atts['id']);
+  $id_anchor = $id_parts['anchor'];
+  $id_label = $id_parts['label'];
+  $label = $atts['label'] !== '' ? wp_kses_post($atts['label']) : esc_html($id_label);
 
-  $ref_id  = 'fnref' . $id;
-  $note_id = 'fn' . $id;
+  $ref_id  = 'fnref' . $id_anchor;
+  $note_id = 'fn' . $id_anchor;
 
   return sprintf(
     '<sup class="fn"><a id="%1$s" href="#%2$s">%3$s</a></sup>',
@@ -256,9 +279,11 @@ add_shortcode('fndef', function($atts = [], $content = null){
     'id' => '',
   ], $atts, 'fndef');
 
-  $id = cz_fn_sanitize_id($atts['id']);
-  $ref_id  = 'fnref' . $id;
-  $note_id = 'fn' . $id;
+  $id_parts = cz_fn_build_id_parts($atts['id']);
+  $id_anchor = $id_parts['anchor'];
+  $id_label = $id_parts['label'];
+  $ref_id  = 'fnref' . $id_anchor;
+  $note_id = 'fn' . $id_anchor;
 
   // Allow other shortcodes inside the note content
   $inner = do_shortcode(shortcode_unautop($content ?? ''));
@@ -270,7 +295,7 @@ add_shortcode('fndef', function($atts = [], $content = null){
     '<p class="footnote" id="%1$s"><a class="fnref" href="#%2$s">%3$s</a> %4$s <a href="#%2$s" class="backlink">↩</a></p>',
     esc_attr($note_id),
     esc_attr($ref_id),
-    esc_html($id),
+    esc_html($id_label),
     $inner
   );
 });
