@@ -1916,6 +1916,44 @@ p.page-links {
   text-decoration: none;
 }
 
+.chapter-link {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.6em;
+}
+
+.chapter-heading {
+  min-width: 0;
+}
+
+.chapter-title-text {
+  display: block;
+}
+
+.chapter-subtitle {
+  display: block;
+  margin-top: 0.22em;
+  font-size: 0.66em;
+  line-height: 1.35;
+  opacity: 0.78;
+}
+
+.chapter-dots {
+  flex: 1 1 auto;
+  min-width: 0.75em;
+  border-bottom: 1px dotted currentColor;
+  opacity: 0.5;
+  transform: translateY(-0.2em);
+}
+
+.chapter-number {
+  flex: 0 0 auto;
+  font-size: 0.72em;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0.85;
+}
+
 @media (max-width: 900px) {
   .volumes-index-title {
     margin-top: 2.25em;

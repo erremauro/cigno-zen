@@ -120,9 +120,35 @@ while ( have_posts() ) :
 					if ( ! $chapter_post_id || '' === $chapter_title ) {
 						continue;
 					}
+					$chapter_subtitle = '';
+					if ( function_exists( 'get_field' ) ) {
+						$chapter_subtitle = (string) get_field( 'sottotitolo', $chapter_post_id );
+					}
+					if ( '' === trim( $chapter_subtitle ) ) {
+						$chapter_subtitle = (string) get_post_meta( $chapter_post_id, 'sottotitolo', true );
+					}
+					$chapter_subtitle = trim( wp_strip_all_tags( $chapter_subtitle ) );
+					$chapter_number = isset( $chapter->chapter_number ) ? trim( (string) $chapter->chapter_number ) : '';
+					$chapter_index  = isset( $chapter->section_label ) ? trim( (string) $chapter->section_label ) : '';
+					if ( '' === $chapter_index ) {
+						$chapter_index = $chapter_number;
+					}
 					?>
 					<li>
-						<h2 class="chapter-title"><a href="<?php echo esc_url( get_permalink( $chapter_post_id ) ); ?>"><?php echo esc_html( $chapter_title ); ?></a></h2>
+						<h2 class="chapter-title">
+							<a class="chapter-link" href="<?php echo esc_url( get_permalink( $chapter_post_id ) ); ?>">
+								<span class="chapter-heading">
+									<span class="chapter-title-text"><?php echo esc_html( $chapter_title ); ?></span>
+									<?php if ( '' !== $chapter_subtitle ) : ?>
+										<span class="chapter-subtitle"><?php echo esc_html( $chapter_subtitle ); ?></span>
+									<?php endif; ?>
+								</span>
+								<?php if ( '' !== $chapter_index ) : ?>
+									<span class="chapter-dots" aria-hidden="true"></span>
+									<span class="chapter-number"><?php echo esc_html( $chapter_index ); ?></span>
+								<?php endif; ?>
+							</a>
+						</h2>
 					</li>
 				<?php endforeach; ?>
 			</ul>
