@@ -149,13 +149,14 @@ function cignozen_get_post_volume( $post_id = null ) {
  * @param bool     $echo Whether to echo HTML.
  * @return string|null
  */
-function display_volumes_name( $post_id = null, $echo = true ) {
+function display_volumes_name( $post_id = null, $echo = true, $class = '' ) {
 	$volume_post = cignozen_get_post_volume( $post_id );
 	if ( ! $volume_post ) {
 		return '';
 	}
 
-	$output  = '<p class="volumes-link">';
+	$classes = trim( 'volumes-link ' . $class );
+	$output  = '<p class="' . esc_attr( $classes ) . '">';
 	$output .= '<a href="' . esc_url( get_permalink( $volume_post->ID ) ) . '">' . esc_html( get_the_title( $volume_post->ID ) ) . '</a>';
 	$output .= '</p>';
 
