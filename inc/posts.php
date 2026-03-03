@@ -9,6 +9,11 @@ function display_author_info_conditionally() {
 	}
 }
 
+function has_the_subtitle() {
+	$sottotitolo = get_field('sottotitolo');
+	return !empty($sottotitolo);
+}
+
 function the_subtitle() {
 	// Controlla se il campo ACF 'sottotitolo' ha un valore
 	if (get_field('sottotitolo')) {

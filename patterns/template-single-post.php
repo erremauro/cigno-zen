@@ -37,16 +37,17 @@ while ( have_posts() ) : the_post();
     $pdf = $resolve_attachment('article_pdf');
     $audio = $resolve_attachment('article_audio');
     $audio_player_shortcode = $audio['id'] > 0 ? sprintf('[player id="%d"]', $audio['id']) : '';
-    $has_article_actions = ($pdf['url'] !== '' || $audio_player_shortcode !== '');
-
     ?>
 
     <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-        <header class="post-header<?php echo $has_article_actions ? ' has-article-actions' : ''; ?>">
+        <header class="post-header has-border-bottom">
             <?php display_author_info_conditionally(); ?>
             <?php display_volumes_name( null, true, 'volumes-link--lined' ); ?>
             <h1 class="post-title"><?php the_title(); ?></h1>
-            <h3 class="post-subtitle"><?php the_subtitle(); ?></h3>
+            
+            <?php if (has_the_subtitle()) : ?>
+                <h3 class="post-subtitle"><?php the_subtitle(); ?></h3>
+            <?php endif; ?>
             <?php echo function_exists('czrt_get_total_reading_time_html') ? czrt_get_total_reading_time_html(get_post()) : ''; ?>
             <?php if ($has_article_actions) : ?>
                 <section class="article-actions" aria-label="<?php esc_attr_e('Azioni articolo', 'textdomain'); ?>">
