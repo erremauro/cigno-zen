@@ -210,7 +210,7 @@ add_shortcode('collapsable', function ($atts = [], $content = null, $tag = '') {
 // <div class="footnotes">
 //   <h2 id="footnotes-toggle">Note</h2>
 //   <div class="footnotes-content">
-//     <p class="footnote" id="fn1"><a class="fnref" href="#fnref1">1</a> Contenuto <a href="#fnref1" class="backlink">↩</a></p>
+//     <div class="footnote" id="fn1"><p><span class="footnote-idx"><a class="fnref" href="#fnref1">1</a></span> Contenuto <a href="#fnref1" class="backlink">↩</a></p></div>
 //   </div>
 // </div>
 
@@ -288,14 +288,47 @@ add_shortcode('fndef', function($atts = [], $content = null){
   // Allow other shortcodes inside the note content
   $inner = do_shortcode(shortcode_unautop($content ?? ''));
   // Safe HTML (paragraph-like): keep links/emphasis/basic formatting
-  $inner = wp_kses_post($inner);
+  $inner = trim(wp_kses_post($inner));
+  // Remove empty paragraphs emitted by wpautop/shortcode formatting.
+  $inner = preg_replace(
+    '~<p(?:\s[^>]*)?>\s*(?:&nbsp;|&#160;|\x{00A0}|<br\s*/?>|\s)*\s*</p>~iu',
+    '',
+    $inner
+  );
 
-  // Build: <p class="footnote" id="fn1"><a class="fnref" href="#fnref1">1</a> ... <a href="#fnref1" class="backlink">↩</a></p>
-  return sprintf(
-    '<p class="footnote" id="%1$s"><a class="fnref" href="#%2$s">%3$s</a> %4$s <a href="#%2$s" class="backlink">↩</a></p>',
-    esc_attr($note_id),
+  $idx_html = sprintf(
+    '<span class="footnote-idx"><a class="fnref" href="#%1$s">%2$s</a></span>',
     esc_attr($ref_id),
-    esc_html($id_label),
+    esc_html($id_label)
+  );
+  $backlink_html = sprintf(
+    '<a href="#%1$s" class="backlink">&#8617;</a>',
+    esc_attr($ref_id)
+  );
+
+  if (preg_match('~<p\b[^>]*>~i', $inner)) {
+    $inner = preg_replace(
+      '~<p(\b[^>]*)>~i',
+      '<p$1>' . $idx_html . ' ',
+      $inner,
+      1
+    );
+    $replaced = 0;
+    $inner = preg_replace(
+      '~</p>(?![\s\S]*</p>)~i',
+      ' ' . $backlink_html . '</p>',
+      $inner,
+      1,
+      $replaced
+    );
+    if (!$replaced) $inner .= ' ' . $backlink_html;
+  } else {
+    $inner = '<p>' . $idx_html . ' ' . $inner . ' ' . $backlink_html . '</p>';
+  }
+
+  return sprintf(
+    '<div class="footnote" id="%1$s">%2$s</div>',
+    esc_attr($note_id),
     $inner
   );
 });
@@ -312,7 +345,7 @@ add_shortcode('footnotes', function($atts = [], $content = null){
   $heading = in_array(strtolower($atts['heading']), ['h2','h3','h4','h5','h6'], true) ? strtolower($atts['heading']) : 'h2';
   $title   = wp_kses_post($atts['title']);
   $toggle_id = sanitize_html_class($atts['toggle_id']);
-  $root_cls = trim('footnotes ' . sanitize_html_class($atts['class']));
+  $root_cls = trim('footnotes-root footnotes ' . sanitize_html_class($atts['class']));
 
   // Process inner content to expand [fndef] items (and any nested shortcodes)
   $items_html = do_shortcode(shortcode_unautop($content ?? ''));

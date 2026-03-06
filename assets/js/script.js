@@ -155,7 +155,7 @@
  * Footnotes plugin – cigno-zen
  * Struttura prevista dai tuoi shortcode:
  * - Riferimento inline: <sup class="fn"><a id="fnref1" href="#fn1">1</a></sup>
- * - Definizione: <p class="footnote" id="fn1"><a class="fnref" href="#fnref1">1</a> ... <a class="backlink" href="#fnref1">↩</a></p>
+ * - Definizione: <div class="footnote" id="fn1"><p><span class="footnote-idx"><a class="fnref" href="#fnref1">1</a></span> ... <a class="backlink" href="#fnref1">↩</a></p></div>
  * - Wrapper: <div class="footnotes"><h2 id="...">Note</h2><div class="footnotes-content">...</div></div>
  */
 (() => {
@@ -174,6 +174,13 @@
     } catch {
       return "";
     }
+  };
+
+  const isFootnoteDefinitionNode = (node) => {
+    if (!node || node.nodeType !== 1) return false;
+    const id = node.id || "";
+    if (!/^fn/.test(id)) return false;
+    return node.matches("div.footnote");
   };
 
   // Regola la soglia per la paginazione delle note (numero di caratteri)
@@ -215,6 +222,10 @@
   };
 
   const stripBackrefs = (container) => {
+    if (!container || typeof container.querySelectorAll !== "function") {
+      return;
+    }
+
     qsa("a", container).forEach((a) => {
       const href = a.getAttribute("href") || "";
       const cls = a.className || "";
@@ -242,27 +253,53 @@
   };
 
   // ---------------- Extract note HTML ----------------
+  const collectFootnoteNodes = (startNode) => {
+    if (!startNode) return [];
+    return [startNode];
+  };
+
   const getFootnoteHTML = (id) => {
     if (!id) return "";
-    let node = document.querySelector(`p.footnote#${cssEscape(id)}`);
+    let node = document.getElementById(id);
+    if (node && !isFootnoteDefinitionNode(node)) {
+      node = node.querySelector('div.footnote[id^="fn"]');
+    }
+    if (!node) node = document.querySelector(`div.footnote#${cssEscape(id)}`);
     if (!node) {
       const any = document.getElementById(id);
       if (any)
-        node = any.matches("p.footnote")
+        node = any.matches("div.footnote")
           ? any
-          : any.querySelector("p.footnote, p");
+          : any.querySelector("div.footnote");
     }
     if (!node) return "";
 
-    const base = node.cloneNode(true);
-    stripBackrefs(base);
-    const baseHTML = base.innerHTML.trim();
+    const nodes = collectFootnoteNodes(node);
+    const baseWrapper = document.createElement("div");
+    const cleanWrapper = document.createElement("div");
 
-    const clone = node.cloneNode(true);
-    stripLeadingMarker(clone, id);
-    stripBackrefs(clone);
-    const html = (clone.textContent || "").trim()
-      ? clone.innerHTML.trim()
+    nodes.forEach((part, index) => {
+      const basePart = part.cloneNode(true);
+      const cleanPart = part.cloneNode(true);
+
+      stripBackrefs(basePart);
+      stripBackrefs(cleanPart);
+
+      if (index === 0 && cleanPart.nodeType === 1) {
+        const markerHost =
+          cleanPart.tagName === "DIV"
+            ? cleanPart.querySelector("p") || cleanPart
+            : cleanPart;
+        stripLeadingMarker(markerHost, id);
+      }
+
+      baseWrapper.appendChild(basePart);
+      cleanWrapper.appendChild(cleanPart);
+    });
+
+    const baseHTML = baseWrapper.innerHTML.trim();
+    const html = (cleanWrapper.textContent || "").trim()
+      ? cleanWrapper.innerHTML.trim()
       : baseHTML;
 
     return html || baseHTML;
@@ -359,14 +396,81 @@
     return { popup, overlay };
   };
 
+  const normalizeFootnoteNodesForPagination = (container) => {
+    let sourceNodes = Array.from(container.childNodes);
+    if (
+      sourceNodes.length === 1 &&
+      sourceNodes[0].nodeType === 1 &&
+      sourceNodes[0].matches("div.footnote")
+    ) {
+      sourceNodes = Array.from(sourceNodes[0].childNodes);
+    }
+
+    const isEmptyParagraph = (node) =>
+      node.nodeType === 1 &&
+      node.tagName.toLowerCase() === "p" &&
+      !(node.textContent || "").trim() &&
+      !node.querySelector("img, video, iframe, svg, math, br");
+
+    sourceNodes = sourceNodes.filter((node) => {
+      const isWhitespaceText =
+        node.nodeType === 3 && !(node.nodeValue || "").trim();
+      if (isWhitespaceText) return false;
+      if (isEmptyParagraph(node)) return false;
+      return true;
+    });
+
+    const hasTopLevelParagraphs = sourceNodes.some(
+      (node) => node.nodeType === 1 && node.tagName.toLowerCase() === "p",
+    );
+
+    const nodes = [];
+    let buffer = [];
+
+    const flushBufferIntoParagraph = () => {
+      if (!buffer.length) return;
+      const paragraph = document.createElement("p");
+      buffer.forEach((node) => paragraph.appendChild(node));
+      buffer = [];
+      if ((paragraph.textContent || "").trim() || paragraph.children.length) {
+        nodes.push(paragraph);
+      }
+    };
+
+    sourceNodes.forEach((node) => {
+      const isParagraph =
+        node.nodeType === 1 && node.tagName.toLowerCase() === "p";
+
+      if (!hasTopLevelParagraphs) {
+        buffer.push(node);
+        return;
+      }
+
+      if (isParagraph) {
+        flushBufferIntoParagraph();
+        nodes.push(node);
+      } else {
+        buffer.push(node);
+      }
+    });
+
+    flushBufferIntoParagraph();
+    return nodes;
+  };
+
   const paginateFootnoteHTML = (html, threshold) => {
     const container = document.createElement("div");
     container.innerHTML = html || "";
-    const nodes = Array.from(container.childNodes);
+    const nodes = normalizeFootnoteNodesForPagination(container);
+    const paragraphCount = nodes.filter(
+      (node) => node.nodeType === 1 && node.tagName.toLowerCase() === "p",
+    ).length;
+    const forceParagraphPageBreaks = paragraphCount > 1;
     const pages = [];
     let page = document.createElement("div");
     page.className = "footnote-page";
     let remaining = threshold;
+    let seenParagraphs = 0;
 
     const getNodeTextLength = (node) => (node.textContent || "").length;
 
@@ -453,6 +557,16 @@
     let idx = 0;
     while (idx < nodes.length) {
       let node = nodes[idx];
+      const isParagraphNode =
+        node.nodeType === 1 && node.tagName.toLowerCase() === "p";
+      if (
+        forceParagraphPageBreaks &&
+        isParagraphNode &&
+        seenParagraphs > 0
+      ) {
+        pushPage();
+      }
+      if (isParagraphNode) seenParagraphs += 1;
       const textLen = getNodeTextLength(node);
 
       if (textLen <= remaining || textLen === 0) {
@@ -607,10 +721,11 @@
       const id = getHashId(a.getAttribute("href") || "");
       if (!id) return;
 
-      const hasTarget =
-        document.querySelector(`p.footnote#${cssEscape(id)}`) ||
-        document.getElementById(id);
-      if (!hasTarget) return;
+      const direct = document.getElementById(id);
+      const hasDefinition =
+        (direct && isFootnoteDefinitionNode(direct)) ||
+        document.querySelector(`div.footnote#${cssEscape(id)}`);
+      if (!hasDefinition) return;
 
       e.preventDefault();
       openFootnote(a, id);
@@ -692,7 +807,7 @@
   };
 
   const initFootnotesToggle = (root = document) => {
-    qsa("div.footnotes", root).forEach(initFootnotesToggleFor);
+    qsa("div.footnotes-root", root).forEach(initFootnotesToggleFor);
   };
 
   // ---------------- Init ----------------
@@ -709,7 +824,7 @@
         m.addedNodes.forEach((n) => {
           if (!n || n.nodeType !== 1) return;
           if (typeof n.querySelectorAll !== "function") return;
-          if (n.matches && n.matches("div.footnotes"))
+          if (n.matches && n.matches("div.footnotes-root"))
             initFootnotesToggleFor(n);
           else initFootnotesToggle(n);
         });
@@ -1902,6 +2017,93 @@
         closeSuggestions();
       }
     });
+  });
+})();
+
+(function () {
+  function ready(fn) {
+    if (document.readyState !== "loading") fn();
+    else document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  function setState(container, expanded) {
+    var trigger = container.querySelector(".js-lang-src-toggle");
+    var icon = container.querySelector(".js-lang-src-icon");
+    var pill = container.querySelector(".js-lang-src-pill");
+    var content = container.querySelector(".js-lang-src-content");
+
+    container.setAttribute("data-original-expanded", expanded ? "true" : "false");
+
+    if (trigger) {
+      trigger.setAttribute("aria-expanded", expanded ? "true" : "false");
+      trigger.classList.toggle("is-expanded", expanded);
+      trigger.setAttribute(
+        "aria-label",
+        expanded ? "Nascondi originale" : "Mostra originale"
+      );
+    }
+
+    if (icon) icon.classList.toggle("is-expanded", expanded);
+    if (pill) pill.classList.toggle("hidden", expanded);
+    if (content) content.hidden = !expanded;
+  }
+
+  function initContainer(container, index) {
+    if (!container || container.hasAttribute("data-original-toggle-ready")) return;
+
+    var originalHtml = container.innerHTML.trim();
+    if (!originalHtml) return;
+
+    var contentId =
+      "lang-src-original-" + String(index + 1) + "-" + Date.now().toString(36);
+    var button = document.createElement("button");
+    var icon = document.createElement("span");
+    var pill = document.createElement("span");
+    var content = document.createElement(
+      container.tagName && container.tagName.toLowerCase() === "p" ? "span" : "div"
+    );
+
+    container.setAttribute("data-original-toggle-ready", "true");
+    container.setAttribute("data-original-expanded", "false");
+
+    button.type = "button";
+    button.className = "js-lang-src-toggle lang-src-toggle";
+    button.setAttribute("aria-controls", contentId);
+    button.setAttribute("aria-expanded", "false");
+    button.setAttribute("aria-label", "Mostra originale");
+    button.style.verticalAlign = "baseline";
+
+    icon.className = "js-lang-src-icon lang-src-toggle__icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.innerHTML =
+      '<svg viewBox="0 0 12 12" focusable="false" aria-hidden="true"><path d="M3 2.25L9 6L3 9.75Z" fill="currentColor"></path></svg>';
+
+    pill.className = "js-lang-src-pill lang-src-pill";
+    pill.textContent = "originale";
+
+    content.className = "js-lang-src-content";
+    content.id = contentId;
+    content.hidden = true;
+    content.innerHTML = originalHtml;
+
+    button.appendChild(icon);
+    button.appendChild(pill);
+
+    container.innerHTML = "";
+    container.appendChild(button);
+    container.appendChild(document.createTextNode(" "));
+    container.appendChild(content);
+
+    button.addEventListener("click", function () {
+      var expanded = container.getAttribute("data-original-expanded") === "true";
+      setState(container, !expanded);
+    });
+  }
+
+  ready(function () {
+    Array.prototype.slice
+      .call(document.querySelectorAll(".lang-src"))
+      .forEach(initContainer);
   });
 })();
 

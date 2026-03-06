@@ -1925,6 +1925,64 @@ p.page-links {
   background-color: rgba(var(--link-rgb), 0.15);
 }
 
+.lang-src-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  color: var(--text);
+  opacity: 0.68;
+}
+
+.lang-src-toggle__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.15rem;
+  height: 1.15rem;
+  color: var(--text);
+  transform-origin: 50% 50%;
+  transition: transform 180ms ease;
+}
+
+.lang-src-toggle__icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.lang-src-toggle__icon.is-expanded {
+  transform: rotate(90deg);
+}
+
+.lang-src-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-family: inherit;
+  line-height: 1;
+  color: var(--text);
+  text-decoration: none;
+  background: transparent;
+  border: 1px solid var(--text);
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  min-width: 4em;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.lang-src-toggle:hover .lang-src-pill,
+.lang-src-toggle:focus-visible .lang-src-pill {
+  background-color: color-mix(in srgb, var(--text) 12%, transparent);
+}
+
 .chapter-title {
   font-size: 1.6em;
   margin: 0;
@@ -1995,9 +2053,14 @@ p.footnote {
   text-indent: 0;
 }
 
-.footnotes {
+.footnotes-root {
   margin-top: 1em;
   border-top: 1px solid var(--border);
+}
+
+.footnotes-content > div.footnote,
+.footnotes-content > div.footnote > p {
+  text-indent: 0;
 }
 
 .footnotes-toggle,
@@ -2068,7 +2131,7 @@ p.footnote {
 }
 
 @media print {
-  .footnotes {
+  .footnotes-root {
     display: block !important;
   }
   .footnote-popup,
@@ -2077,7 +2140,12 @@ p.footnote {
   }
 }
 
-.footnotes .fnref:after {
+.footnotes-content .footnote-idx {
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.footnotes-content .footnote-idx .fnref:after {
   content: ".";
 }
 
