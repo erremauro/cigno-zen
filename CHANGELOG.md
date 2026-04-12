@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[Unreleased]
+### Changed
+- Footnote block is now revealed automatically when the page is loaded with a hash pointing to a footnote (e.g. `#fn1`): the collapsed footnotes section expands and the browser scrolls to the target anchor. No popup is shown — popups remain exclusive to inline `sup` clicks within the same page.
+
 [2.3.0] 2026-03-05
 ### Add
 - Add `.lang-src` support do render content in source language hidden but expandable.

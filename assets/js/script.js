@@ -810,10 +810,46 @@
     qsa("div.footnotes-root", root).forEach(initFootnotesToggleFor);
   };
 
+  // ---------------- Reveal blocco footnotes da hash URL ----------------
+  // Se la pagina viene caricata con un hash che punta a un div.footnote (es. #fn1),
+  // espande il blocco footnotes collassato e lascia che il browser scrolli
+  // normalmente all'anchor. Nessun popup viene aperto: questo percorso è riservato
+  // ai link in entrata da altre pagine, mentre il popup resta esclusivo del click
+  // su sup inline nella stessa pagina.
+  const revealFootnoteFromHash = () => {
+    const hash = (window.location.hash || "").replace(/^#/, "").trim();
+    if (!hash || !/^fn/i.test(hash)) return;
+
+    const target = document.getElementById(hash);
+    if (!target) return;
+
+    // Risali al wrapper .footnotes-root che contiene la nota.
+    const root = target.closest("div.footnotes-root");
+    if (!root) return;
+
+    const heading = root.querySelector(":scope > [aria-expanded]");
+    const content = root.querySelector(":scope > .footnotes-content");
+    if (!heading || !content || !content.hidden) return;
+
+    // Espande il blocco (replica setOpen(true) di initFootnotesToggleFor).
+    heading.setAttribute("aria-expanded", "true");
+    content.hidden = false;
+    const chev = heading.querySelector(".footnotes-chevron");
+    if (chev) chev.style.transform = "rotate(0deg)";
+
+    // Lascia che il browser esegua lo scroll nativo verso l'anchor.
+    // requestAnimationFrame garantisce che il contenuto sia già visibile
+    // prima che il browser tenti di posizionare la viewport.
+    requestAnimationFrame(() => {
+      target.scrollIntoView({ block: "start" });
+    });
+  };
+
   // ---------------- Init ----------------
   const init = () => {
     initFootnotesToggle();
     initFootnotePopups();
+    revealFootnoteFromHash();
   };
   if (document.readyState !== "loading") init();
   else document.addEventListener("DOMContentLoaded", init);
