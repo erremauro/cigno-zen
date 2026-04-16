@@ -3352,3 +3352,24 @@ ul.cz-references-list {
 .reading-time-value {
   line-height: 1;
 }
+
+/** ========== SUTRA COMMENTS ========== */
+
+blockquote.sutra-quote {
+  border-left: .25em solid var(--border);
+  padding-left: 1em;
+  margin: 2em 2em;
+  font-style: italic;
+}
+p.quote-author {
+  text-indent: 0;
+  font-weight: bold;
+  text-align: right;
+  text-transform: uppercase;
+  line-height: 2;
+  font-size: 1rem;
+  margin-bottom: 2em;
+}
+p.quote-author::before {
+  content: "— ";
+}

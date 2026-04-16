@@ -133,12 +133,14 @@ while ( have_posts() ) :
 					if ( '' === $chapter_index ) {
 						$chapter_index = $chapter_number;
 					}
+					$mostra_come = trim( (string) get_post_meta( $chapter_post_id, '_cz_post_display_title', true ) );
+					$chapter_label = '' !== $mostra_come ? $mostra_come : $chapter_title;
 					?>
 					<li>
 						<h2 class="chapter-title">
 							<a class="chapter-link" href="<?php echo esc_url( get_permalink( $chapter_post_id ) ); ?>">
 								<span class="chapter-heading">
-									<span class="chapter-title-text"><?php echo esc_html( $chapter_title ); ?></span>
+									<span class="chapter-title-text"><?php echo esc_html( $chapter_label ); ?></span>
 									<?php if ( '' !== $chapter_subtitle ) : ?>
 										<span class="chapter-subtitle"><?php echo esc_html( $chapter_subtitle ); ?></span>
 									<?php endif; ?>

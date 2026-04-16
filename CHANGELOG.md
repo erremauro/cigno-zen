@@ -5,8 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[Unreleased]
+[2.4.0] 2026-04-16 
 ### Changed
+- Update `template-single-volume` to show the "Show As" title if specified.
+- Add styles for sutra comments (i.e. Diamond Sutra Comment)
 - Footnote block is now revealed automatically when the page is loaded with a hash pointing to a footnote (e.g. `#fn1`): the collapsed footnotes section expands and the browser scrolls to the target anchor. No popup is shown — popups remain exclusive to inline `sup` clicks within the same page.
 
 [2.3.0] 2026-03-05
@@ -373,7 +375,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.4.0...HEAD
+[2.3.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.4.0
 [2.3.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.3.0
 [2.2.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.2.0
 [2.1.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.1.0
