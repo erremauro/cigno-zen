@@ -37,6 +37,7 @@ while ( have_posts() ) : the_post();
     $pdf = $resolve_attachment('article_pdf');
     $audio = $resolve_attachment('article_audio');
     $audio_player_shortcode = $audio['id'] > 0 ? sprintf('[player id="%d"]', $audio['id']) : '';
+    $has_article_actions = ($pdf['url'] !== '') || ($audio_player_shortcode !== '');
     ?>
 
     <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
