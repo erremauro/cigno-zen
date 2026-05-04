@@ -17,3 +17,4 @@ require_once get_template_directory() . '/inc/more-link.php';
 require_once get_template_directory() . '/inc/cz-continue-reading.php';
 
 require_once get_template_directory() . '/inc/masters.php';
+require_once get_template_directory() . '/inc/broken-link.php';

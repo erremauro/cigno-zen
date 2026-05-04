@@ -29,11 +29,11 @@ $panel_id = 'tag-full-description-' . $term->term_id;
 		<div class="tag-definition">
 			<?php if ( $short_definition ) : ?>
 				<div class="tag-short-definition">
-					<?php echo wp_kses_post( wpautop( $short_definition ) ); ?>
+					<?php echo wp_kses_post( cz_highlight_broken_links( wpautop( $short_definition ) ) ); ?>
 				</div>
 			<?php elseif ( $wp_description ) : ?>
 				<div class="tag-short-definition">
-					<?php echo wp_kses_post( $wp_description ); ?>
+					<?php echo wp_kses_post( cz_highlight_broken_links( $wp_description ) ); ?>
 				</div>
 			<?php endif; ?>
 

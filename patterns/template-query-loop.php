@@ -103,7 +103,7 @@ $the_query = new WP_Query( $args );
                 <?php display_volumes_name() ?>
                 <h2 class="post-title">
                     <a href="<?php the_permalink(); ?>">
-                        <?php the_title(); ?>
+                        <?php cz_the_html_title(); ?>
                     </a>
                 </h2>
                 <h4 class="post-subtitle">

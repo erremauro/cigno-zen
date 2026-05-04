@@ -40,7 +40,7 @@
         <a class="article-featured" href="<?php echo get_permalink($post); ?>">
             <div class="article-meta">
                 <p class="article-author"><?php the_author(); ?></p>
-                <h2 class="article-title"><?php the_title(); ?></h2>
+                <h2 class="article-title"><?php cz_the_html_title(); ?></h2>
             </div>
         </a>
         <?php
@@ -77,7 +77,7 @@
                 <?php foreach ($recent_posts as $post) : setup_postdata($post); ?>
                     <a class="article-card" href="<?php echo get_permalink($post); ?>">
                         <p class="article-author"><?php the_author(); ?></p>
-                        <h3 class="article-title"><?php the_title(); ?></h3>
+                        <h3 class="article-title"><?php cz_the_html_title(); ?></h3>
                     </a>
                 <?php endforeach; wp_reset_postdata(); ?>
             </div>

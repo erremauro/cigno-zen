@@ -44,7 +44,7 @@ while ( have_posts() ) : the_post();
         <header class="post-header has-border-bottom">
             <?php display_author_info_conditionally(); ?>
             <?php display_volumes_name( null, true, 'volumes-link--lined' ); ?>
-            <h1 class="post-title"><?php the_title(); ?></h1>
+            <h1 class="post-title"><?php cz_the_html_title(); ?></h1>
             
             <?php if (has_the_subtitle()) : ?>
                 <h3 class="post-subtitle"><?php the_subtitle(); ?></h3>

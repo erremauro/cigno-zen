@@ -1,5 +1,71 @@
 <?php
 
+// ── Titolo HTML ─────────────────────────────────────────────────────────────
+
+/**
+ * Restituisce il titolo del post: il campo ACF "titolo_html" se compilato,
+ * altrimenti il titolo WordPress plain-text. L'HTML è limitato a tag inline
+ * sicuri per una resa tipografica (corsivo, ruby, ecc.).
+ */
+function cz_get_html_title( int $post_id = 0 ): string {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID() ?: 0;
+	}
+
+	$html = function_exists( 'get_field' ) ? (string) get_field( 'titolo_html', $post_id ) : '';
+	$html = trim( $html );
+
+	if ( $html !== '' ) {
+		return wp_kses( $html, [
+			'em'     => [],
+			'i'      => [],
+			'strong' => [],
+			'b'      => [],
+			'span'   => [ 'class' => true, 'lang' => true ],
+			'ruby'   => [],
+			'rt'     => [],
+			'rp'     => [],
+			'br'     => [],
+			'sup'    => [],
+			'sub'    => [],
+		] );
+	}
+
+	return esc_html( get_the_title( $post_id ) );
+}
+
+function cz_the_html_title( int $post_id = 0 ): void {
+	echo cz_get_html_title( $post_id );
+}
+
+// Registrazione campo ACF via codice
+add_action( 'acf/init', function (): void {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( [
+		'key'      => 'group_cz_titolo_html',
+		'title'    => 'Titolo HTML',
+		'fields'   => [
+			[
+				'key'           => 'field_cz_titolo_html',
+				'label'         => 'Titolo HTML',
+				'name'          => 'titolo_html',
+				'type'          => 'text',
+				'instructions'  => 'HTML inline per il titolo (es. <em>, <ruby>). Lascia vuoto per usare il titolo standard.',
+				'required'      => 0,
+				'placeholder'   => 'Es. Il <em>Dharma</em> della non-dualità',
+			],
+		],
+		'location' => [
+			[ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'post' ] ],
+		],
+		'position' => 'side',
+		'style'    => 'default',
+	] );
+} );
+
 function display_author_info_conditionally() {
 	$author_name = get_the_author();
 	if ($author_name !== 'cigno') {
