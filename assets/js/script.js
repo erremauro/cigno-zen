@@ -1048,9 +1048,6 @@
     if (!toggle || !content) return;
 
     const chev = $(".collapsable-chevron", toggle);
-    const wasOpen = section.classList.contains("is-open");
-    if (open === wasOpen) return;
-
     section.classList.toggle("is-open", open);
     toggle.setAttribute("aria-expanded", open ? "true" : "false");
     content.setAttribute("aria-hidden", open ? "false" : "true");

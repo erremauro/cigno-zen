@@ -3156,10 +3156,15 @@ blockquote.poem p.verse {
   align-items: "center";
   gap: 0.5rem;
   user-select: none;
+  width: 100%;
+  border-bottom: 1px solid transparent;
+}
+
+.collapsable-section.is-open .collapsable-toggle {
+  border-bottom-color: var(--border);
 }
 
 .collapsable-content {
-  border-top: 1px solid var(--border);
   padding-top: 1em;
 }
 
