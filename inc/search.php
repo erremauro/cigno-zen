@@ -34,7 +34,10 @@ function get_highlighted_paragraph($content, $search_term) {
 
 	$dom = new DOMDocument();
 	libxml_use_internal_errors(true);
-	$loaded = $dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'));
+	if (empty(trim(strip_tags($content)))) {
+		return wp_trim_words($content, 55, '...');
+	}
+	$loaded = $dom->loadHTML('<?xml encoding="UTF-8">' . $content);
 
 	if (!$loaded) {
 		libxml_clear_errors();
