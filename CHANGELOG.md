@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[2.5.3] 2026-05-25
+### Fixed
+- Fix a performance issue related to serving the font by serving the font directly from the site, instead of using the remote hosting platform.
+
 [2.5.2] 2026-05-25
 ### Fixed
 - Fix broken-link's caching management by adding a link index which cache is emptied when a new post is published
@@ -394,7 +398,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.5.2...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.5.3...HEAD
+[2.5.3]: https://github.com/erremauro/cigno-zen/releases/tag/v2.5.3
 [2.5.2]: https://github.com/erremauro/cigno-zen/releases/tag/v2.5.2
 [2.5.1]: https://github.com/erremauro/cigno-zen/releases/tag/v2.5.1
 [2.5.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.5.0

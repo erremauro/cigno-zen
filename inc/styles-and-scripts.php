@@ -39,17 +39,30 @@ function cignozen_add_favicon_meta() {
 add_action('wp_head', 'cignozen_add_favicon_meta');
 
 function carica_google_fonts() {
-    wp_enqueue_style('libre-baskerville', 'https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap', false);
-    wp_enqueue_style('hiragino-pro', 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@200..900&display=swap', false);
+    wp_enqueue_style('noto-serif-jp', 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400&display=block', false);
 }
 
+function cignozen_font_preload_hints() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+}
+add_action('wp_head', 'cignozen_font_preload_hints', 1);
+
 function cigno_zen_styles() {
+    list( $css_fonts_url, $css_fonts_ver ) = get_asset('assets/css/fonts.css');
+    wp_enqueue_style(
+        'cigno-zen-fonts',
+        $css_fonts_url,
+        [],
+        $css_fonts_ver
+    );
+
     list( $css_main_url, $css_main_ver ) = get_asset('assets/css/main.css');
 
     wp_enqueue_style(
         'cigno-zen-style',
         $css_main_url,
-        [],
+        ['cigno-zen-fonts'],
         $css_main_ver
     );
 
