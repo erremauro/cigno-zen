@@ -38,6 +38,15 @@
                     <?php get_template_part( 'parts/svg/user' ); ?>
                 </summary>
                 <div class="nav-user-menu" role="menu">
+                    <?php if ( current_user_can( 'manage_options' ) ) : ?>
+                        <a role="menuitem" href="<?php echo esc_url( admin_url() ); ?>">
+                            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            <span>Dashboard</span>
+                        </a>
+                    <?php endif; ?>
+                    <?php do_action( 'czh_nav_user_menu_items' ); ?>
                     <a role="menuitem" href="<?php echo esc_url( home_url( '/logout' ) ); ?>">
                         <?php get_template_part( 'parts/svg/logout' ); ?>
                         <span>Logout</span>

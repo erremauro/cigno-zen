@@ -5,6 +5,9 @@ add_action('init', function () {
     $wp_rewrite->author_base = 'autore';
 });
 
+// Nasconde la admin bar nel frontend per tutti gli utenti
+add_filter('show_admin_bar', '__return_false');
+
 require_once get_template_directory() . '/inc/styles-and-scripts.php';
 require_once get_template_directory() . '/inc/shortcodes.php';
 require_once get_template_directory() . '/inc/jetpack.php';
