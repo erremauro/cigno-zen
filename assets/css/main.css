@@ -673,11 +673,23 @@ header.site-header {
 
 body.czup-sticky-nav {
   height: auto;
+  padding-top: var(--czup-nav-height, 72px);
 }
 
 body.czup-sticky-nav .top-nav-bar {
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.czup-sticky-nav .top-nav-bar.nav-hidden {
+  transform: translateY(-100%);
+}
+
+body.czup-sticky-nav main {
+  margin-top: 2em;
 }
 
 :root {

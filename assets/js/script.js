@@ -2181,3 +2181,55 @@
     });
   });
 })();
+
+// ── Sticky nav: hide on scroll-down, show on scroll-up ───────────────────────
+(function () {
+  'use strict';
+
+  var nav       = document.querySelector('.top-nav-bar');
+  var THRESHOLD = 8;
+
+  if (!nav) return;
+
+  function isStickyActive() {
+    return document.body.classList.contains('czup-sticky-nav');
+  }
+
+  function syncNavHeight() {
+    document.documentElement.style.setProperty('--czup-nav-height', nav.offsetHeight + 'px');
+  }
+
+  var lastY   = window.scrollY;
+  var ticking = false;
+
+  function update() {
+    ticking = false;
+    if (!isStickyActive()) return;
+
+    var y     = window.scrollY;
+    var delta = y - lastY;
+
+    if (Math.abs(delta) < THRESHOLD) return;
+
+    if (y <= 0) {
+      nav.classList.remove('nav-hidden');
+    } else if (delta > 0) {
+      nav.classList.add('nav-hidden');
+    } else {
+      nav.classList.remove('nav-hidden');
+    }
+
+    lastY = y;
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!ticking) { window.requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+
+  window.addEventListener('resize', syncNavHeight, { passive: true });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    syncNavHeight();
+    lastY = window.scrollY;
+  });
+})();
