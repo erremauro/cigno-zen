@@ -215,6 +215,41 @@ add_action(
     3
 );
 
+// ── Invalidazione cache alla creazione/modifica di un termine ───────────────
+
+add_action( 'created_term', 'cz_invalidate_term_broken_link_cache', 10, 3 );
+add_action( 'edited_term',  'cz_invalidate_term_broken_link_cache', 10, 3 );
+
+function cz_invalidate_term_broken_link_cache( int $term_id, int $tt_id, string $taxonomy ): void {
+    $term_link = get_term_link( $term_id, $taxonomy );
+    if ( is_wp_error( $term_link ) ) {
+        return;
+    }
+
+    $normalized = cz_normalize_internal_url( $term_link );
+    $hash       = md5( $normalized );
+
+    delete_transient( 'cz_bl_' . $hash );
+
+    global $wpdb;
+
+    // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+    $source_ids = $wpdb->get_col(
+        $wpdb->prepare(
+            'SELECT source_post_id FROM ' . $wpdb->prefix . 'cz_link_index WHERE target_url_hash = %s',
+            $hash
+        )
+    );
+
+    if ( empty( $source_ids ) || ! function_exists( 'w3tc_flush_post' ) ) {
+        return;
+    }
+
+    foreach ( $source_ids as $source_id ) {
+        w3tc_flush_post( (int) $source_id );
+    }
+}
+
 // ── WP-CLI: wp cignozen index-links ──────────────────────────────────────────
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
