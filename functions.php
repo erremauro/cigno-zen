@@ -22,3 +22,14 @@ require_once get_template_directory() . '/inc/cz-continue-reading.php';
 require_once get_template_directory() . '/inc/masters.php';
 require_once get_template_directory() . '/inc/broken-link.php';
 require_once get_template_directory() . '/inc/link-index.php';
+
+// Sticky nav: aggiunge la classe body di default; l'utente può disattivarla
+// tramite la preferenza czup_sticky_nav = '0' in cz-user-preferences.
+add_filter( 'body_class', function ( array $classes ): array {
+	$user_id = get_current_user_id();
+	if ( $user_id && get_user_meta( $user_id, 'czup_sticky_nav', true ) === '0' ) {
+		return $classes;
+	}
+	$classes[] = 'czup-sticky-nav';
+	return $classes;
+} );

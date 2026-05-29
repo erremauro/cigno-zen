@@ -671,6 +671,15 @@ header.site-header {
   z-index: 998;
 }
 
+body.czup-sticky-nav {
+  height: auto;
+}
+
+body.czup-sticky-nav .top-nav-bar {
+  position: sticky;
+  top: 0;
+}
+
 :root {
   --top-nav-height: 129px;
 }
