@@ -3399,3 +3399,149 @@ p.quote-author {
 p.quote-author::before {
   content: "— ";
 }
+
+/* ──────────────────────────────────────────────────────
+   Admin Panel Overlay (.cz-admin-panel)
+   ────────────────────────────────────────────────────── */
+
+/* Trigger button in user menu — matches existing <a role="menuitem"> style */
+.top-nav-bar .nav-user-menu .czap-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.5rem 0.65rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.top-nav-bar .nav-user-menu .czap-trigger svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+.top-nav-bar .nav-user-menu .czap-trigger:hover {
+  background: var(--top-nav-hover);
+}
+
+/* Overlay backdrop + box */
+.cz-admin-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.cz-admin-panel.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.czap-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.czap-box {
+  position: relative;
+  z-index: 1;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.75rem 1.75rem 2rem;
+  width: min(480px, calc(100vw - 2rem));
+  box-shadow: var(--elev-shadow-strong);
+  transform: scale(0.96);
+  transition: transform 0.2s ease;
+}
+.cz-admin-panel.is-open .czap-box {
+  transform: scale(1);
+}
+
+/* Header */
+.czap-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.czap-title {
+  font-size: var(--fs-h5);
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.czap-close {
+  background: transparent;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+  opacity: 0.55;
+  transition: opacity 0.15s;
+  display: inline-flex;
+}
+.czap-close:hover {
+  opacity: 1;
+}
+
+/* Grid of action buttons */
+.czap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+.czap-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1.4rem 0.75rem 1.2rem;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text);
+  background: var(--card);
+  border: var(--card-border);
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+  cursor: pointer;
+}
+.czap-btn:hover {
+  background: var(--tt-btn-bg-hover);
+  box-shadow: var(--card-hover-shadow);
+  transform: translateY(-2px);
+}
+.czap-btn svg {
+  flex-shrink: 0;
+  stroke: var(--link);
+}
+.czap-btn span {
+  font-size: var(--fs-ui-compact);
+  text-align: center;
+  color: var(--text);
+  font-family: var(--font-body);
+}
+.czap-btn--disabled {
+  opacity: 0.3;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+body.czap-open {
+  overflow: hidden;
+}
+@media (max-width: 380px) {
+  .czap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -2233,3 +2233,48 @@
     lastY = window.scrollY;
   });
 })();
+
+/* Admin Panel Overlay */
+(function () {
+  function ready(fn) {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  ready(function () {
+    var trigger  = document.querySelector('.czap-trigger');
+    var panel    = document.getElementById('cz-admin-panel');
+    if (!trigger || !panel) return;
+
+    var backdrop = panel.querySelector('.czap-backdrop');
+    var closeBtn = panel.querySelector('.czap-close');
+
+    function openPanel() {
+      panel.classList.add('is-open');
+      panel.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('czap-open');
+      // chiude il menu utente <details>
+      var userMenu = document.querySelector('.top-nav-bar .nav-user');
+      if (userMenu) userMenu.removeAttribute('open');
+      // focus sul pulsante di chiusura per accessibilità
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closePanel() {
+      panel.classList.remove('is-open');
+      panel.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('czap-open');
+      trigger.focus();
+    }
+
+    trigger.addEventListener('click', openPanel);
+    if (closeBtn)  closeBtn.addEventListener('click', closePanel);
+    if (backdrop)  backdrop.addEventListener('click', closePanel);
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && panel.classList.contains('is-open')) {
+        closePanel();
+      }
+    });
+  });
+})();
