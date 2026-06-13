@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+[2.7.3] 2026-06-13
+### Changed
+- Il pulsante "Bacheca" nel pannello admin è stato rinominato in "Articoli", ora punta a `/wp-admin/edit.php` e l'icona è stata aggiornata di conseguenza.
+
 [2.7.2] 2026-06-10
 ### Changed
 - Dashboard's Button functionalities has been expanded.
@@ -424,7 +428,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.2...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.3...HEAD
+[2.7.3]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.3
 [2.7.2]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.2
 [2.7.1]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.1
 [2.7.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.0
