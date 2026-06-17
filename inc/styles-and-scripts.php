@@ -1,22 +1,9 @@
 <?php
 
 /* ===== Utilities ===== */
-function get_asset( $rel_path ) {
-    $base_dir = get_template_directory();
-    $base_url = get_template_directory_uri() . '/';
-
-    $abs = $base_dir . '/' . ltrim( $rel_path, '/' );
-    $min = preg_replace( '/(\.js|\.css)$/', '.min$1', $abs );
-
-    $use_min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? false : true;
-
-    $chosen = ( $use_min && file_exists( $min ) ) ? $min : $abs;
-
-    $url = $base_url . ltrim( str_replace( $base_dir, '', $chosen ), '/' );
-    $ver = file_exists( $chosen ) ? filemtime( $chosen ) : "1.0.0";
-
-    return [ $url, $ver ];
-};
+function cigno_zen_get_asset( string $rel_path ): array {
+    return cz_get_asset( get_template_directory(), get_template_directory_uri(), $rel_path );
+}
 
 /**
  * Setup del tema
@@ -49,7 +36,7 @@ function cignozen_font_preload_hints() {
 add_action('wp_head', 'cignozen_font_preload_hints', 1);
 
 function cigno_zen_styles() {
-    list( $css_fonts_url, $css_fonts_ver ) = get_asset('assets/css/fonts.css');
+    list( $css_fonts_url, $css_fonts_ver ) = cigno_zen_get_asset('assets/css/fonts.css');
     wp_enqueue_style(
         'cigno-zen-fonts',
         $css_fonts_url,
@@ -57,7 +44,7 @@ function cigno_zen_styles() {
         $css_fonts_ver
     );
 
-    list( $css_main_url, $css_main_ver ) = get_asset('assets/css/main.css');
+    list( $css_main_url, $css_main_ver ) = cigno_zen_get_asset('assets/css/main.css');
 
     wp_enqueue_style(
         'cigno-zen-style',
@@ -148,7 +135,7 @@ add_filter('czpr_enqueue_inline_styles', '__return_false');
  * Caricamento di script e stili
  */
 function cigno_zen_scripts() {
-    list( $js_url, $js_ver ) = get_asset( 'assets/js/script.js' );
+    list( $js_url, $js_ver ) = cigno_zen_get_asset( 'assets/js/script.js' );
     wp_enqueue_script(
         'cigno-zen-script',
         $js_url,

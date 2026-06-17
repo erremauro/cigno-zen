@@ -5,66 +5,71 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-[2.7.3] 2026-06-13
+## [2.7.4]
+### Fixed
+- Fix dictionary top margin
+### Polish
+- The theme now serve the assets using the custom `cigno_zen_get_asset` function
+
+## [2.7.3] 2026-06-13
 ### Changed
 - Il pulsante "Bacheca" nel pannello admin è stato rinominato in "Articoli", ora punta a `/wp-admin/edit.php` e l'icona è stata aggiornata di conseguenza.
 
-[2.7.2] 2026-06-10
+## [2.7.2] 2026-06-10
 ### Changed
 - Dashboard's Button functionalities has been expanded.
 
-[2.7.1] 2026-05-29
+## [2.7.1] 2026-05-29
 ### Changed
 - Non-sticky top navigation bar now automatically hides on scroll.
 ### Fixed
 - Fix cz-highlights drawer height on mobile browser with dynamic address bars.
 
-[2.7.0] 2026-05-29
+## [2.7.0] 2026-05-29
 ### Changed
 - The top navigation bar now sticks on top.
 
-[2.6.1] 2026-05-29
+## [2.6.1] 2026-05-29
 ### Fixed
 - Fix an issue with tag's object caching that prevented a previously broken link to be updated.
 
-[2.6.0] 2026-05-26
+## [2.6.0] 2026-05-26
 ### Change
 - Hide the admin bar.
 - Shows cz-highlight menu
 ### Fixed
 - Add missing font's css
 
-
-[2.5.3] 2026-05-25
+## [2.5.3] 2026-05-25
 ### Fixed
 - Fix a performance issue related to serving the font by serving the font directly from the site, instead of using the remote hosting platform.
 
-[2.5.2] 2026-05-25
+## [2.5.2] 2026-05-25
 ### Fixed
 - Fix broken-link's caching management by adding a link index which cache is emptied when a new post is published
 
-[2.5.1] 2026-05-25
+## [2.5.1] 2026-05-25
 ### Fixed
 - Fix issue with highlighted search's string enconding
 
-[2.5.0] 2026-05-20
+## [2.5.0] 2026-05-20
 ### Added
 - Add broken-link rendering and styling
 - Add custom HTML formatted title for posts
 ### Fixed
 - Fix `initial="closed"` behaviour for the `[collapsable]` shortcode.
 
-[2.4.1] 2026-04-22
+## [2.4.1] 2026-04-22
 ### Fix
 - Restore article actions
 
-[2.4.0] 2026-04-16 
+## [2.4.0] 2026-04-16 
 ### Changed
 - Update `template-single-volume` to show the "Show As" title if specified.
 - Add styles for sutra comments (i.e. Diamond Sutra Comment)
 - Footnote block is now revealed automatically when the page is loaded with a hash pointing to a footnote (e.g. `#fn1`): the collapsed footnotes section expands and the browser scrolls to the target anchor. No popup is shown — popups remain exclusive to inline `sup` clicks within the same page.
 
-[2.3.0] 2026-03-05
+## [2.3.0] 2026-03-05
 ### Add
 - Add `.lang-src` support do render content in source language hidden but expandable.
 ### Changed
@@ -74,18 +79,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Multi-paragraph footnote's content is now handled correctly by footnotes's popups presenting each paragraph on a new page.
 
-[2.2.0] 2026-03-02
+## [2.2.0] 2026-03-02
 ### Changed
 - Add support for `cz-reading-time`
 - Add a decoration to the volume's title in `template-single-post`
 
-[2.1.0] 2026-02-25
+## [2.1.0] 2026-02-25
 ### Changed
 - Single Volume view now show subtitles and Chapter Inde
 - Search Bar results has been enhanced.
 - Add support for symbol in footnotes anchors
 
-[2.0.1] 2026-02-14
+## [2.0.1] 2026-02-14
 ## Changed
 - Refine single volume appearance
 ## Fixed
@@ -428,7 +433,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.3...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.4...HEAD
+[2.7.4]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.4
 [2.7.3]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.3
 [2.7.2]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.2
 [2.7.1]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.1
