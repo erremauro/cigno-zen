@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.7.4]
+## [2.7.5] 2026-06-17
+### Changed
+- The subtitle has been added for the featured article in the home page.
+
+## [2.7.4] 2026-06-17
 ### Fixed
 - Fix dictionary top margin
 ### Polish
@@ -433,7 +437,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.4...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.5...HEAD
+[2.7.5]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.5
 [2.7.4]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.4
 [2.7.3]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.3
 [2.7.2]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.2

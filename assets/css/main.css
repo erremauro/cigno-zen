@@ -2512,6 +2512,10 @@ section.home-section .post-content p {
 .article-meta {
   text-align: center;
 }
+.article-meta .article-subtitle {
+  font-size: 0.9em;
+  font-style: italic;
+}
 .article-grid .article-card {
   padding: 1em;
   text-align: center;

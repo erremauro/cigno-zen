@@ -41,6 +41,9 @@
             <div class="article-meta">
                 <p class="article-author"><?php the_author(); ?></p>
                 <h2 class="article-title"><?php cz_the_html_title(); ?></h2>
+                <?php if (has_the_subtitle()) : ?>
+                    <h3 class="article-subtitle"><?php the_subtitle(); ?></h3>
+                <?php endif; ?>
             </div>
         </a>
         <?php
