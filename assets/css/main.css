@@ -2495,15 +2495,19 @@ section.home-section .post-content p {
 .article-featured {
   display: block;
   margin-bottom: 2rem;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  text-align: left;
+  text-align: center;
+}
+
+.article-featured .article-title {
+  font-size: 1.25em;
 }
 
 /* Grid wrapper (desktop) */
 .article-grid {
-  margin-top: 1.5em;
+  margin-top: 2.5em;
   position: relative;
   display: block; /* ensure dots sit below, not inline */
 }
@@ -2535,6 +2539,13 @@ section.home-section .post-content p {
 .article-grid .article-author {
   font-size: 0.9em;
   font-style: italic;
+}
+
+.article-grid .article-subtitle {
+  margin-top: 0.4em;
+  font-size: 0.85em;
+  font-style: italic;
+  opacity: 0.8;
 }
 
 .more-articles {
@@ -2596,19 +2607,19 @@ section.home-section .post-content p {
     width: 2rem;
     height: 2rem;
     padding: 0;
-    border: var(--card-border);
+    border: var(--card-border); 
     color: var(--text);
     border-radius: 9999px;
     background: transparent;
-    font: inherit;
-    line-height: 1;
     cursor: pointer;
     user-select: none;
   }
 
   .cz-carousel .cz-carousel-dot.is-active {
     border-color: var(--link);
-    box-shadow: 0 0 0 2px color-mix(in srgb, var(--link) 20%, transparent);
+    background: var(--link);
+    color: var(--bg);
+
   }
 }
 

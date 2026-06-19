@@ -50,8 +50,6 @@
         wp_reset_postdata();
     endif;
 
-    echo do_shortcode('[separator]');
-
     // --- Successivi 3 articoli ---
     $args = [
         'posts_per_page' => 3,
@@ -81,6 +79,9 @@
                     <a class="article-card" href="<?php echo get_permalink($post); ?>">
                         <p class="article-author"><?php the_author(); ?></p>
                         <h3 class="article-title"><?php cz_the_html_title(); ?></h3>
+                        <?php if (has_the_subtitle()) : ?>
+                            <p class="article-subtitle"><?php the_subtitle(); ?></p>
+                        <?php endif; ?>
                     </a>
                 <?php endforeach; wp_reset_postdata(); ?>
             </div>

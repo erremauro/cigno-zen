@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Suble changes has been applied to the featured articles in the homepage
+
 ## [2.7.5] 2026-06-17
 ### Changed
 - The subtitle has been added for the featured article in the home page.
