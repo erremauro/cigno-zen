@@ -5,10 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.8.0] 2026-07-20
 ### Changed
+- Add Sorting controls to Articles and Volumes list.
+- Update Article's result style
 - Hides dictionary's term source information
 - Subtle changes has been applied to the featured articles in the homepage
+### Fixed
+- Fix categories hierarchy in category list view.
+- Fix missing excerpt for masters in search results.
 
 ## [2.7.5] 2026-06-17
 ### Changed
@@ -442,7 +447,8 @@ the slug's name
 - Initial `index.php`, `style.css`, and `functions.php`
 - This Changelog
 
-[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.7.5...HEAD
+[Unreleased]: https://github.com/erremauro/cigno-zen/compare/v2.8.0...HEAD
+[2.8.0]: https://github.com/erremauro/cigno-zen/releases/tag/v2.8.0
 [2.7.5]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.5
 [2.7.4]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.4
 [2.7.3]: https://github.com/erremauro/cigno-zen/releases/tag/v2.7.3

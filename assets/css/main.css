@@ -1510,6 +1510,65 @@ header.archive-header {
   margin-bottom: 4em;
 }
 
+.query-sort form {
+  margin-top: 1.25em;
+  font-size: 0.85rem;
+}
+
+.query-sort-label {
+  display: block;
+  margin-bottom: 0.6em;
+  text-align: center;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.query-sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+}
+
+.order-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  box-sizing: border-box;
+  height: 2.9em;
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--text);
+  background: transparent;
+  border: 1px solid var(--text);
+  border-radius: 0;
+  padding: 0 1em;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.order-toggle:hover {
+  background-color: color-mix(in srgb, var(--text) 12%, transparent);
+}
+
+.order-toggle-icon {
+  flex: 0 0 auto;
+  transition: transform 160ms ease;
+}
+
+.order-toggle.is-asc .order-toggle-icon {
+  transform: rotate(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-toggle-icon {
+    transition: none;
+  }
+}
+
 article.post {
   margin-top: 3em;
 }
@@ -1641,14 +1700,13 @@ article.post:first-child {
 }
 
 .post-content div.more-text {
-  margin-top: 1em;
+  margin-top: 2.5em;
   text-align: center;
 }
 
-.post-content div.more-text a.cta-link {
-  font-size: 1.2em;
-  font-weight: normal;
-  gap: 0;
+.post-content div.more-text a.link-pill {
+  font-size: 0.9rem;
+  padding: 0.6rem 1.4rem;
 }
 
 .wp-block-quote {
@@ -1692,11 +1750,18 @@ p.volumes-link.volumes-link--lined a {
   z-index: 1;
 }
 
+p.volumes-link.volumes-link--empty {
+  height: 1px;
+  background: var(--border);
+}
+
 h1.post-title,
 h2.post-title {
   text-align: center;
   font-style: italic;
   font-weight: 400;
+  font-size: var(--fs-h1);
+  line-height: 1.2;
   padding: 0.5em 0;
 }
 
@@ -1704,6 +1769,8 @@ h2.post-title {
   text-align: center;
   font-style: italic;
   font-weight: 400;
+  font-size: var(--fs-h3);
+  line-height: 1.35;
   padding: 0.5em 0;
 }
 
@@ -2192,6 +2259,12 @@ p.footnote {
   margin-bottom: 1em;
 }
 
+/* Il titolo dentro archive-header gestisce già lo spazio verso il
+   controllo di ordinamento sottostante: niente margine extra qui. */
+.volumes-list h1.archive-title {
+  margin-bottom: 0;
+}
+
 .category-select {
   margin-bottom: 3em;
 }
@@ -2257,7 +2330,8 @@ li.category-author-group .separator {
   margin-bottom: 0.25em;
 }
 
-.category-select select {
+.category-select select,
+.query-sort select {
   box-sizing: border-box;
   padding: 1em;
   border: 1px solid var(--text);
@@ -2275,6 +2349,12 @@ li.category-author-group .separator {
   background-size: 1em;
   padding-right: 3em;
   cursor: pointer;
+}
+
+.query-sort select {
+  height: 2.9em;
+  padding: 0 2.4em 0 1em;
+  font-size: 0.85rem;
 }
 
 /* ./VOLUMI, AUTORI, CATEGORIE */

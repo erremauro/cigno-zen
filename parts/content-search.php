@@ -6,8 +6,20 @@
 	<div class="post-content">
 		<?php
         // Ottieni il contenuto del post
-        $content = get_post_field('post_content', get_the_ID());
-        $raw = strip_shortcodes($content);
+        if ('maestro' === get_post_type() && function_exists('cz_get_maestro_search_content')) {
+            // La biografia dei Maestri vive dentro [collapsable id="bio"]:
+            // strip_shortcodes() sul post_content intero la cancellerebbe.
+            $raw = cz_get_maestro_search_content(get_the_ID());
+        } else {
+            $content = get_post_field('post_content', get_the_ID());
+            $raw = strip_shortcodes($content);
+        }
+
+        // Solo se davvero non c'è alcun testo (Maestro senza biografia) usa un
+        // testo descrittivo di riserva costruito dai campi strutturati.
+        if ('' === trim(wp_strip_all_tags($raw)) && 'maestro' === get_post_type() && function_exists('cz_get_maestro_search_fallback_text')) {
+            $raw = '<p>' . esc_html(cz_get_maestro_search_fallback_text(get_the_ID())) . '</p>';
+        }
 
         // Ottieni il termine di ricerca
         $search_term = get_search_query();
@@ -37,17 +49,9 @@
         echo $snippet;
         ?>
 		<div class="more-text">
-            <?php
-                $url = get_permalink( get_the_ID() );
-                get_template_part(
-                    'parts/cta-title-link',
-                    null,
-                    [
-                        'url'   => $url,
-                        'title' => 'Continua'
-                    ]
-                );
-            ?>
+            <a class="link-pill" href="<?php echo esc_url( get_permalink( get_the_ID() ) ); ?>">
+                <?php esc_html_e( 'Continua', 'textdomain' ); ?>
+            </a>
         </div>
 	</div>
 </article>

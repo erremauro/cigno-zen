@@ -4,27 +4,25 @@
 
 		<form method="get" action="<?php echo esc_url( get_permalink() ); ?>">
 			<label for="cat">Seleziona Categoria:</label>
-			<select name="cat" id="cat" onchange="this.form.submit()">
-				<option value="">-- Tutte le categorie --</option>
-				<?php
-				$categories = get_categories([
-					'hide_empty' => false,
-					'orderby'    => 'name',
-				]);
+			<?php
+			$selected_cat   = isset($_GET['cat']) ? (int) $_GET['cat'] : 0;
+			$selected_order = isset($_GET['order_by']) ? $_GET['order_by'] : 'author';
 
-				$selected_cat   = isset($_GET['cat']) ? (int) $_GET['cat'] : 0;
-				$selected_order = isset($_GET['order_by']) ? $_GET['order_by'] : 'author';
-
-				foreach ( $categories as $category ) {
-					printf(
-						'<option value="%d"%s>%s</option>',
-						$category->term_id,
-						selected( $selected_cat, $category->term_id, false ),
-						esc_html( $category->name )
-					);
-				}
-				?>
-			</select>
+			// hierarchical => true fa sì che le sottocategorie vengano annidate
+			// e indentate sotto la rispettiva categoria padre (Walker_CategoryDropdown),
+			// invece del semplice elenco alfabetico piatto di get_categories().
+			$category_dropdown = wp_dropdown_categories([
+				'name'            => 'cat',
+				'id'              => 'cat',
+				'orderby'         => 'name',
+				'hide_empty'      => false,
+				'hierarchical'    => true,
+				'selected'        => $selected_cat,
+				'show_option_all' => __( '-- Tutte le categorie --', 'textdomain' ),
+				'echo'            => 0,
+			]);
+			echo str_replace( '<select', '<select onchange="this.form.submit()"', $category_dropdown ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			?>
 
 			<label for="order_by">Ordina per:</label>
 			<select name="order_by" id="order_by" onchange="this.form.submit()">

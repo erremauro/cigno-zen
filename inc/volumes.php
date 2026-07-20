@@ -152,7 +152,17 @@ function cignozen_get_post_volume( $post_id = null ) {
 function display_volumes_name( $post_id = null, $echo = true, $class = '' ) {
 	$volume_post = cignozen_get_post_volume( $post_id );
 	if ( ! $volume_post ) {
-		return '';
+		// Nessun volume: mostra comunque una linea di separazione al posto del breadcrumb.
+		$output = ( false !== strpos( $class, 'lined' ) )
+			? '<p class="volumes-link volumes-link--empty" aria-hidden="true"></p>'
+			: '';
+
+		if ( $echo ) {
+			echo $output;
+			return null;
+		}
+
+		return $output;
 	}
 
 	$classes = trim( 'volumes-link ' . $class );

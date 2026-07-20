@@ -55,19 +55,59 @@ function get_highlighted_paragraph($content, $search_term) {
 		}
 
 		if ($paragraph && $paragraph->nodeName === 'p') {
-			$paragraph_content = $dom->saveHTML($paragraph);
-			$highlighted_paragraph = preg_replace(
-				'/(' . preg_quote($search_term, '/') . ')/i',
-				'<mark class="highlight">$1</mark>',
-				$paragraph_content
-			);
+			$paragraph_text = trim(preg_replace('/\s+/u', ' ', $paragraph->textContent));
 
-			return wp_kses_post($highlighted_paragraph);
+			return wp_kses_post('<p>' . get_search_result_excerpt($paragraph_text, $search_term) . '</p>');
 		}
 	}
 
 	libxml_clear_errors();
 	return wp_trim_words($content, 55, '...');
+}
+
+/**
+ * Ritaglia il testo del paragrafo intorno al termine di ricerca (invece di
+ * restituirlo per intero) ed evidenzia il match. Il ritaglio si allinea al
+ * confine di parola più vicino per non tagliare una parola a metà.
+ */
+function get_search_result_excerpt($text, $search_term, $context_chars = 100) {
+	$text_length = mb_strlen($text);
+	$match_pos = mb_stripos($text, $search_term);
+
+	if (false === $match_pos) {
+		$excerpt = mb_substr($text, 0, $context_chars * 2);
+		$suffix = $text_length > $context_chars * 2 ? '&hellip;' : '';
+		return esc_html($excerpt) . $suffix;
+	}
+
+	$term_length = mb_strlen($search_term);
+	$start = max(0, $match_pos - $context_chars);
+	$end   = min($text_length, $match_pos + $term_length + $context_chars);
+
+	if ($start > 0) {
+		$next_space = mb_strpos($text, ' ', $start);
+		if (false !== $next_space && $next_space < $match_pos) {
+			$start = $next_space + 1;
+		}
+	}
+	if ($end < $text_length) {
+		$prev_space = mb_strrpos(mb_substr($text, 0, $end), ' ');
+		if (false !== $prev_space && $prev_space > $match_pos + $term_length) {
+			$end = $prev_space;
+		}
+	}
+
+	$excerpt = esc_html(mb_substr($text, $start, $end - $start));
+	$excerpt = preg_replace(
+		'/(' . preg_quote($search_term, '/') . ')/iu',
+		'<mark class="highlight">$1</mark>',
+		$excerpt
+	);
+
+	$prefix = $start > 0 ? '&hellip; ' : '';
+	$suffix = $end < $text_length ? '&hellip;' : '';
+
+	return $prefix . $excerpt . $suffix;
 }
 
 /**
