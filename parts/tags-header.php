@@ -49,11 +49,13 @@ $panel_id = 'tag-full-description-' . $term->term_id;
 				</div>
 			<?php endif; ?>
 
-			<?php if ( $definition_source ) : ?>
+			<!-- Nasconde la fonte della definizione
+			<?php /* if ( $definition_source ) : */ ?>
 				<div class="definition-source">
-					<p>"<?php echo esc_html( $definition_source ); ?>"</p>
+					<p>"<?php /* echo esc_html( $definition_source ); */ ?>"</p>
 				</div>
-			<?php endif; ?>
+			<?php /* endif; */ ?>
+			-->
 		</div>
 	<?php endif; ?>
 </header>

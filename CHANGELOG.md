@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Changed
-- Suble changes has been applied to the featured articles in the homepage
+- Hides dictionary's term source information
+- Subtle changes has been applied to the featured articles in the homepage
 
 ## [2.7.5] 2026-06-17
 ### Changed
