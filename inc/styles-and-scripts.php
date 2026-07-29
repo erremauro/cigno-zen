@@ -25,16 +25,6 @@ function cignozen_add_favicon_meta() {
 }
 add_action('wp_head', 'cignozen_add_favicon_meta');
 
-function carica_google_fonts() {
-    wp_enqueue_style('noto-serif-jp', 'https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400&display=block', false);
-}
-
-function cignozen_font_preload_hints() {
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
-}
-add_action('wp_head', 'cignozen_font_preload_hints', 1);
-
 function cigno_zen_styles() {
     list( $css_fonts_url, $css_fonts_ver ) = cigno_zen_get_asset('assets/css/fonts.css');
     wp_enqueue_style(
@@ -61,8 +51,6 @@ function cigno_zen_styles() {
             ':root { --fs-root: ' . $user_text_size . '; }'
         );
     }
-
-    carica_google_fonts();
 }
 add_action('wp_enqueue_scripts', 'cigno_zen_styles');
 

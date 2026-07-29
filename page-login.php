@@ -13,18 +13,25 @@ if ( is_user_logged_in() ) {
 
 // Elabora i dati di post dopo il tentativo di login
 if ($_POST && isset($_POST['cigno_zen_login'])) {
-	$creds = array();
-	$creds['user_login']    = sanitize_text_field($_POST['username']);
-	$creds['user_password'] = $_POST['password'];
-	$creds['remember']      = isset($_POST['remember']) ? true : false;
-
-	$user = wp_signon($creds);
-
-	if (is_wp_error($user)) {
-		$ERROR_MESSAGE = $user->get_error_message();
+	if ( ! isset($_POST['_wpnonce']) || ! wp_verify_nonce($_POST['_wpnonce'], 'cigno_zen_login') ) {
+		$ERROR_MESSAGE = 'Richiesta non valida. Ricarica la pagina e riprova.';
 	} else {
-		wp_safe_redirect( $redirect_to ); // redirect dopo login
-		exit;
+		$creds = array();
+		$creds['user_login']    = sanitize_text_field($_POST['username']);
+		$creds['user_password'] = $_POST['password'];
+		$creds['remember']      = isset($_POST['remember']) ? true : false;
+
+		$user = wp_signon($creds);
+
+		if (is_wp_error($user)) {
+			// Messaggio generico: i messaggi nativi di wp_signon() distinguono
+			// "utente inesistente" da "password errata", permettendo di enumerare
+			// gli username registrati.
+			$ERROR_MESSAGE = 'Username/email o password non corretti.';
+		} else {
+			wp_safe_redirect( $redirect_to ); // redirect dopo login
+			exit;
+		}
 	}
 }
 
@@ -37,9 +44,10 @@ get_template_part( 'parts/header', null, array( 'show_menu' => false ) );
 		<h1 style="text-align: center; margin-bottom: 1em;">Accedi</h1>
 		<form method="post" class="login-form">
 			<input type="hidden" name="redirect_to" value="<?php echo esc_attr( $redirect_to ); ?>">
+			<?php wp_nonce_field( 'cigno_zen_login' ); ?>
 			<?php if ( $ERROR_MESSAGE ) : ?>
 				<div class="error-message">
-					<p><?php echo $ERROR_MESSAGE ?></p>
+					<p><?php echo esc_html( $ERROR_MESSAGE ); ?></p>
 				</div>
 			<?php endif ?>
 			<div class="username-control">

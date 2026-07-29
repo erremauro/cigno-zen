@@ -2597,6 +2597,7 @@ section.home-section .post-content p {
   text-align: center;
 }
 .article-meta .article-subtitle {
+  margin-top: 0.8em;
   font-size: 0.9em;
   font-style: italic;
 }
