@@ -3475,6 +3475,13 @@ ul.cz-references-list {
   line-height: 1;
 }
 
+@media (max-width: 768px) {
+  .reading-time.reading-time-total em {
+    flex-direction: column;
+    gap: 0.15em;
+  }
+}
+
 /** ========== SUTRA COMMENTS ========== */
 
 blockquote.sutra-quote {

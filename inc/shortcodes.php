@@ -75,7 +75,7 @@ add_shortcode('autore', function ($atts, $content = null) {
         return '';
     }
 
-    $url = get_author_posts_url((int) $atts['id']);
+    $url = trailingslashit(get_author_posts_url((int) $atts['id']));
     $target = trim((string) $atts['target']);
     $target_attr = $target !== '' ? sprintf(' target="%s"', esc_attr($target)) : '';
 
@@ -116,7 +116,7 @@ add_shortcode('maestro', function ($atts, $content = null) {
         return '';
     }
 
-    $href = '/maestro/' . $slug;
+    $href = trailingslashit('/maestro/' . $slug);
     $target = trim((string) $atts['target']);
     $target_attr = $target !== '' ? sprintf(' target="%s"', esc_attr($target)) : '';
 
