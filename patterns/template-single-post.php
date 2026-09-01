@@ -85,11 +85,24 @@ while ( have_posts() ) : the_post();
 
             custom_post_pagination();
 
+            // Chapter nav is normally auto-appended to wp_link_pages() by
+            // cz-volume; disable that here so we can place the article note
+            // between the pagination section and the chapter nav ourselves.
+            add_filter( 'cz_volume_auto_append_nav', '__return_false' );
+
             wp_link_pages( array(
                 'before'         => '<div class="post-pagination">' . __('<h5>Pagine</h5><p class="page-links">', 'textdomain'),
                 'next_or_number' => 'number',
                 'after'          => '</p></div>',
             ) );
+
+            remove_filter( 'cz_volume_auto_append_nav', '__return_false' );
+
+            if ( class_exists( 'CZ_Highlights' ) ) {
+                CZ_Highlights::instance()->render_post_note_bar();
+            }
+
+            echo do_shortcode( '[cz_volume_chapters_nav]' );
             ?>
         </div>
 
