@@ -98,10 +98,6 @@ while ( have_posts() ) : the_post();
 
             remove_filter( 'cz_volume_auto_append_nav', '__return_false' );
 
-            if ( class_exists( 'CZ_Highlights' ) ) {
-                CZ_Highlights::instance()->render_post_note_bar();
-            }
-
             echo do_shortcode( '[cz_volume_chapters_nav]' );
             ?>
         </div>
