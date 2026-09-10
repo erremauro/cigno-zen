@@ -1,6 +1,19 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-	<header class="post-header">
-		<h2 class="post-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+	<header class="post-header has-border-bottom">
+		<?php
+			if ( ! is_author() ) :
+				display_author_info_conditionally();
+			endif;
+		?>
+		<?php display_volumes_name( null, true, 'volumes-link--lined' ); ?>
+		<h2 class="post-title"><a href="<?php the_permalink(); ?>"><?php cz_the_html_title(); ?></a></h2>
+		<?php if ( has_the_subtitle() ) : ?>
+			<h4 class="post-subtitle">
+				<a href="<?php the_permalink(); ?>">
+					<?php the_subtitle(); ?>
+				</a>
+			</h4>
+		<?php endif; ?>
 	</header><!-- .entry-header -->
 
 	<div class="post-content">

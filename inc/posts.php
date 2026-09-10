@@ -90,6 +90,65 @@ function the_subtitle() {
 	}
 }
 
+/**
+ * Mostra la data di pubblicazione e, se diversa, quella di modifica.
+ * $style: 'icon' (icone, per Anteprima e single-post) o 'meta' (righe
+ * etichettate "Data di pubblicazione:" / "Ultima Modifica:", per la vista Elenco).
+ */
+function cz_render_post_dates( int $post_id = 0, string $style = 'icon' ): void {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID() ?: 0;
+	}
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$published_ts = get_post_time( 'U', false, $post_id );
+	$modified_ts  = get_post_modified_time( 'U', false, $post_id );
+
+	if ( ! $published_ts ) {
+		return;
+	}
+
+	$show_modified = $modified_ts
+		&& date_i18n( 'Y-m-d', $modified_ts ) !== date_i18n( 'Y-m-d', $published_ts );
+
+	if ( 'meta' === $style ) {
+		echo '<div class="post-meta-row post-meta-date-published" aria-label="' . esc_attr__( 'Data di pubblicazione', 'textdomain' ) . '">';
+		get_template_part( 'parts/svg/clock' );
+		echo '<time class="post-date-value" datetime="' . esc_attr( date_i18n( 'c', $published_ts ) ) . '">'
+			. esc_html( date_i18n( 'j M Y', $published_ts ) ) . '</time>';
+		echo '</div>';
+
+		if ( $show_modified ) {
+			echo '<div class="post-meta-row post-meta-date-modified" aria-label="' . esc_attr__( 'Ultima Modifica', 'textdomain' ) . '">';
+			get_template_part( 'parts/svg/pencil' );
+			echo '<time class="post-date-value" datetime="' . esc_attr( date_i18n( 'c', $modified_ts ) ) . '">'
+				. esc_html( date_i18n( 'j M Y', $modified_ts ) ) . '</time>';
+			echo '</div>';
+		}
+		return;
+	}
+
+	echo '<div class="post-dates">';
+
+	echo '<span class="post-date post-date-published" title="' . esc_attr__( 'Data di pubblicazione', 'textdomain' ) . '">';
+	get_template_part( 'parts/svg/clock' );
+	echo '<time class="post-date-value" datetime="' . esc_attr( date_i18n( 'c', $published_ts ) ) . '">'
+		. esc_html( date_i18n( 'j M Y', $published_ts ) ) . '</time>';
+	echo '</span>';
+
+	if ( $show_modified ) {
+		echo '<span class="post-date post-date-modified" title="' . esc_attr__( 'Ultima Modifica', 'textdomain' ) . '">';
+		get_template_part( 'parts/svg/pencil' );
+		echo '<time class="post-date-value" datetime="' . esc_attr( date_i18n( 'c', $modified_ts ) ) . '">'
+			. esc_html( date_i18n( 'j M Y', $modified_ts ) ) . '</time>';
+		echo '</span>';
+	}
+
+	echo '</div>';
+}
+
 function custom_post_pagination() {
 	global $multipage, $page, $numpages;
 

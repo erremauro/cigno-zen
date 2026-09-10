@@ -2278,3 +2278,49 @@
     });
   });
 })();
+
+/* Article list view toggle (Anteprima / Elenco) on archive listings.
+ * Persists the choice in localStorage so it survives page loads.
+ */
+(function () {
+  var STORAGE_KEY = 'cz-article-view';
+
+  function ready(fn) {
+    if (document.readyState !== 'loading') fn();
+    else document.addEventListener('DOMContentLoaded', fn);
+  }
+
+  ready(function () {
+    var containers = document.querySelectorAll('[data-article-view]');
+    var buttons = document.querySelectorAll('.view-toggle-btn');
+    if (!containers.length || !buttons.length) return;
+
+    function applyView(view) {
+      containers.forEach(function (el) {
+        el.setAttribute('data-view', view);
+      });
+      buttons.forEach(function (btn) {
+        var isActive = btn.dataset.viewTarget === view;
+        btn.classList.toggle('is-active', isActive);
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+    }
+
+    var saved = null;
+    try {
+      saved = localStorage.getItem(STORAGE_KEY);
+    } catch (e) {}
+
+    applyView(saved === 'list' ? 'list' : 'preview');
+
+    buttons.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var view = btn.dataset.viewTarget;
+        applyView(view);
+        try {
+          localStorage.setItem(STORAGE_KEY, view);
+        } catch (e) {}
+      });
+    });
+  });
+})();

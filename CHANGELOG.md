@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] 2026-09-10
+### Changed
+- Add publishing date informations
+- Add e compact view for article list
+- Updates the result layout for search results
+### Fixed
+- Fix translation for search result title
+
 ## [2.8.4] 2026-09-10
 ### Fixed
 - Fix an issue with the rendering of newer version of cz-highilights plugin

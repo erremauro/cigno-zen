@@ -9,7 +9,7 @@
             <h1 class="search-page-title">
                 <?php
                 /* translators: %s: search query. */
-                printf(esc_html__('Results for: %s', 'cigno-zen'), '<span>' . get_search_query() . '</span>');
+                printf(esc_html__('Risultati per: %s', 'cigno-zen'), '<span>' . get_search_query() . '</span>');
                 ?>
             </h1>
             <p><?php do_action( 'ep_suggestions' ); ?></p>

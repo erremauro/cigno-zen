@@ -190,21 +190,43 @@ if ( $cz_custom_sort ) {
     ?>
   </h1>
 
-  <?php if ( ! $featured_only ) : ?>
-    <?php
-    $sort_hidden_params = [];
-    if ( isset( $_GET['featured'] ) ) {
-        $sort_hidden_params['featured'] = wp_unslash( $_GET['featured'] );
-    }
-    cz_render_sort_control( $sort_fields, $orderby_param, $order_param, $sort_hidden_params );
-    ?>
-  <?php endif; ?>
+  <div class="archive-controls">
+    <?php if ( ! $featured_only ) : ?>
+      <?php
+      $sort_hidden_params = [];
+      if ( isset( $_GET['featured'] ) ) {
+          $sort_hidden_params['featured'] = wp_unslash( $_GET['featured'] );
+      }
+      cz_render_sort_control( $sort_fields, $orderby_param, $order_param, $sort_hidden_params );
+      ?>
+    <?php endif; ?>
+
+    <div class="view-toggle-group">
+      <span class="query-sort-label"><?php esc_html_e( 'Vista', 'textdomain' ); ?></span>
+      <div class="view-toggle" role="group" aria-label="<?php esc_attr_e( 'Modalità di visualizzazione', 'textdomain' ); ?>">
+        <button type="button" class="order-toggle view-toggle-btn is-active" data-view-target="preview" aria-pressed="true">
+          <?php get_template_part( 'parts/svg/view-preview' ); ?>
+          <span class="view-toggle-label"><?php esc_html_e( 'Anteprima', 'textdomain' ); ?></span>
+        </button>
+        <button type="button" class="order-toggle view-toggle-btn" data-view-target="list" aria-pressed="false">
+          <?php get_template_part( 'parts/svg/view-list' ); ?>
+          <span class="view-toggle-label"><?php esc_html_e( 'Elenco', 'textdomain' ); ?></span>
+        </button>
+      </div>
+    </div>
+  </div>
 </header>
 
 <?php if ($the_query->have_posts()) : ?>
+    <div class="article-list" data-view="preview" data-article-view>
     <?php while ($the_query->have_posts()) : $the_query->the_post(); ?>
+        <?php
+            $cz_volume_post = function_exists( 'cignozen_get_post_volume' ) ? cignozen_get_post_volume( get_the_ID() ) : null;
+            $cz_author_name = get_the_author();
+            $cz_show_author = ! is_author() && $cz_author_name !== 'cigno';
+        ?>
         <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
-            <header class="post-header has-border-bottom">
+            <header class="post-header post-header-preview has-border-bottom">
                 <?php
                     if (! is_author() ):
                         display_author_info_conditionally();
@@ -216,12 +238,48 @@ if ( $cz_custom_sort ) {
                         <?php cz_the_html_title(); ?>
                     </a>
                 </h2>
-                <h4 class="post-subtitle">
-                    <a href="<?php the_permalink(); ?>">
-                        <?php the_subtitle(); ?>
-                    </a>
-                <h4>
+                <?php if ( has_the_subtitle() ) : ?>
+                    <h4 class="post-subtitle">
+                        <a href="<?php the_permalink(); ?>">
+                            <?php the_subtitle(); ?>
+                        </a>
+                    </h4>
+                <?php endif; ?>
+                <?php cz_render_post_dates( get_the_ID(), 'icon' ); ?>
             </header>
+
+            <header class="post-header-list">
+                <?php if ( $cz_show_author || $cz_volume_post instanceof WP_Post ) : ?>
+                    <div class="post-meta-list post-meta-list-top">
+                        <?php if ( $cz_show_author ) : ?>
+                            <div class="post-meta-row post-meta-author">
+                                <?php the_author_posts_link(); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ( $cz_volume_post instanceof WP_Post ) : ?>
+                            <div class="post-meta-row post-meta-volume">
+                                <a href="<?php echo esc_url( get_permalink( $cz_volume_post ) ); ?>"><?php echo esc_html( get_the_title( $cz_volume_post ) ); ?></a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+                <h1 class="post-title-list">
+                    <a href="<?php the_permalink(); ?>">
+                        <?php cz_the_html_title(); ?>
+                    </a>
+                </h1>
+                <?php if ( has_the_subtitle() ) : ?>
+                    <h2 class="post-subtitle-list">
+                        <a href="<?php the_permalink(); ?>">
+                            <?php the_subtitle(); ?>
+                        </a>
+                    </h2>
+                <?php endif; ?>
+                <div class="post-meta-list">
+                    <?php cz_render_post_dates( get_the_ID(), 'meta' ); ?>
+                </div>
+            </header>
+
             <div class="post-content">
                 <?php the_excerpt(); ?>
                 <div class="more-text">
@@ -232,6 +290,7 @@ if ( $cz_custom_sort ) {
             </div>
         </article>
     <?php endwhile; ?>
+    </div>
 
     <!-- Paginazione -->
     <?php if ( $the_query->max_num_pages > 1 ) : ?>

@@ -49,6 +49,7 @@ while ( have_posts() ) : the_post();
             <?php if (has_the_subtitle()) : ?>
                 <h3 class="post-subtitle"><?php the_subtitle(); ?></h3>
             <?php endif; ?>
+            <?php cz_render_post_dates( get_the_ID(), 'icon' ); ?>
             <?php echo function_exists('czrt_get_total_reading_time_html') ? czrt_get_total_reading_time_html(get_post()) : ''; ?>
             <?php if ($has_article_actions) : ?>
                 <section class="article-actions" aria-label="<?php esc_attr_e('Azioni articolo', 'textdomain'); ?>">
