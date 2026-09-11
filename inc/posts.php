@@ -228,6 +228,9 @@ function cz_get_paginated_excerpt( int $length = 155 ): string {
 	$chunk = wp_strip_all_tags( $chunk );
 	$chunk = trim( preg_replace( '/\s+/', ' ', $chunk ) );
 
+	// Rimuove il numero di paragrafo isolato a inizio testo (es. "22 Qual è...").
+	$chunk = preg_replace( '/^\d{1,4}\s+/', '', $chunk );
+
 	if ( $chunk === '' ) {
 		return '';
 	}
