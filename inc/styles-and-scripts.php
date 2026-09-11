@@ -171,6 +171,13 @@ function cignozen_get_title() {
             $title .= ': ' . esc_html( $article_title );
         }
 
+        // Sotto-pagine paginate (<!--nextpage-->): titolo identico su tutte le
+        // sotto-pagine altrimenti, segnale di contenuto duplicato per i motori
+        // di ricerca. Vedi anche cz_is_paginated_subpage() in inc/posts.php.
+        if ( function_exists( 'cz_is_paginated_subpage' ) && cz_is_paginated_subpage() ) {
+            $title = cz_append_page_suffix( $title );
+        }
+
         return $title;
     }
 

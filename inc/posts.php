@@ -183,6 +183,94 @@ function custom_post_pagination() {
 	echo '</p></div>';
 }
 
+// ── Titolo e description unici per le sotto-pagine paginate (<!--nextpage-->) ──
+// Senza questo, tutte le sotto-pagine di un post lungo condividono lo stesso
+// <title> e la stessa meta description (generati da Rank Math sul post base),
+// segnale di contenuto duplicato che porta Google a scansionarle senza indicizzarle.
+//
+// Non possiamo usare le global $page/$numpages/$pages di WordPress: sono
+// popolate da setup_postdata() dentro The Loop, che nei template di questo
+// tema parte DOPO l'header (quindi dopo cignozen_get_title()). Ricalcoliamo
+// quindi lo split per <!--nextpage--> direttamente dal post corrente, che è
+// già risolvibile in head tramite get_post()/get_query_var('page').
+
+function cz_get_pagination_state(): array {
+	static $state = null;
+	if ( $state !== null ) {
+		return $state;
+	}
+
+	$post = is_singular() ? get_post() : null;
+
+	if ( ! $post || strpos( $post->post_content, '<!--nextpage-->' ) === false ) {
+		return $state = [ 'page' => 1, 'numpages' => 1, 'chunks' => [] ];
+	}
+
+	$chunks   = explode( '<!--nextpage-->', $post->post_content );
+	$numpages = count( $chunks );
+	$page     = max( 1, min( $numpages, (int) get_query_var( 'page' ) ?: 1 ) );
+
+	return $state = [ 'page' => $page, 'numpages' => $numpages, 'chunks' => $chunks ];
+}
+
+/**
+ * Estrae un estratto testuale dalla sotto-pagina correntemente mostrata.
+ */
+function cz_get_paginated_excerpt( int $length = 155 ): string {
+	$state = cz_get_pagination_state();
+	$chunk = $state['chunks'][ $state['page'] - 1 ] ?? '';
+
+	if ( $chunk === '' ) {
+		return '';
+	}
+
+	$chunk = strip_shortcodes( $chunk );
+	$chunk = wp_strip_all_tags( $chunk );
+	$chunk = trim( preg_replace( '/\s+/', ' ', $chunk ) );
+
+	if ( $chunk === '' ) {
+		return '';
+	}
+
+	if ( mb_strlen( $chunk ) > $length ) {
+		$chunk = mb_substr( $chunk, 0, $length );
+		$chunk = preg_replace( '/\s+\S*$/u', '', $chunk ) . '…';
+	}
+
+	return $chunk;
+}
+
+function cz_is_paginated_subpage(): bool {
+	$state = cz_get_pagination_state();
+	return $state['numpages'] > 1 && $state['page'] > 1;
+}
+
+function cz_append_page_suffix( string $title ): string {
+	$state = cz_get_pagination_state();
+	return trim( $title ) . sprintf( ' – Parte %d di %d', $state['page'], $state['numpages'] );
+}
+
+// Rank Math: il tag <title> visibile è generato da cignozen_get_title() (vedi
+// inc/styles-and-scripts.php, che chiama cz_append_page_suffix() direttamente),
+// ma Rank Math usa comunque il proprio titolo calcolato per og:title/twitter:title
+// e per lo schema JSON-LD — lo teniamo allineato con lo stesso suffisso.
+add_filter( 'rank_math/frontend/title', function ( $title ) {
+	if ( cz_is_paginated_subpage() ) {
+		$title = cz_append_page_suffix( (string) $title );
+	}
+	return $title;
+} );
+
+add_filter( 'rank_math/frontend/description', function ( $description ) {
+	if ( cz_is_paginated_subpage() ) {
+		$excerpt = cz_get_paginated_excerpt();
+		if ( $excerpt !== '' ) {
+			return $excerpt;
+		}
+	}
+	return $description;
+} );
+
 // Reindirizza a un post casuale se presente ?random=1
 add_action('template_redirect', function () {
     if ( isset($_GET['random']) ) {
