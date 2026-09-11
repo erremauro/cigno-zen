@@ -5,6 +5,30 @@ add_action('init', function () {
     $wp_rewrite->author_base = 'autore';
 });
 
+// Redirect 301 dai vecchi URL /author/{login}/... (base pre-esistente) alla nuova base /autore/{login}/...
+add_action('template_redirect', function () {
+    if (!is_404()) {
+        return;
+    }
+
+    $path = trim((string) parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if (strpos($path, 'author/') !== 0) {
+        return;
+    }
+
+    $rest = substr($path, strlen('author/'));
+    $segments = explode('/', $rest);
+    $login = array_shift($segments);
+
+    if ($login === '' || !get_user_by('login', $login)) {
+        return;
+    }
+
+    $new_path = 'autore/' . $login . (empty($segments) ? '' : '/' . implode('/', $segments));
+    wp_safe_redirect(home_url('/' . $new_path . '/'), 301);
+    exit;
+});
+
 // Nasconde la admin bar nel frontend per tutti gli utenti
 add_filter('show_admin_bar', '__return_false');
 
