@@ -1,5 +1,31 @@
 <?php
 /**
+ * Noindex,follow per i lemma (post_tag) senza articoli collegati: sono voci di
+ * dizionario a se stanti che potrebbero non avere mai un articolo associato,
+ * quindi non ha senso farle competere per l'indicizzazione. Restano crawlabili
+ * (follow) cosi i link interni continuano a passare "succo" verso il resto del
+ * sito. La condizione e' dinamica sul conteggio articoli del termine: appena un
+ * lemma riceve il primo articolo, il noindex si toglie da solo.
+ */
+add_filter( 'wp_robots', function ( array $robots ): array {
+	if ( ! is_tag() ) {
+		return $robots;
+	}
+
+	$term = get_queried_object();
+	if ( ! ( $term instanceof WP_Term ) ) {
+		return $robots;
+	}
+
+	if ( (int) $term->count === 0 ) {
+		$robots['noindex'] = true;
+		$robots['follow']  = true;
+	}
+
+	return $robots;
+} );
+
+/**
  * Parse a CSV-like string of synonyms into a clean array
  */
 function cz_parse_synonyms_csv( $raw ): array {
