@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.10.0] 2026-09-25
+### Added
+- New `.mobile` modifier for `blockquote.poem`: even indent lines (`p.v2`, `p.v4`, `p.v6`, `p.v8`) are shown as separate indented lines only on mobile (≤587px); on wider screens they flow inline as a continuation of the previous line (stanza spacing of `p.verse` preserved)
+### Fixed
+- Poem verses (`blockquote.poem p.verse`) rendered with a larger font than regular paragraphs on mobile: the fixed `1.2em` size now uses the same `--fs-reading` scale as `.post-content p` (large/small variants scale proportionally; redundant mobile override removed)
+
 ## [2.9.4] 2026-09-11
 ### Fixed
 - Strip leading paragraph number from paginated sub-page meta description (e.g. "22 Qual è..." → "Qual è...")

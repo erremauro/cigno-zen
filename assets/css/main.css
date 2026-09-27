@@ -3235,7 +3235,7 @@ blockquote.poem {
 }
 
 blockquote.poem p.verse {
-  font-size: 1.2em;
+  font-size: var(--fs-reading);
   text-indent: 0;
   padding: 0 1em;
 }
@@ -3249,11 +3249,11 @@ blockquote.poem p.verse:last-child {
 }
 
 blockquote.poem.font-size-large p.verse {
-  font-size: 1.4em;
+  font-size: calc(var(--fs-reading) * 1.1667);
 }
 
 blockquote.poem.font-size-small p.verse {
-  font-size: 1em;
+  font-size: calc(var(--fs-reading) * 0.8333);
 }
 
 blockquote.poem p { 
@@ -3301,9 +3301,31 @@ blockquote.poem p.verse {
   padding: 0; 
 }
 
-@media (max-width: 587px) {
-  blockquote.poem.font-size-large p.verse {
-    font-size: 1.2em;
+/* .mobile: even indents (v2, v4, v6, v8) are line breaks only on mobile;
+   on wider screens they flow as a continuation of the previous line */
+@media (min-width: 588px) {
+  blockquote.poem.mobile :is(p.v2, p.v4, p.v6, p.v8),
+  blockquote.poem.mobile p:has(+ :is(p.v2, p.v4, p.v6, p.v8)) {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    text-indent: 0;
+  }
+
+  blockquote.poem.mobile :is(p.v2, p.v4, p.v6, p.v8)::before {
+    content: " ";
+  }
+
+  /* force a line break at the start of each chain, so that consecutive
+     chains don't merge into the same line */
+  blockquote.poem.mobile p:not(.v2, .v4, .v6, .v8):has(+ :is(p.v2, p.v4, p.v6, p.v8))::before {
+    content: "";
+    display: block;
+  }
+
+  /* keep the stanza spacing of p.verse once it becomes inline */
+  blockquote.poem.mobile p.verse:not(.v2, .v4, .v6, .v8):has(+ :is(p.v2, p.v4, p.v6, p.v8))::before {
+    height: 1em;
   }
 }
 
