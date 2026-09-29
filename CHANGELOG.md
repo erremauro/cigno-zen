@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] 2026-09-29
+### Added
+- New 'school' taxonomy template added.
+
 ## [2.10.0] 2026-09-25
 ### Added
 - New `.mobile` modifier for `blockquote.poem`: even indent lines (`p.v2`, `p.v4`, `p.v6`, `p.v8`) are shown as separate indented lines only on mobile (≤587px); on wider screens they flow inline as a continuation of the previous line (stanza spacing of `p.verse` preserved)

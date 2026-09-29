@@ -3821,3 +3821,51 @@ body.czap-open {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+/* ========== SCHOOL TEMPLATE =============== */
+.school-masters {
+  text-align: center;
+  padding: 0 1em 3em 1em;
+}
+
+.school-masters h2 {
+  margin-bottom: 1em;
+}
+
+.school-masters-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.school-master-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  padding: 1em 0;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.school-master-item:last-child {
+  border-bottom: none;
+}
+
+.school-master-romaji {
+  font-size: 0.85em;
+  color: #686868;
+}
+
+.school-master-name {
+  font-size: 1.1em;
+}
+
+.school-master-traditional {
+  font-family: var(--font-mincho);
+}
+
+.school-master-years {
+  font-size: 0.8em;
+  font-style: italic;
+  color: #686868;
+}
