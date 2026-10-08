@@ -2324,3 +2324,32 @@
     });
   });
 })();
+
+// ── Header: indicatori note/evidenziazioni/salvato ──────────────────────────
+// czh.js emette `czh:annotations-change` e czsa.js `czsa:saved-change` a ogni
+// modifica: aggiorna le icone senza dover ricaricare la pagina.
+(function () {
+  function update(postId, states) {
+    document.querySelectorAll('.post-annotations').forEach(function (box) {
+      if (postId && Number(box.dataset.postId) !== Number(postId)) return;
+      Object.keys(states).forEach(function (cls) {
+        var icon = box.querySelector('.' + cls);
+        if (icon) icon.hidden = !states[cls];
+      });
+      box.hidden = !box.querySelector('.post-annotation:not([hidden])');
+    });
+  }
+
+  document.addEventListener('czh:annotations-change', function (e) {
+    var d = e.detail || {};
+    update(d.postId, {
+      'post-annotation-notes': d.hasNotes,
+      'post-annotation-highlights': d.hasHighlights,
+    });
+  });
+
+  document.addEventListener('czsa:saved-change', function (e) {
+    var d = e.detail || {};
+    update(d.postId, { 'post-annotation-saved': d.saved });
+  });
+})();

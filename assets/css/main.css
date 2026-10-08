@@ -1665,6 +1665,53 @@ article.post:first-child {
   font-weight: 600;
 }
 
+/* ANNOTAZIONI UTENTE (cz-highlights): note / evidenziazioni presenti */
+.post-annotations {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9em;
+  padding: 0.35em 0;
+  opacity: 0.75;
+  user-select: none;
+}
+
+.post-annotation {
+  display: inline-flex;
+  align-items: center;
+}
+
+.post-annotations[hidden],
+.post-annotation[hidden] {
+  display: none;
+}
+
+button.post-annotation {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button.post-annotation:hover,
+button.post-annotation:focus-visible {
+  color: var(--link);
+}
+
+.post-annotation svg {
+  flex: 0 0 auto;
+}
+
+.icon-highlighter-stroke {
+  opacity: 0.6;
+}
+
+.post-annotation-saved {
+  cursor: default;
+}
+
 /* ELENCO ARTICOLI: vista Elenco (compatta, allineata a sinistra, come un
    indice — header dedicato con Titolo/Sottotitolo + metadati in etichette) */
 .post-header-list {

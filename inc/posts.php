@@ -149,6 +149,87 @@ function cz_render_post_dates( int $post_id = 0, string $style = 'icon' ): void 
 	echo '</div>';
 }
 
+/**
+ * Indicatori (solo icone) delle annotazioni personali dell'utente corrente:
+ * - nota: nota sull'articolo o nota su un'evidenziazione (cz-highlights);
+ * - evidenziatore: evidenziazioni presenti (cz-highlights);
+ * - segnalibro: articolo tra i salvati (cz-saved-articles).
+ */
+function cz_render_user_annotations( int $post_id = 0 ): void {
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
+	if ( ! $post_id ) {
+		$post_id = get_the_ID() ?: 0;
+	}
+	if ( ! $post_id ) {
+		return;
+	}
+
+	$user_id = get_current_user_id();
+
+	// cz-highlights attivo e non disabilitato dalla preferenza utente
+	// di cz-user-preferences (vuoto = abilitato).
+	$czh_enabled  = class_exists( 'CZH_DB' ) && class_exists( 'CZH_PostNotes_DB' )
+		&& '0' !== get_user_meta( $user_id, 'czup_highlights_enabled', true );
+	$czsa_enabled = class_exists( 'CZSA_DB' );
+
+	if ( ! $czh_enabled && ! $czsa_enabled ) {
+		return;
+	}
+
+	$has_notes      = false;
+	$has_highlights = false;
+	if ( $czh_enabled ) {
+		global $wpdb;
+		$table = CZH_DB::table_name();
+		$row   = $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT COUNT(*) AS highlights, SUM(note IS NOT NULL AND note <> '') AS notes
+				 FROM {$table} WHERE user_id = %d AND post_id = %d AND status != 'orphaned'",
+				$user_id,
+				$post_id
+			)
+		);
+
+		$has_highlights = $row && (int) $row->highlights > 0;
+		$has_notes      = ( $row && (int) $row->notes > 0 ) || CZH_PostNotes_DB::get( $user_id, $post_id );
+	}
+
+	$is_saved = $czsa_enabled && CZSA_DB::is_saved( $user_id, (int) $post_id );
+
+	// Il contenitore e le icone sono sempre stampati (eventualmente nascosti):
+	// lo script del tema li mostra/nasconde in tempo reale sugli eventi
+	// `czh:annotations-change` (cz-highlights) e `czsa:saved-change` (cz-saved-articles).
+	$hidden = static fn( bool $visible ): string => $visible ? '' : ' hidden';
+
+	echo '<div class="post-annotations" data-post-id="' . esc_attr( $post_id ) . '"' . $hidden( $has_notes || $has_highlights || $is_saved ) . '>';
+
+	if ( $czh_enabled ) {
+		// Click su entrambe le icone → apre il drawer di cz-highlights
+		// (gestito da czh.js tramite data-czh-open-drawer).
+		$label = __( 'Sono presenti note', 'textdomain' );
+		echo '<button type="button" class="post-annotation post-annotation-notes" data-czh-open-drawer title="' . esc_attr( $label ) . '" aria-label="' . esc_attr( $label ) . '"' . $hidden( (bool) $has_notes ) . '>';
+		get_template_part( 'parts/svg/note' );
+		echo '</button>';
+
+		$label = __( 'Sono presenti evidenziazioni', 'textdomain' );
+		echo '<button type="button" class="post-annotation post-annotation-highlights" data-czh-open-drawer title="' . esc_attr( $label ) . '" aria-label="' . esc_attr( $label ) . '"' . $hidden( $has_highlights ) . '>';
+		get_template_part( 'parts/svg/highlighter' );
+		echo '</button>';
+	}
+
+	if ( $czsa_enabled ) {
+		// Solo indicatore: nessuna azione al click.
+		$label = __( 'Articolo salvato', 'textdomain' );
+		echo '<span class="post-annotation post-annotation-saved" role="img" title="' . esc_attr( $label ) . '" aria-label="' . esc_attr( $label ) . '"' . $hidden( $is_saved ) . '>';
+		get_template_part( 'parts/svg/bookmark' );
+		echo '</span>';
+	}
+
+	echo '</div>';
+}
+
 function custom_post_pagination() {
 	global $multipage, $page, $numpages;
 

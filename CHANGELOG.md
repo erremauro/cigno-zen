@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.0] 2026-10-08
+### Added
+- Article header (`header.post-header`): new icon-only section below the reading time (`.post-annotations`) showing the current user's personal annotations: a note icon when an article note or a highlight note exists, a highlighter icon when highlights exist (cz-highlights), and a bookmark icon when the article is among the saved articles (cz-saved-articles). Each icon shows a descriptive tooltip on hover.
+- Clicking the note or highlighter icon opens the cz-highlights drawer (`aside#czh-drawer`); the bookmark icon is an indicator only.
+- Icons update in real time, without a page reload, listening to the `czh:annotations-change` (cz-highlights) and `czsa:saved-change` (cz-saved-articles) events.
+- New SVG parts: `parts/svg/note.php`, `parts/svg/highlighter.php`, `parts/svg/bookmark.php`.
+
 ## [2.11.0] 2026-09-29
 ### Added
 - New 'school' taxonomy template added.

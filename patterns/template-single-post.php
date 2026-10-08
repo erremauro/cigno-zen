@@ -51,6 +51,7 @@ while ( have_posts() ) : the_post();
             <?php endif; ?>
             <?php cz_render_post_dates( get_the_ID(), 'icon' ); ?>
             <?php echo function_exists('czrt_get_total_reading_time_html') ? czrt_get_total_reading_time_html(get_post()) : ''; ?>
+            <?php cz_render_user_annotations( get_the_ID() ); ?>
             <?php if ($has_article_actions) : ?>
                 <section class="article-actions" aria-label="<?php esc_attr_e('Azioni articolo', 'textdomain'); ?>">
                     <?php if ($pdf['url'] !== '') : ?>
