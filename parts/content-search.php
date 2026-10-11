@@ -37,7 +37,13 @@
         // Ottieni il termine di ricerca
         $search_term = get_search_query();
 
-        $snippet = get_highlighted_paragraph( $raw, $search_term );
+        // Le Liste hanno il contenuto nei dati strutturati (plugin cz-lists): l'estratto
+        // mostra nomi originali ed elementi che contengono il termine.
+        if ('cz_list' === get_post_type() && function_exists('cz_lists_get_search_snippet')) {
+            $snippet = cz_lists_get_search_snippet(get_the_ID(), $search_term);
+        } else {
+            $snippet = get_highlighted_paragraph( $raw, $search_term );
+        }
 
         // Se manca <p>, aggiungilo ora
         if (strpos($snippet, '<p') === false) {

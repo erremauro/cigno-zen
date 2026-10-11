@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.13.0] 2026-10-11
+### Added
+- Templates for the "Liste" section of the cz-lists plugin: `single-cz_list.php` with `patterns/template-single-list.php` (title, original names and an "All lists" link above the title; no author, dates or reading time) and `archive-cz_list.php` / `taxonomy-cz_list_count.php` with `patterns/template-list-index.php` (list index, and per-number pages titled "Liste di N elementi").
+- "Liste" link in the side drawer (Utilità section, after "Studio dei Sutra") and on the Utilità page.
+### Changed
+- Search results (`parts/content-search.php`): lists use the dedicated excerpt from cz-lists (original names and matching items) instead of the post content.
+
 ## [2.12.0] 2026-10-08
 ### Added
 - Article header (`header.post-header`): new icon-only section below the reading time (`.post-annotations`) showing the current user's personal annotations: a note icon when an article note or a highlight note exists, a highlighter icon when highlights exist (cz-highlights), and a bookmark icon when the article is among the saved articles (cz-saved-articles). Each icon shows a descriptive tooltip on hover.

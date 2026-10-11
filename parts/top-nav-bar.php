@@ -158,6 +158,7 @@ if ( current_user_can( 'manage_options' ) ) :
                 <li><a href="<?php echo esc_url( home_url( '/dizionario' ) ); ?>">Dizionario</a></li>
                 <li><a href="<?php echo esc_url( home_url( '/genealogia-dei-maestri' ) ); ?>">Genealogia dei Maestri</a></li>
                 <li><a href="<?php echo esc_url( home_url( '/studio-dei-sutra' ) ); ?>">Studio dei Sutra</a></li>
+                <li><a href="<?php echo esc_url( get_post_type_archive_link( 'cz_list' ) ?: home_url( '/liste/' ) ); ?>">Liste</a></li>
             </ul>
         </div>
     </div>

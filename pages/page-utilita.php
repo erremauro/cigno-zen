@@ -54,6 +54,14 @@
                     Questo tool scompone i sutra in parti e ti aiuta a memorizzarli con il supporto dell'audio.
                 </div>
             </div>
+            <div class="utility-item">
+                <div class="utility-name">
+                    <a href="<?php echo esc_url( get_post_type_archive_link( 'cz_list' ) ?: home_url( '/liste/' ) ); ?>">Liste</a>
+                </div>
+                <div class="utility-description">
+                    Consulta le liste numeriche della tradizione buddhista, dalle due verità ai cento dharma, con i termini originali e i collegamenti al dizionario.
+                </div>
+            </div>
         </div>
     </div>
 </article>
