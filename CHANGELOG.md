@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.14.0] 2026-10-13
+### Added
+- Single list header (`patterns/template-single-list.php`): button to the related dictionary lemma below the original names, via `cz_lists_the_lemma_link()` (cz-lists 1.1.0).
+
 ## [2.13.0] 2026-10-11
 ### Added
 - Templates for the "Liste" section of the cz-lists plugin: `single-cz_list.php` with `patterns/template-single-list.php` (title, original names and an "All lists" link above the title; no author, dates or reading time) and `archive-cz_list.php` / `taxonomy-cz_list_count.php` with `patterns/template-list-index.php` (list index, and per-number pages titled "Liste di N elementi").

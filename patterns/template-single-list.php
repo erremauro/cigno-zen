@@ -10,6 +10,7 @@ while ( have_posts() ) : the_post(); ?>
             </p>
             <h1 class="post-title"><?php cz_the_html_title(); ?></h1>
             <?php if ( function_exists( 'cz_lists_the_names' ) ) cz_lists_the_names(); ?>
+            <?php if ( function_exists( 'cz_lists_the_lemma_link' ) ) cz_lists_the_lemma_link(); ?>
         </header>
 
         <div class="post-content">
