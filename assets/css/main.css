@@ -1638,6 +1638,10 @@ article.post:first-child {
   border-bottom: 0;
 }
 
+.volume-header .article-actions {
+  display: flex;
+}
+
 /* POST DATES (pubblicazione / modifica) */
 .post-dates {
   display: inline-flex;

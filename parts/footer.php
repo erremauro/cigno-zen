@@ -3,6 +3,7 @@
 			<p><?php echo date('Y'); ?>, Cigno Zen</p>
 			<p>
 				<a href="<?php echo esc_url('https://www.instagram.com/cignozen'); ?>">Instagram</a> ・
+				<a href="<?php echo esc_url('https://substack.com/@cignozen'); ?>">Substack</a> ・
 				<a href="<?php echo esc_url(home_url('/contatti')); ?>">Contatti</a> ・
 				<a href="<?php echo esc_url(home_url('/privacy-policy')); ?>">Privacy</a>
 			</p>

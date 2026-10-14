@@ -21,13 +21,37 @@
 
 	$total_completed = (int) $completed_query->found_posts;
 
+	$in_progress_query = new WP_Query(
+		array(
+			'post_type'      => 'volume',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				'relation' => 'OR',
+				array(
+					'key'     => '_cz_volume_completed',
+					'value'   => 1,
+					'compare' => '!=',
+					'type'    => 'NUMERIC',
+				),
+				array(
+					'key'     => '_cz_volume_completed',
+					'compare' => 'NOT EXISTS',
+				),
+			),
+		)
+	);
+
+	$total_in_progress = (int) $in_progress_query->found_posts;
+
 	get_template_part(
 		'parts/cta-title-link',
 		null,
 		array(
 			'url'   => $archive_url ? $archive_url : '/volumi',
 			'title' => 'Sfoglia i Volumi',
-			'desc'  => $total_completed . ' volumi completati disponibili.',
+			'desc'  => $total_completed . ' volumi completati, ' . $total_in_progress . " volumi in corso d'opera.",
 		)
 	);
 	?>
