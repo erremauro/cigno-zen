@@ -3308,9 +3308,10 @@ blockquote.poem.font-size-small p.verse {
 }
 
 blockquote.poem p { 
-  line-height: 1.68; 
-  padding: 0; 
-  text-indent: 0; 
+  line-height: 1.68;
+  padding: 0;
+  text-indent: 0;
+  text-align: left;
 }
 blockquote.poem p.v1 { 
   padding-left:6%; 
