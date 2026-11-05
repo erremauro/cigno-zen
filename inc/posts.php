@@ -324,6 +324,50 @@ function cz_get_paginated_excerpt( int $length = 155 ): string {
 	return $chunk;
 }
 
+// ── Stampa degli articoli (?stampa=1) ──
+// Il pulsante "Stampa" dell'articolo (vedi script.js) stampa direttamente i
+// post a pagina singola; per quelli paginati apre ?stampa=1, dove il post è
+// mostrato per intero (note riunite in fondo da script.js) e si apre subito
+// la finestra di stampa. ?stampa=1 funziona su qualunque articolo, così il
+// link resta valido anche senza JavaScript.
+// Gli URL con query string non finiscono nella page cache di W3TC.
+
+function cz_is_print_full(): bool {
+	static $result = null;
+	if ( $result !== null ) {
+		return $result;
+	}
+
+	return $result = isset( $_GET['stampa'] ) && is_singular( 'post' );
+}
+
+function cz_get_print_full_url( int $post_id = 0 ): string {
+	return add_query_arg( 'stampa', '1', get_permalink( $post_id ?: get_the_ID() ) );
+}
+
+add_filter( 'body_class', function ( array $classes ): array {
+	if ( cz_is_print_full() ) {
+		$classes[] = 'cz-print-full';
+	}
+	return $classes;
+} );
+
+// La versione completa duplica il contenuto delle sotto-pagine: fuori dagli indici.
+add_filter( 'wp_robots', function ( array $robots ): array {
+	if ( cz_is_print_full() ) {
+		$robots['noindex'] = true;
+		$robots['follow']  = true;
+	}
+	return $robots;
+}, 20 );
+
+add_filter( 'rank_math/frontend/robots', function ( $robots ) {
+	if ( cz_is_print_full() ) {
+		$robots['index'] = 'noindex';
+	}
+	return $robots;
+} );
+
 function cz_is_paginated_subpage(): bool {
 	$state = cz_get_pagination_state();
 	return $state['numpages'] > 1 && $state['page'] > 1;

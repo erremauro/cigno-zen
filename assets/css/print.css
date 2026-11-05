@@ -1,0 +1,217 @@
+/* ==========================================================================
+   STAMPA ARTICOLI
+   Caricato con media="print" solo sui singoli articoli (vedi
+   cigno_zen_styles() in inc/styles-and-scripts.php). Il titolo nella
+   testata di pagina viene aggiunto inline da PHP, perché le margin box di
+   @page accettano solo stringhe letterali.
+   ========================================================================== */
+
+@media print {
+  /* ---------- Pagina ---------- */
+  @page {
+    margin: 20mm 20mm 30mm;
+
+    @bottom-center {
+      content: counter(page);
+      font-family: "Libre Baskerville", serif;
+      font-size: 9pt;
+      color: #000;
+    }
+  }
+
+  /* ---------- Colori e dimensioni ----------
+     :root:root (0,2,0) batte sia html[data-theme] sia
+     :root:not([data-theme]) del tema. Il contenuto è sempre nero su bianco,
+     qualunque sia il tema scelto a schermo. */
+  :root:root {
+    color-scheme: light;
+
+    --bg-rgb: 255, 255, 255;
+    --bg: #fff;
+    --text: #000;
+    --link: #000;
+    --border: #888;
+
+    --fs-root: 11pt;
+    --fs-base: 1rem;
+    --fs-reading: 1rem;
+    --fs-h1: 1.9rem;
+    --fs-h2: 1.5rem;
+    --fs-h3: 1.25rem;
+    --fs-h4: 1.15rem;
+    --fs-h5: 1.05rem;
+    --fs-h6: 1rem;
+    --lh-base: 1.5;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Niente spazio per la barra di navigazione fissa (body.czup-sticky-nav):
+     il testo parte subito dal margine di pagina. */
+  body,
+  body.czup-sticky-nav {
+    font-family: var(--font-body);
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* ---------- Elementi non stampati ---------- */
+  #wpadminbar,
+  .top-nav-bar,
+  .nav-drawer,
+  .nav-drawer-backdrop,
+  .search-bar,
+  .search-suggestions,
+  .czcr-toolbar,
+  body > footer,
+  .post-footer,
+  .post-dates,
+  .reading-time,
+  .post-annotations,
+  .article-actions,
+  .article-audio-player,
+  .post-pagination,
+  .cz-volume-chapters-nav,
+  .more-text,
+  .footnote-popup,
+  .footnote-overlay,
+  .backlink,
+  .cz-outline,
+  .cz-outline-toggle,
+  .cz-outline-backdrop {
+    display: none !important;
+  }
+
+  /* ---------- Contenitori a piena larghezza ---------- */
+  #primary,
+  #main,
+  article.post,
+  .post-content {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+  }
+
+  /* ---------- Intestazione articolo ---------- */
+  .post-header,
+  .post-header.has-border-bottom {
+    margin: 0 0 6em;
+    padding: 0;
+    border-bottom: 0;
+    break-after: avoid;
+  }
+
+  .post-header > :first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  h1.post-title {
+    font-style: italic;
+    font-weight: 400;
+    font-size: var(--fs-h1);
+    line-height: 1.2;
+    padding: 0.2em 0;
+  }
+
+  .post-subtitle {
+    font-size: var(--fs-h3);
+    padding: 0.2em 0;
+  }
+
+  /* ---------- Paragrafi ----------
+     Solo i paragrafi diretti del testo: quelli dentro blockquote, note e
+     domande mantengono lo stile che hanno a schermo. */
+  .post-content > p:not(.question):not(.quote-author) {
+    text-indent: 0.5cm;
+    margin: 0;
+    padding: 0;
+    line-height: var(--lh-base);
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ---------- Titoli e blocchi ---------- */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    break-after: avoid;
+    break-inside: avoid;
+  }
+
+  blockquote,
+  figure,
+  img,
+  table {
+    break-inside: avoid;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* ---------- Link ----------
+     Nessun colore né sottolineatura: in stampa i link (lemmi compresi, che
+     il plugin cz-dictionary sottolinea con un bordo puntinato) sono testo. */
+  a,
+  a:link,
+  a:visited,
+  a:hover,
+  a.lemma {
+    color: inherit !important;
+    text-decoration: none !important;
+    border-bottom: 0 !important;
+    background: none !important;
+  }
+
+  /* ---------- Note ---------- */
+  /* Le note iniziano sempre su una pagina nuova. */
+  .footnotes-root {
+    margin-top: 0;
+    border-top: 0;
+    font-size: 0.9em;
+    break-before: page;
+  }
+
+  /* Note ravvicinate: a schermo ereditano il padding di .post-content p. */
+  .footnotes-content > br {
+    display: none;
+  }
+
+  .footnotes-content > div.footnote > p {
+    padding: 0.2em 0;
+    margin: 0;
+  }
+
+  /* Lo script del tema chiude le note (hidden) e aggiunge uno chevron per
+     aprirle: in stampa sono sempre aperte e il titolo "Note" è testo. */
+  .footnotes-root .footnotes-content,
+  .footnotes-root .footnotes-content[hidden] {
+    display: block !important;
+  }
+
+  .footnotes-chevron {
+    display: none !important;
+  }
+
+  #footnotes-toggle,
+  .footnotes-toggle {
+    display: block !important;
+    break-after: avoid;
+  }
+}

@@ -43,6 +43,20 @@ function cigno_zen_styles() {
         $css_main_ver
     );
 
+    if ( is_singular( 'post' ) ) {
+        list( $css_print_url, $css_print_ver ) = cigno_zen_get_asset('assets/css/print.css');
+
+        wp_enqueue_style(
+            'cigno-zen-print',
+            $css_print_url,
+            ['cigno-zen-style'],
+            $css_print_ver,
+            'print'
+        );
+
+        wp_add_inline_style( 'cigno-zen-print', cignozen_get_print_running_header_css() );
+    }
+
     $user_text_size = cignozen_get_user_root_font_size_clamp();
 
     if ( '' !== $user_text_size ) {
@@ -53,6 +67,28 @@ function cigno_zen_styles() {
     }
 }
 add_action('wp_enqueue_scripts', 'cigno_zen_styles');
+
+/**
+ * Testata di stampa: titolo dell'articolo in corsivo in alto su ogni pagina
+ * tranne la prima (dove c'è già il titolo grande). Le margin box di @page
+ * accettano solo stringhe letterali, quindi il titolo va scritto nel CSS.
+ */
+function cignozen_get_print_running_header_css() {
+    $title = html_entity_decode( wp_strip_all_tags( get_the_title() ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+    $title = trim( preg_replace( '/\s+/u', ' ', $title ) );
+
+    if ( '' === $title ) {
+        return '';
+    }
+
+    // Escape per una stringa CSS; "<" come \3c per non chiudere il tag <style>.
+    $title = str_replace( [ '\\', '"', '<' ], [ '\\\\', '\\"', '\\3c ' ], $title );
+
+    return '@media print {'
+        . '@page { @top-center { content: "' . $title . '"; font-family: "Libre Baskerville", serif; font-style: italic; font-size: 9pt; color: #000; } }'
+        . '@page :first { @top-center { content: none; } }'
+        . '}';
+}
 
 function cignozen_get_user_root_font_size_clamp() {
     if ( ! is_user_logged_in() ) {

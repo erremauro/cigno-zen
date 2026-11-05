@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.15.1] 2026-11-02
+## [2.16.0] 2026-11-05
+### Added
+- Print stylesheet for single articles (`assets/css/print.css`), loaded with `media="print"` on single posts only:
+  - pages with 20mm margins (30mm at the bottom), page number centered at the bottom and the article title in italics as running header on every page except the first (inline `@page` rule from `cignozen_get_print_running_header_css()`, since page margin boxes only accept literal strings);
+  - always black on white with the site font (Libre Baskerville, 11pt), whatever the screen theme;
+  - only the article is printed: navigation bars, footer, related topics, dates, reading time, annotations, PDF/audio actions, pagination, chapter navigation, footnote popups and the outline are hidden;
+  - no border below title and subtitle, which start right at the top margin, followed by a wide space before the text;
+  - paragraphs indented by 0.5cm with no spacing between them; blockquotes keep their screen style and are not split across pages;
+  - links (dictionary lemmas included) printed as plain text, with no color, underline or dotted border;
+  - footnotes always expanded, without the toggle chevron, starting on a new page and closer together.
+- Full print of paginated posts: `?stampa=1` shows the whole article on a single page (all `<!--nextpage-->` parts in sequence, footnotes merged into a single block at the end by `script.js`) and opens the print dialog automatically. The page is `noindex` (`wp_robots` and Rank Math) and is not cached by W3TC, which skips URLs with a query string. New helpers in `inc/posts.php`: `cz_is_print_full()`, `cz_get_print_full_url()` and the `cz-print-full` body class.
+- Print button in the floating toolbar of cz-continue-reading (1.10.0): on single-page posts it prints the page; on paginated posts the theme intercepts the `czcr:print` event and opens `?stampa=1` in a new tab (`data-cz-print-url` / `data-cz-print-paged` attributes on `<article>`).
+- The article outline (`[outline]`, cz-outline 1.1.0) opens as a left sidebar on desktop and as a drawer on mobile, from the "indice" button in the text or from the new outline icon in the floating toolbar, to the left of "Su".
+
+
 ### Fixed
 - Poems (`blockquote.poem p`): verses are now always left-aligned, so they no longer inherit justified text alignment from the article content.
 

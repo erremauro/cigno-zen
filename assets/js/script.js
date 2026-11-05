@@ -2353,3 +2353,68 @@
     update(d.postId, { 'post-annotation-saved': d.saved });
   });
 })();
+
+// ── Stampa completa dei post paginati (?stampa=1, body.cz-print-full) ──────
+// Il contenuto arriva con un blocco "Note" per ogni sotto-pagina: la
+// numerazione è continua, quindi le note vengono riunite nell'ultimo blocco.
+// Poi, a pagina e font caricati, si apre la finestra di stampa.
+(function () {
+  function mergeFootnotes() {
+    var roots = Array.prototype.slice.call(
+      document.querySelectorAll(".post-content div.footnotes-root"),
+    );
+    if (roots.length < 2) return;
+
+    var target = roots[roots.length - 1];
+    var targetContent = target.querySelector(":scope > .footnotes-content");
+    if (!targetContent) return;
+
+    var notes = document.createDocumentFragment();
+    roots.slice(0, -1).forEach(function (root) {
+      root
+        .querySelectorAll(":scope > .footnotes-content > .footnote")
+        .forEach(function (note) {
+          notes.appendChild(note);
+        });
+      root.remove();
+    });
+    targetContent.insertBefore(notes, targetContent.firstChild);
+  }
+
+  // Pulsante "Stampa" della czcr-toolbar (plugin cz-continue-reading): emette
+  // `czcr:print`. Post a pagina singola → lascia fare (window.print());
+  // post paginato → annulla e apre ?stampa=1 con il post intero.
+  function initPrintButtons() {
+    document.addEventListener("czcr:print", function (e) {
+      var article = document.querySelector("article[data-cz-print-paged]");
+      if (!article || article.getAttribute("data-cz-print-paged") !== "1") return;
+      var url = article.getAttribute("data-cz-print-url");
+      if (!url) return;
+      e.preventDefault();
+      window.open(url, "_blank", "noopener");
+    });
+  }
+
+  function init() {
+    initPrintButtons();
+    if (!document.body.classList.contains("cz-print-full")) return;
+    mergeFootnotes();
+
+    window.addEventListener("load", function () {
+      var ready = document.fonts && document.fonts.ready
+        ? document.fonts.ready
+        : Promise.resolve();
+      ready.then(function () {
+        setTimeout(function () {
+          window.print();
+        }, 300);
+      });
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();

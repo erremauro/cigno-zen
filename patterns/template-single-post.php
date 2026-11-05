@@ -37,10 +37,15 @@ while ( have_posts() ) : the_post();
     $pdf = $resolve_attachment('article_pdf');
     $audio = $resolve_attachment('article_audio');
     $audio_player_shortcode = $audio['id'] > 0 ? sprintf('[player id="%d"]', $audio['id']) : '';
+    $is_multipage = cz_get_pagination_state()['numpages'] > 1;
+    $print_full = cz_is_print_full();
     $has_article_actions = ($pdf['url'] !== '') || ($audio_player_shortcode !== '');
     ?>
 
-    <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+    <?php // data-cz-print-*: usati da script.js per il pulsante Stampa della czcr-toolbar (post paginati → ?stampa=1). ?>
+    <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>
+        data-cz-print-url="<?php echo esc_url(cz_get_print_full_url()); ?>"
+        data-cz-print-paged="<?php echo ($is_multipage && ! $print_full) ? '1' : '0'; ?>">
         <header class="post-header has-border-bottom">
             <?php display_author_info_conditionally(); ?>
             <?php display_volumes_name( null, true, 'volumes-link--lined' ); ?>
@@ -83,8 +88,15 @@ while ( have_posts() ) : the_post();
 
         <div class="post-content">
             <?php
-            the_content();
+            if ($print_full) {
+                // Tutte le sotto-pagine in sequenza, senza navigazione tra pagine.
+                $full_content = str_ireplace('<!--nextpage-->', '', get_post()->post_content);
+                echo apply_filters('the_content', $full_content);
+            } else {
+                the_content();
+            }
 
+            if (! $print_full) :
             custom_post_pagination();
 
             // Chapter nav is normally auto-appended to wp_link_pages() by
@@ -101,6 +113,7 @@ while ( have_posts() ) : the_post();
             remove_filter( 'cz_volume_auto_append_nav', '__return_false' );
 
             echo do_shortcode( '[cz_volume_chapters_nav]' );
+            endif;
             ?>
         </div>
 
