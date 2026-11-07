@@ -42,7 +42,7 @@ while ( have_posts() ) : the_post();
     $has_article_actions = ($pdf['url'] !== '') || ($audio_player_shortcode !== '');
     ?>
 
-    <?php // data-cz-print-*: usati da script.js per il pulsante Stampa della czcr-toolbar (post paginati → ?stampa=1). ?>
+    <?php // data-cz-print-*: usati da script.js per il pulsante Stampa della toolbar di cz-core (post paginati → ?stampa=1). ?>
     <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>
         data-cz-print-url="<?php echo esc_url(cz_get_print_full_url()); ?>"
         data-cz-print-paged="<?php echo ($is_multipage && ! $print_full) ? '1' : '0'; ?>">

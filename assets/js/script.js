@@ -2381,11 +2381,11 @@
     targetContent.insertBefore(notes, targetContent.firstChild);
   }
 
-  // Pulsante "Stampa" della czcr-toolbar (plugin cz-continue-reading): emette
-  // `czcr:print`. Post a pagina singola → lascia fare (window.print());
+  // Pulsante "Stampa" della toolbar di cz-core (mu-plugins/cz-toolbar): emette
+  // `cz-toolbar:print`. Post a pagina singola → lascia fare (window.print());
   // post paginato → annulla e apre ?stampa=1 con il post intero.
   function initPrintButtons() {
-    document.addEventListener("czcr:print", function (e) {
+    document.addEventListener("cz-toolbar:print", function (e) {
       var article = document.querySelector("article[data-cz-print-paged]");
       if (!article || article.getAttribute("data-cz-print-paged") !== "1") return;
       var url = article.getAttribute("data-cz-print-url");
