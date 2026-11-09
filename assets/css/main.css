@@ -1977,14 +1977,16 @@ h2.post-title {
 }
 
 .article-actions {
-  display: inline-flex;
+  /* flex (non inline-flex): sempre su una riga propria, anche quando
+     .post-annotations (solo utenti loggati) non la separa da .post-dates. */
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   flex-wrap: wrap;
   margin: 1em auto 0;
   padding: 0.55em 0.7em;
-  width: auto;
+  width: fit-content;
   max-width: 100%;
   font-family: sans-serif;
 }
