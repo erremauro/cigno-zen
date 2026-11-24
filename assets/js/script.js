@@ -1,34 +1,3 @@
-(function (document) {
-  function onShowSearchClick(event) {
-    // Seleziona l'elemento con ID search-bar
-    var searchBar = document.getElementById("search-bar");
-
-    // Controlla lo stato attuale della visibilità
-    if (searchBar.style.display === "none" || searchBar.style.display === "") {
-      // Se è nascosto, mostralo
-      searchBar.style.display = "block";
-    } else {
-      // Se è visibile, nascondilo
-      searchBar.style.display = "none";
-    }
-
-    // Nasconde l'etichetta del menu
-    document
-      .querySelectorAll(".menu-label")
-      .forEach((el) => el.classList.toggle("hidden"));
-
-    // Ruota l'immagine aggiungendo o rimuovendo la classe
-    var menuButton = document.getElementById("menu-button");
-    menuButton.classList.toggle("rotated");
-  }
-
-  document.addEventListener("DOMContentLoaded", function () {
-    var menuButton = document.getElementById("site-menu-toggle");
-    // Assicurati di aggiungere l'event listener correttamente
-    menuButton.addEventListener("click", onShowSearchClick);
-  });
-})(document);
-
 /* Generic content toggle with optional smooth scroll on collapse.
  * - Works on any ".js-toggle" wrapper.
  * - Uses data-toggle-target (CSS selector) or aria-controls to find the panel.
@@ -2202,8 +2171,14 @@
   var lastY   = window.scrollY;
   var ticking = false;
 
+  // sfondo traslucido con blur quando la barra non è più in cima alla pagina
+  function syncScrolled() {
+    nav.classList.toggle('is-scrolled', isStickyActive() && window.scrollY > 0);
+  }
+
   function update() {
     ticking = false;
+    syncScrolled();
     if (!isStickyActive()) return;
 
     var y     = window.scrollY;
@@ -2228,8 +2203,42 @@
 
   window.addEventListener('resize', syncNavHeight, { passive: true });
 
+  // ── Auto-nascondi dopo un periodo di inattività (mouse fermo, nessun tocco/tasto/scroll)
+  var IDLE_MS       = 4000;
+  var REVEAL_ZONE   = 24;  // px dal bordo superiore: avvicinando il mouse la barra ricompare
+  var idleTimer     = 0;
+
+  function canAutoHide() {
+    if (!isStickyActive() || window.scrollY <= 0) return false;
+    var body = document.body;
+    if (body.classList.contains('nav-drawer-open') || body.classList.contains('czap-open')) return false;
+    if (nav.classList.contains('is-search-open')) return false;
+    if (nav.matches(':hover') || nav.contains(document.activeElement)) return false;
+    return true;
+  }
+
+  function scheduleIdleHide() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(function () {
+      if (canAutoHide()) nav.classList.add('nav-hidden');
+    }, IDLE_MS);
+  }
+
+  ['mousemove', 'pointerdown', 'touchstart', 'keydown', 'wheel', 'scroll'].forEach(function (type) {
+    window.addEventListener(type, scheduleIdleHide, { passive: true });
+  });
+
+  // su desktop la barra torna visibile portando il mouse vicino al bordo superiore
+  window.addEventListener('mousemove', function (e) {
+    if (!isStickyActive() || !nav.classList.contains('nav-hidden')) return;
+    if (e.clientY <= REVEAL_ZONE) nav.classList.remove('nav-hidden');
+  }, { passive: true });
+
+  scheduleIdleHide();
+
   document.addEventListener('DOMContentLoaded', function () {
     syncNavHeight();
+    syncScrolled();
     lastY = window.scrollY;
   });
 })();

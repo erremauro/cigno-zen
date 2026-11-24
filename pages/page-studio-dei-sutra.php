@@ -1,7 +1,5 @@
 <article>
-<h1 class="wp-block-heading">Studio dei Sutra</h1>
+<h1 class="wp-block-heading has-text-align-center">Studio dei Sutra</h1>
 
-<div class="cz-sutra-memo-container">
-<?php echo do_shortcode('[cz-sutra-memo]'); ?>
-</div>
+<?php echo do_shortcode('[cz-sutra-studio]'); ?>
 </article>

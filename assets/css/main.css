@@ -688,6 +688,36 @@ body.czup-sticky-nav .top-nav-bar.nav-hidden {
   transform: translateY(-100%);
 }
 
+/* Barra non più in cima alla pagina: sfondo traslucido con blur sul contenuto che scorre sotto.
+   Il blur sta su uno pseudo-elemento: un backdrop-filter sulla barra stessa diventerebbe il
+   containing block dei figli position:fixed (es. .nav-user-menu). */
+body.czup-sticky-nav .top-nav-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: rgba(var(--bg-rgb), 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+body.czup-sticky-nav .top-nav-bar.is-scrolled {
+  background-color: transparent;
+}
+
+body.czup-sticky-nav .top-nav-bar.is-scrolled::before {
+  opacity: 1;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body.czup-sticky-nav .top-nav-bar::before {
+    background-color: rgba(var(--bg-rgb), 0.95);
+  }
+}
+
 body.czup-sticky-nav main {
   margin-top: 2em;
 }
